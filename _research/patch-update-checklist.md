@@ -86,3 +86,27 @@ Tulis tanggal cek di sini (biar ketahuan patch itu sudah diperiksa):
   koreksi data kita). Season masih S16, tidak ada hero/item baru.
   Catatan: klaim "data resmi" hub-game ini kandidat buat perbaikan tier
   kita — tapi WAJIB diverifikasi dulu sumber + tanggalnya sebelum dipakai.
+
+## 7. Watcher Otomatis (GitHub Actions)
+
+Mulai Fase 26 (Tugas 3), pemantauan patch dilakukan secara otomatis via
+GitHub Actions tanpa server / backend:
+
+- **Workflow:** `.github/workflows/patch-watch.yml`
+- **Skrip:** `tests/patch-watch.mjs`
+- **Jadwal:** Berjalan terjadwal tiap hari pukul 06:00 UTC (13:00 WIB), atau
+  bisa dipicu manual via `workflow_dispatch`.
+- **Cara Kerja:**
+  1. Skrip membaca tanggal patch terakhir yang tercatat di file ini
+     (saat ini: `2026-11-05`).
+  2. Skrip memeriksa pembaruan dari situs berita resmi HoK dan hub-game.
+  3. Jika tanggal patch baru lebih baru dari catatan:
+     - Skrip memeriksa daftar issue terbuka di repo GitHub.
+     - Jika belum ada issue terbuka untuk tanggal tersebut, skrip otomatis
+       membuat GitHub issue baru dengan label `patch-watcher` berisi link
+       sumber dan checklist verifikasi (§3 di atas).
+     - Jika issue sudah terbuka, watcher melewatinya agar tidak duplikat.
+  4. Jika tidak ada patch baru, workflow selesai secara diam-diam (exit 0).
+- **Pengujian / Simulasi:**
+  Jalankan `node tests/patch-watch.mjs --simulate YYYY-MM-DD` atau masukkan
+  input `simulate_date` pada menu Run workflow di Actions.

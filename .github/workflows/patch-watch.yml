@@ -1,0 +1,35 @@
+name: Patch Watcher
+
+on:
+  schedule:
+    # Berjalan otomatis tiap hari jam 06:00 UTC (13:00 WIB)
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+    inputs:
+      simulate_date:
+        description: 'Simulasi tanggal patch baru YYYY-MM-DD (kosongkan untuk pengecekan riil)'
+        required: false
+        default: ''
+
+jobs:
+  watch:
+    name: Check HoK Patch Updates
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run Patch Watcher
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SIMULATE_PATCH_DATE: ${{ github.event.inputs.simulate_date }}
+        run: node tests/patch-watch.mjs
