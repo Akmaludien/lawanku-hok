@@ -388,12 +388,40 @@ dialog .x {
 .slot.ban .x { position: absolute; top: 0; right: 0; margin: 0; min-width: 24px; min-height: 24px; padding: 0 4px; font-size: 14px; }
 
 /* popup pilih hero */
-dialog#pickdlg, dialog#h2hdlg, dialog#sharecard-dlg {
+dialog#pickdlg, dialog#h2hdlg, dialog#sharecard-dlg, dialog#sync-dlg {
   background: var(--card); color: var(--fg); border: 1px solid var(--line);
   border-radius: 12px 12px 0 0; padding: var(--s4); width: 100%; max-width: 720px;
   max-height: 85vh; margin: auto auto 0; overflow-y: auto;
 }
-dialog#pickdlg::backdrop, dialog#h2hdlg::backdrop, dialog#sharecard-dlg::backdrop { background: rgba(0, 0, 0, .75); backdrop-filter: blur(2px); }
+dialog#pickdlg::backdrop, dialog#h2hdlg::backdrop, dialog#sharecard-dlg::backdrop, dialog#sync-dlg::backdrop { background: rgba(0, 0, 0, .75); backdrop-filter: blur(2px); }
+.sync-code-box {
+  background: var(--bg); border: 1px dashed var(--acc); border-radius: 8px;
+  padding: var(--s3); text-align: center; margin: var(--s2) 0;
+}
+.sync-code-val {
+  font-family: monospace; font-size: 32px; font-weight: 800;
+  letter-spacing: 6px; color: var(--acc); margin: var(--s1) 0;
+}
+.sync-status-card {
+  background: var(--chip); border: 1px solid var(--line); border-radius: 8px;
+  padding: var(--s3); margin: var(--s2) 0; display: flex; flex-direction: column; gap: var(--s1);
+}
+.sync-input-row {
+  display: flex; gap: var(--s2); align-items: stretch; margin-top: var(--s2);
+}
+.sync-input-row input {
+  flex: 1; text-transform: uppercase; letter-spacing: 3px; font-family: monospace; font-size: 18px;
+  font-weight: 700; text-align: center; background: var(--bg); color: var(--fg);
+  border: 1px solid var(--line); border-radius: 8px; padding: var(--s2);
+}
+.sync-badge {
+  display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px;
+  border-radius: 999px; font-size: 12px; font-weight: 600; background: rgba(16, 185, 129, .15);
+  color: var(--soft); border: 1px solid rgba(16, 185, 129, .3);
+}
+.sync-badge.off {
+  background: rgba(148, 163, 184, .15); color: var(--mut); border-color: rgba(148, 163, 184, .3);
+}
 .share-preview-wrap {
   margin: var(--s2) 0; text-align: center; background: var(--bg);
   border-radius: 8px; padding: var(--s2); border: 1px solid var(--line);
@@ -457,7 +485,7 @@ main:has(.qgrid) { max-width: 640px; }
   .grid, .pool { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); }
   .pgrid { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); }
   .hero2col { grid-template-columns: 1fr 1fr; align-items: start; }
-  dialog#pickdlg, dialog#h2hdlg, dialog#sharecard-dlg { margin: auto; border-radius: 8px; max-height: 80vh; }
+  dialog#pickdlg, dialog#h2hdlg, dialog#sharecard-dlg, dialog#sync-dlg { margin: auto; border-radius: 8px; max-height: 80vh; }
   /* Fase 23 — draft desktop satu layar: advisor ramping, seksi di 2 baris penuh */
   .arena-a .slot, .arena-e .slot { min-height: 42px; margin-bottom: 3px; }
   .drow1 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 10px; align-items: start; }

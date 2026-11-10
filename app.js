@@ -127,6 +127,7 @@ function toggleFav(id) {
     localStorage.setItem(FAV_KEY, JSON.stringify(has ? favs.filter(x => x !== id) : [...favs, id]));
   } catch {}
   applyFavStars();
+  scheduleSyncPush();
   return !has;
 }
 function applyFavStars() {
@@ -660,22 +661,44 @@ function renderHero(slugName) {
   form.addEventListener("change", syncKind);
   usulBtn.addEventListener("click", () => { msg.textContent = ""; dlg.showModal(); });
   closeBtn.addEventListener("click", () => dlg.close());
-  form.addEventListener("submit", e => {
+  form.addEventListener("submit", async e => {
     e.preventDefault();
     const kind = form.elements.namedItem("kind").value;
+    const counterId = kind === "hero" ? Number(sel.value) || null : null;
+    const counterHero = counterId && byId.has(counterId) ? byId.get(counterId).en : null;
+    const itemsVal = kind === "item" ? itemInput.value.trim() : null;
+    const noteVal = note.value.trim();
+
     const data = {
       kind, target: h.id,
-      counter: kind === "hero" ? Number(sel.value) || null : null,
-      items: kind === "item" ? itemInput.value : null,
-      note: note.value, at: new Date().toISOString(),
+      counter: counterId,
+      items: itemsVal,
+      note: noteVal, at: new Date().toISOString(),
     };
     try {
       const all = JSON.parse(localStorage.getItem("hok-usulan") || "[]");
       all.push(data);
       localStorage.setItem("hok-usulan", JSON.stringify(all));
     } catch {}
+
+    sendBtn.disabled = true;
+    msg.textContent = "Mengirim usulan…";
+
+    let messageBody = "[Hero: " + h.en + " (ID " + h.id + ")] Jenis: " + kind;
+    if (counterHero) messageBody += " | Counter: " + counterHero + " (ID " + counterId + ")";
+    if (itemsVal) messageBody += " | Item: " + itemsVal;
+    if (noteVal) messageBody += " | Catatan: " + noteVal;
+
+    const res = await sendSuggestion({ message: messageBody });
+    sendBtn.disabled = false;
     form.reset(); syncKind();
-    msg.textContent = "Terkirim. Makasih! Usulan tersimpan lokal di Lawanku (belum ada server).";
+    if (res && res.error) {
+      msg.textContent = res.error;
+    } else if (res && res.queued) {
+      msg.textContent = "Usulan disimpan di antrean perangkat dan dikirim otomatis saat online. Makasih!";
+    } else {
+      msg.textContent = "Usulan berhasil dikirim ke server Lawanku. Makasih!";
+    }
   });
   syncKind();
   renderDock("hero", null);
@@ -801,6 +824,7 @@ function loadSavedDrafts() {
 }
 function storeSavedDrafts(list) {
   try { localStorage.setItem(SAVED_KEY, JSON.stringify(list)); } catch {}
+  scheduleSyncPush();
 }
 function draftToParam(d) {
   const p = new URLSearchParams();
@@ -823,6 +847,496 @@ function draftFromParam(qs) {
     });
   }
   return any ? fresh : null;
+}
+
+/* ---------- SINKRONISASI CLOUD (Cloudflare Workers + D1) ---------- */
+const API_BASE = "https://lawanku-api.akmaludienramadhan1.workers.dev";
+const KEY_DEVICE_ID = "hok-device-id";
+const KEY_SYNC_ACCOUNT = "hok-sync-account";
+const KEY_SYNC_UPDATED = "hok-sync-updated";
+const KEY_USULAN_QUEUE = "hok-usulan-queue";
+
+function getDeviceId() {
+  let id = "";
+  try { id = localStorage.getItem(KEY_DEVICE_ID) || ""; } catch {}
+  if (!id || !/^[A-Za-z0-9_-]{8,64}$/.test(id)) {
+    id = "dev_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+    try { localStorage.setItem(KEY_DEVICE_ID, id); } catch {}
+  }
+  return id;
+}
+
+function getSyncAccount() {
+  try { return localStorage.getItem(KEY_SYNC_ACCOUNT) || null; } catch { return null; }
+}
+
+function setSyncAccount(accId) {
+  try {
+    if (accId) localStorage.setItem(KEY_SYNC_ACCOUNT, String(accId));
+    else localStorage.removeItem(KEY_SYNC_ACCOUNT);
+  } catch {}
+}
+
+function getLastSyncUpdated() {
+  try { return Number(localStorage.getItem(KEY_SYNC_UPDATED) || 0); } catch { return 0; }
+}
+
+function setLastSyncUpdated(ts) {
+  try { localStorage.setItem(KEY_SYNC_UPDATED, String(Number(ts) || 0)); } catch {}
+}
+
+function getSyncPayload() {
+  return {
+    favs: getFavs(),
+    drafts: loadSavedDrafts(),
+  };
+}
+
+function applyRemotePayload(payload, updatedAt) {
+  if (!payload || typeof payload !== "object") return false;
+  let changed = false;
+  try {
+    if (Array.isArray(payload.favs)) {
+      const cur = JSON.stringify(getFavs());
+      const next = JSON.stringify(payload.favs.filter(Number.isInteger));
+      if (cur !== next) {
+        localStorage.setItem(FAV_KEY, next);
+        changed = true;
+      }
+    }
+    if (Array.isArray(payload.drafts)) {
+      const cur = JSON.stringify(loadSavedDrafts());
+      const next = JSON.stringify(payload.drafts.slice(0, 12));
+      if (cur !== next) {
+        localStorage.setItem(SAVED_KEY, next);
+        changed = true;
+      }
+    }
+    if (updatedAt) setLastSyncUpdated(updatedAt);
+  } catch {}
+  if (changed) {
+    applyFavStars();
+    const hash = location.hash.replace(/^#/, "") || "/";
+    if (hash === "/favorit" || hash === "/draft") {
+      route();
+    }
+  }
+  return changed;
+}
+
+let syncPushTimer = null;
+function scheduleSyncPush(delay = 2000) {
+  if (!getSyncAccount() || (typeof navigator !== "undefined" && !navigator.onLine)) return;
+  clearTimeout(syncPushTimer);
+  syncPushTimer = setTimeout(() => {
+    syncPush().catch(() => {});
+  }, delay);
+}
+
+async function syncPush() {
+  const accountId = getSyncAccount();
+  if (!accountId || (typeof navigator !== "undefined" && !navigator.onLine)) return null;
+  const payload = getSyncPayload();
+  try {
+    const res = await fetch(API_BASE + "/api/sync", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ accountId, payload }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data && data.updatedAt) {
+      setLastSyncUpdated(data.updatedAt);
+      return data.updatedAt;
+    }
+  } catch {}
+  return null;
+}
+
+async function syncPull() {
+  const accountId = getSyncAccount();
+  if (!accountId || (typeof navigator !== "undefined" && !navigator.onLine)) return null;
+  try {
+    const res = await fetch(API_BASE + "/api/sync?account=" + encodeURIComponent(accountId));
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data) return null;
+    const remoteUpdated = Number(data.updatedAt) || 0;
+    const localUpdated = getLastSyncUpdated();
+
+    if (data.payload === null) {
+      const favs = getFavs();
+      const drafts = loadSavedDrafts();
+      if (favs.length || drafts.length) {
+        await syncPush();
+      }
+      return { status: "pushed_initial" };
+    }
+
+    if (remoteUpdated > localUpdated) {
+      applyRemotePayload(data.payload, remoteUpdated);
+      return { status: "pulled", updatedAt: remoteUpdated };
+    } else if (localUpdated > remoteUpdated) {
+      await syncPush();
+      return { status: "pushed_newer" };
+    }
+    return { status: "in_sync", updatedAt: remoteUpdated };
+  } catch {
+    return null;
+  }
+}
+
+let pollingInterval = null;
+function startSyncPolling() {
+  if (pollingInterval) return;
+  pollingInterval = setInterval(() => {
+    if (typeof document !== "undefined" && document.hidden) return;
+    if (typeof navigator !== "undefined" && !navigator.onLine) return;
+    if (getSyncAccount()) {
+      syncPull().catch(() => {});
+    }
+  }, 60000);
+
+  if (typeof document !== "undefined") {
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden && getSyncAccount() && (typeof navigator === "undefined" || navigator.onLine)) {
+        syncPull().catch(() => {});
+      }
+    });
+  }
+  if (typeof window !== "undefined") {
+    window.addEventListener("online", () => {
+      if (getSyncAccount()) syncPull().catch(() => {});
+      flushUsulanQueue().catch(() => {});
+    });
+  }
+}
+
+/* ---------- USULAN (POST /api/suggest + Antrean Offline) ---------- */
+function getUsulanQueue() {
+  try {
+    const v = JSON.parse(localStorage.getItem(KEY_USULAN_QUEUE) || "[]");
+    return Array.isArray(v) ? v : [];
+  } catch { return []; }
+}
+function enqueueUsulan(item) {
+  try {
+    const q = getUsulanQueue();
+    q.push(item);
+    localStorage.setItem(KEY_USULAN_QUEUE, JSON.stringify(q));
+  } catch {}
+}
+async function flushUsulanQueue() {
+  if (typeof navigator !== "undefined" && !navigator.onLine) return;
+  const q = getUsulanQueue();
+  if (!q.length) return;
+  const remaining = [];
+  for (const item of q) {
+    try {
+      const res = await fetch(API_BASE + "/api/suggest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(item),
+      });
+      if (!res.ok && res.status !== 429) remaining.push(item);
+    } catch {
+      remaining.push(item);
+    }
+  }
+  try {
+    localStorage.setItem(KEY_USULAN_QUEUE, JSON.stringify(remaining));
+  } catch {}
+}
+
+async function sendSuggestion(data) {
+  if (typeof navigator !== "undefined" && !navigator.onLine) {
+    enqueueUsulan(data);
+    return { ok: true, queued: true };
+  }
+  try {
+    const res = await fetch(API_BASE + "/api/suggest", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (res.status === 429) {
+      return { ok: false, error: "Batas pengiriman tercapai (maks 10 usulan/jam). Coba lagi nanti." };
+    }
+    if (!res.ok) {
+      enqueueUsulan(data);
+      return { ok: true, queued: true };
+    }
+    const json = await res.json().catch(() => ({ ok: true }));
+    return { ok: !!(json && json.ok) };
+  } catch {
+    enqueueUsulan(data);
+    return { ok: true, queued: true };
+  }
+}
+
+/* ---------- MODAL SINKRONISASI PERANGKAT ---------- */
+function openSyncModal() {
+  let dlg = $("#sync-dlg");
+  if (!dlg) {
+    dlg = document.createElement("dialog");
+    dlg.id = "sync-dlg";
+    document.body.appendChild(dlg);
+  }
+
+  let countdownTimer = null;
+  function cleanup() {
+    if (countdownTimer) {
+      clearInterval(countdownTimer);
+      countdownTimer = null;
+    }
+  }
+
+  dlg.onclose = cleanup;
+
+  function renderModalContent() {
+    cleanup();
+    dlg.replaceChildren();
+
+    const head = el("div", "dlg-head");
+    head.appendChild(el("h2", null, "Sinkronisasi Perangkat"));
+    const closeBtn = el("button", "x", "×");
+    closeBtn.type = "button";
+    closeBtn.setAttribute("aria-label", "Tutup dialog sinkronisasi");
+    closeBtn.onclick = () => dlg.close();
+    head.appendChild(closeBtn);
+    dlg.appendChild(head);
+
+    const accountId = getSyncAccount();
+
+    if (!accountId) {
+      // STATE 1: BELUM TERHUBUNG
+      const desc = el("p", "mut", "Sinkronkan daftar Favorit dan simpanan Draft antar perangkat kamu secara otomatis (Cloudflare Workers + D1). Tanpa akun password.");
+      dlg.appendChild(desc);
+
+      const secGen = el("div", "card");
+      secGen.appendChild(el("b", null, "1. Minta Kode Pairing"));
+      secGen.appendChild(el("p", "mut why", "Buat kode 6 digit untuk menghubungkan perangkat ini dengan perangkat baru."));
+
+      const genArea = el("div");
+      const genBtn = el("button", "btn-acc", "Minta Kode Pairing");
+      genBtn.type = "button";
+      genArea.appendChild(genBtn);
+      secGen.appendChild(genArea);
+      dlg.appendChild(secGen);
+
+      genBtn.onclick = async () => {
+        genBtn.disabled = true;
+        genBtn.textContent = "Menghubungkan ke server…";
+        try {
+          const res = await fetch(API_BASE + "/api/pair", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ deviceId: getDeviceId() }),
+          });
+          const data = await res.json();
+          if (!res.ok || !data.code || !data.accountId) {
+            throw new Error((data && data.error) || "Gagal meminta kode");
+          }
+          setSyncAccount(data.accountId);
+          await syncPush();
+          showCodeDisplay(genArea, data.code, data.expiresIn || 600);
+        } catch (err) {
+          genBtn.disabled = false;
+          genBtn.textContent = "Minta Kode Pairing";
+          alert("Gagal: " + (err.message || "Koneksi bermasalah"));
+        }
+      };
+
+      const secClaim = el("div", "card");
+      secClaim.appendChild(el("b", null, "2. Atau Punya Kode dari Perangkat Lain?"));
+      secClaim.appendChild(el("p", "mut why", "Masukkan kode 6 digit yang tampil di perangkat kamu yang lain:"));
+
+      const claimForm = el("form", "sync-input-row");
+      const inp = document.createElement("input");
+      inp.type = "text";
+      inp.maxLength = 6;
+      inp.placeholder = "KODE6X";
+      inp.setAttribute("aria-label", "Kode pairing 6 digit");
+      inp.autocomplete = "off";
+
+      const subBtn = el("button", "btn-acc", "Hubungkan");
+      subBtn.type = "submit";
+      claimForm.appendChild(inp);
+      claimForm.appendChild(subBtn);
+      secClaim.appendChild(claimForm);
+
+      const claimMsg = el("p", "mut");
+      claimMsg.style.marginTop = "8px";
+      secClaim.appendChild(claimMsg);
+
+      claimForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const code = inp.value.trim().toUpperCase();
+        if (!code || code.length !== 6) {
+          claimMsg.textContent = "Masukkan 6 karakter kode pairing.";
+          claimMsg.style.color = "var(--hard)";
+          return;
+        }
+        subBtn.disabled = true;
+        subBtn.textContent = "Mengecek…";
+        claimMsg.textContent = "";
+
+        try {
+          const res = await fetch(API_BASE + "/api/pair/claim", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ code, deviceId: getDeviceId() }),
+          });
+          const data = await res.json();
+          if (!res.ok || !data.accountId) {
+            throw new Error((data && data.error) || (res.status === 410 ? "Kode sudah kedaluwarsa" : "Kode tidak valid"));
+          }
+          setSyncAccount(data.accountId);
+          claimMsg.style.color = "var(--soft)";
+          claimMsg.textContent = "Berhasil terhubung! Menyinkronkan data…";
+          await syncPull();
+          setTimeout(() => {
+            renderModalContent();
+          }, 800);
+        } catch (err) {
+          subBtn.disabled = false;
+          subBtn.textContent = "Hubungkan";
+          claimMsg.style.color = "var(--hard)";
+          claimMsg.textContent = "Gagal: " + (err.message || "Periksa kembali kode.");
+        }
+      };
+
+      dlg.appendChild(secClaim);
+
+    } else {
+      // STATE 2: SUDAH TERHUBUNG (PERINGATAN: JANGAN PERNAH TAMPILKAN accountId DI LAYAR)
+      const card = el("div", "sync-status-card");
+      const badgeRow = el("div", "row");
+      const badge = el("span", "sync-badge", "● Terhubung ke Cloud");
+      badgeRow.appendChild(badge);
+      card.appendChild(badgeRow);
+
+      const ts = getLastSyncUpdated();
+      const timeStr = ts ? new Date(ts).toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" }) : "Belum pernah";
+      const infoP = el("p", "mut", "Perangkat ini aktif tersinkronisasi. Favorit & Draft tersimpan aman di Cloudflare D1.");
+      const syncInfo = el("small", "mut", "Terakhir sinkron: " + timeStr);
+      card.appendChild(infoP);
+      card.appendChild(syncInfo);
+      dlg.appendChild(card);
+
+      const actRow = el("div", "row");
+      actRow.style.flexWrap = "wrap";
+      actRow.style.gap = "8px";
+      actRow.style.marginTop = "12px";
+
+      const manualBtn = el("button", "btn-acc", "Sinkronkan Sekarang");
+      manualBtn.type = "button";
+      manualBtn.onclick = async () => {
+        manualBtn.disabled = true;
+        manualBtn.textContent = "Menyinkronkan…";
+        await syncPull();
+        manualBtn.disabled = false;
+        manualBtn.textContent = "Tersinkron!";
+        setTimeout(() => renderModalContent(), 600);
+      };
+      actRow.appendChild(manualBtn);
+
+      const addDevBtn = el("button", "btn-sec", "Tambah Perangkat Baru");
+      addDevBtn.type = "button";
+      actRow.appendChild(addDevBtn);
+
+      dlg.appendChild(actRow);
+
+      const addArea = el("div");
+      addArea.style.marginTop = "12px";
+      dlg.appendChild(addArea);
+
+      addDevBtn.onclick = async () => {
+        addDevBtn.disabled = true;
+        addDevBtn.textContent = "Membuat kode…";
+        try {
+          const res = await fetch(API_BASE + "/api/pair", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ deviceId: getDeviceId(), accountId: getSyncAccount() }),
+          });
+          const data = await res.json();
+          if (!res.ok || !data.code) throw new Error(data.error || "Gagal membuat kode");
+          showCodeDisplay(addArea, data.code, data.expiresIn || 600);
+          addDevBtn.hidden = true;
+        } catch (err) {
+          addDevBtn.disabled = false;
+          addDevBtn.textContent = "Tambah Perangkat Baru";
+          alert("Gagal: " + err.message);
+        }
+      };
+
+      const discSec = el("div");
+      discSec.style.marginTop = "24px";
+      discSec.style.borderTop = "1px solid var(--line)";
+      discSec.style.paddingTop = "12px";
+      const discBtn = el("button", "mini", "Putus Sambungan Perangkat Ini");
+      discBtn.type = "button";
+      discBtn.style.color = "var(--hard)";
+      discBtn.onclick = () => {
+        if (confirm("Putus sambungan perangkat ini dari sinkronisasi cloud? Data lokal di perangkat ini tidak akan dihapus.")) {
+          setSyncAccount(null);
+          setLastSyncUpdated(0);
+          renderModalContent();
+        }
+      };
+      discSec.appendChild(discBtn);
+      dlg.appendChild(discSec);
+    }
+  }
+
+  function showCodeDisplay(container, code, expiresInSec) {
+    container.replaceChildren();
+    const box = el("div", "sync-code-box");
+    box.appendChild(el("b", null, "KODE PAIRING PERANGKAT:"));
+    const val = el("div", "sync-code-val", code);
+    box.appendChild(val);
+
+    let secLeft = expiresInSec;
+    const timerTxt = el("small", "mut", "Berlaku " + Math.floor(secLeft / 60) + ":" + String(secLeft % 60).padStart(2, "0"));
+    box.appendChild(timerTxt);
+
+    countdownTimer = setInterval(() => {
+      secLeft--;
+      if (secLeft <= 0) {
+        clearInterval(countdownTimer);
+        timerTxt.textContent = "Kode sudah kedaluwarsa. Silakan minta kode baru.";
+        timerTxt.style.color = "var(--hard)";
+      } else {
+        timerTxt.textContent = "Berlaku " + Math.floor(secLeft / 60) + ":" + String(secLeft % 60).padStart(2, "0");
+      }
+    }, 1000);
+
+    const btnSalin = el("button", "btn-sec", "Salin Kode");
+    btnSalin.type = "button";
+    btnSalin.style.marginTop = "8px";
+    btnSalin.onclick = () => {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(code).then(() => {
+          btnSalin.textContent = "Tersalin!";
+          setTimeout(() => { btnSalin.textContent = "Salin Kode"; }, 2000);
+        }).catch(() => {
+          prompt("Salin kode pairing:", code);
+        });
+      } else {
+        prompt("Salin kode pairing:", code);
+      }
+    };
+    box.appendChild(btnSalin);
+    const hint = el("p", "mut why", "Buka Lawanku di perangkat lain → buka Sinkronisasi → masukkan kode ini di kolom 'Punya Kode dari Perangkat Lain'.");
+    hint.style.fontSize = "13px";
+    hint.style.marginTop = "8px";
+    box.appendChild(hint);
+    container.appendChild(box);
+  }
+
+  renderModalContent();
+  dlg.showModal();
 }
 
 /* ---------- SHARE CARD (CANVAS GENERATOR) ---------- */
@@ -1470,8 +1984,12 @@ function renderDraft() {
   shareImgBtn.addEventListener("click", () => showDraftShareCard(draft));
   const copyMsg = el("span", "mut", "");
   copyMsg.id = "copymsg";
+  const syncDraftBtn = el("button", "all", getSyncAccount() ? "☁ Tersinkron" : "☁ Sinkron Cloud");
+  syncDraftBtn.id = "syncdraftbtn"; syncDraftBtn.type = "button";
+  syncDraftBtn.addEventListener("click", () => openSyncModal());
   shareRow.appendChild(copyBtn);
   shareRow.appendChild(shareImgBtn);
+  shareRow.appendChild(syncDraftBtn);
   shareRow.appendChild(copyMsg);
   const saveRow = el("div", "share-row");
   const nameInput = el("input");
@@ -2275,7 +2793,11 @@ function renderFavorit() {
   const sub = el("p", "mut");
   const n = el("span"); n.id = "n"; n.textContent = "0";
   sub.appendChild(n);
-  sub.appendChild(document.createTextNode(" hero · tersimpan di perangkat ini"));
+  sub.appendChild(document.createTextNode(" hero · "));
+  const syncFavBtn = el("button", "mini", getSyncAccount() ? "☁ Tersinkron Cloud" : "☁ Sinkron Cloud");
+  syncFavBtn.id = "syncfavbtn"; syncFavBtn.type = "button";
+  syncFavBtn.onclick = () => openSyncModal();
+  sub.appendChild(syncFavBtn);
   main.appendChild(sub);
   const none = el("p", "mut", "Belum ada. Cari hero di bawah, tap buat tambah.");
   none.id = "none";
@@ -2664,6 +3186,20 @@ function renderTentang() {
   how.appendChild(el("b", null, "Cara data dibuat"));
   how.appendChild(el("p", "mut", "Counter alami disusun dari patch Season 16 (531 counter: 243 hard, 288 soft). Item counter hanya memakai 8 paket item yang sudah terverifikasi lewat data kurasi — harga dan stat item ditampilkan dari data Season 16 yang sudah dicek silang (HoKStats dan hub-game). Tier list memakai tier resmi HoK Camp (Global) per 6 Nov 2026, lengkap dengan win, pick, dan ban rate — angka-angka itu disalin dari data resmi dan dicek silang antara hub-game dan HoKStats. Kuis skenario dibangkitkan dari data counter. Di sini tidak ada data pemain — Lawanku tidak terhubung ke API resmi HoK, dan tidak pernah mengarang angka."));
   main.appendChild(how);
+
+  const syncSec = el("div", "card");
+  const sHead = el("div", "row");
+  sHead.appendChild(el("b", null, "Sinkronisasi Antar-Perangkat"));
+  const isLinked = !!getSyncAccount();
+  sHead.appendChild(el("span", "sync-badge" + (isLinked ? "" : " off"), isLinked ? "● Terhubung" : "Belum aktif"));
+  syncSec.appendChild(sHead);
+  syncSec.appendChild(el("p", "mut", "Simpan dan sinkronkan daftar Favorit serta racikan Draft kamu antara HP, laptop, dan tablet secara otomatis tanpa perlu registrasi akun (Cloudflare Workers + D1)."));
+  const syncBtn = el("button", "btn-acc", isLinked ? "Buka Pengaturan Sinkronisasi" : "Aktifkan Sinkronisasi");
+  syncBtn.type = "button";
+  syncBtn.onclick = () => openSyncModal();
+  syncSec.appendChild(syncBtn);
+  main.appendChild(syncSec);
+
   const don = el("div", "card donasi");
   const dHead = el("div", "row");
   dHead.appendChild(icon("i-heart"));
@@ -3093,5 +3629,11 @@ async function boot() {
   }
   window.addEventListener("hashchange", route);
   route();
+  getDeviceId();
+  startSyncPolling();
+  if (getSyncAccount()) {
+    syncPull().catch(() => {});
+  }
+  flushUsulanQueue().catch(() => {});
 }
 boot();

@@ -40,3 +40,4 @@ jobs:
         run: |
           cd tests
           node e2e-test.mjs
+          node sync-test.mjs
