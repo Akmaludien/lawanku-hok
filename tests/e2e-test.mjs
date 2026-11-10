@@ -71,7 +71,7 @@ server.listen(0, async () => {
     const page = await context.newPage();
 
     page.on('pageerror', err => {
-      console.error('  [PageError]', err.message);
+      console.error('  [PageError]', err.stack || err.message);
       jsErrors.push(err.message);
     });
     page.on('console', msg => {

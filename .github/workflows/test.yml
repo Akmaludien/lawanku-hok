@@ -25,7 +25,9 @@ jobs:
           cache-dependency-path: 'tests/package-lock.json'
 
       - name: Check JavaScript Syntax
-        run: node --check app.js
+        run: |
+          node --check i18n.js
+          node --check app.js
 
       - name: Run Data Integrity Tests
         run: node tests/data-test.mjs
@@ -43,6 +45,7 @@ jobs:
           node sync-test.mjs
           node prerender-test.mjs
           node draft5v5-test.mjs
+          node i18n-test.mjs
 
       - name: Verify Prerender & Sitemap Up-to-Date
         run: |

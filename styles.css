@@ -77,6 +77,23 @@ header {
 .topnav a svg { width: 16px; height: 16px; }
 .topnav a:hover { color: var(--fg); }
 .topnav a.on { background: var(--acc); color: var(--onacc); box-shadow: 0 0 20px -4px rgba(245, 158, 11, .35); }
+
+/* saklar bahasa header & tentang */
+.hright { display: flex; align-items: center; gap: var(--s2); }
+.lang-switch {
+  display: inline-flex; align-items: center; gap: 2px;
+  background: var(--chip); border: 1px solid var(--line);
+  border-radius: 8px; padding: 2px;
+}
+.lang-btn {
+  background: transparent; border: none; color: var(--mut);
+  padding: 4px 8px; font-family: "Outfit", "Inter", sans-serif;
+  font-size: 11px; font-weight: 700; border-radius: 6px; cursor: pointer;
+  transition: all .15s ease; line-height: 1;
+}
+.lang-btn:hover { color: var(--fg); }
+.lang-btn.on { background: var(--acc); color: var(--onacc); font-weight: 800; }
+.lang-switch-wrap { display: flex; align-items: center; gap: var(--s3); margin: var(--s3) 0; }
 footer {
   color: var(--mut); font-size: 13px;
   padding-block: var(--s4) calc(var(--dock-h, 80px) + var(--s4));

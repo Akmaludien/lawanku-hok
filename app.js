@@ -6,7 +6,55 @@
 const $ = (s, r) => (r || document).querySelector(s);
 const $$ = (s, r) => [...(r || document).querySelectorAll(s)];
 const ROLES = ["all", "clash", "jungle", "mid", "farm", "roam"];
-const ROLE_LABEL = { all: "Semua", clash: "Clash", jungle: "Jungle", mid: "Mid", farm: "Farm", roam: "Roam" };
+const ROLE_LABEL = new Proxy({ all: "Semua", clash: "Clash", jungle: "Jungle", mid: "Mid", farm: "Farm", roam: "Roam" }, {
+  get(target, prop) {
+    if (prop === "all") return typeof t === "function" ? t("home.roleAll") : "Semua";
+    return target[prop] || prop;
+  }
+});
+
+function updateNavLanguage() {
+  if (typeof t !== "function") return;
+  const navMap = [
+    ["#/", "nav.counter"],
+    ["#/favorit", "nav.fav"],
+    ["#/draft", "nav.draft"],
+    ["#/quiz", "nav.quiz"],
+    ["#/items", "nav.items"],
+    ["#/tier", "nav.tier"],
+    ["#/tentang", "nav.about"],
+  ];
+  for (const [href, key] of navMap) {
+    const a = $(`.topnav a[href="${href}"]`);
+    if (a) {
+      const lbl = a.querySelector(".nav-lbl");
+      if (lbl) lbl.textContent = t(key);
+      else {
+        const svg = a.querySelector("svg");
+        a.replaceChildren();
+        if (svg) a.appendChild(svg);
+        const span = el("span", "nav-lbl", t(key));
+        a.appendChild(span);
+      }
+    }
+  }
+  const footer = $("footer");
+  if (footer) footer.textContent = t("about.footer");
+}
+if (typeof window !== "undefined") {
+  window.updateNavLanguage = updateNavLanguage;
+}
+
+if (typeof document !== "undefined") {
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".lang-btn");
+    if (!btn) return;
+    const lang = btn.dataset.lang;
+    if (lang && (lang === "id" || lang === "en")) {
+      if (typeof setLang === "function") setLang(lang);
+    }
+  });
+}
 
 let HEROES = [];
 let ITEM_DETAILS = {};
@@ -152,14 +200,14 @@ function renderDock(route, controls) {
   dock.replaceChildren();
   if (controls) dock.appendChild(controls);
   const nav = el("nav", "tabs");
-  nav.setAttribute("aria-label", "Menu utama");
-  nav.appendChild(tabEl("#/", "i-swords", "Counter", route === "home"));
-  nav.appendChild(tabEl("#/favorit", "i-star", "Favorit", route === "favorit"));
-  nav.appendChild(tabEl("#/draft", "i-draft", "Draft", route === "draft"));
-  nav.appendChild(tabEl("#/quiz", "i-quiz", "Kuis", route === "quiz"));
-  nav.appendChild(tabEl("#/items", "i-item", "Item", route === "items"));
-  nav.appendChild(tabEl("#/tier", "i-gem", "Tier", route === "tier"));
-  nav.appendChild(tabEl("#/tentang", "i-info", "Tentang", route === "tentang"));
+  nav.setAttribute("aria-label", t("nav.ariaMenu"));
+  nav.appendChild(tabEl("#/", "i-swords", t("nav.dockCounter"), route === "home"));
+  nav.appendChild(tabEl("#/favorit", "i-star", t("nav.dockFav"), route === "favorit"));
+  nav.appendChild(tabEl("#/draft", "i-draft", t("nav.dockDraft"), route === "draft"));
+  nav.appendChild(tabEl("#/quiz", "i-quiz", t("nav.dockQuiz"), route === "quiz"));
+  nav.appendChild(tabEl("#/items", "i-item", t("nav.dockItems"), route === "items"));
+  nav.appendChild(tabEl("#/tier", "i-gem", t("nav.dockTier"), route === "tier"));
+  nav.appendChild(tabEl("#/tentang", "i-info", t("nav.dockAbout"), route === "tentang"));
   dock.appendChild(nav);
   const top = route === "home" ? "#/" : "#/" + route;
   for (const a of $$(".topnav a")) a.classList.toggle("on", a.getAttribute("href") === top);
@@ -167,7 +215,7 @@ function renderDock(route, controls) {
 function roleButtons(active, onPick) {
   const wrap = el("div", "roles");
   wrap.setAttribute("role", "group");
-  wrap.setAttribute("aria-label", "Filter role");
+  wrap.setAttribute("aria-label", t("home.filterRole"));
   for (const r of ROLES) {
     const b = el("button", "role" + (r === active ? " on" : ""), ROLE_LABEL[r]);
     b.type = "button";
@@ -187,7 +235,7 @@ function roleButtons(active, onPick) {
 function counterFilterChips(activeRole, onSelect) {
   const wrap = el("div", "fchips compact");
   wrap.setAttribute("role", "group");
-  wrap.setAttribute("aria-label", "Filter role counter");
+  wrap.setAttribute("aria-label", t("home.filterRole"));
   for (const r of ROLES) {
     const b = el("button", "fchip" + (r === activeRole ? " on" : ""), ROLE_LABEL[r]);
     b.type = "button";
@@ -211,7 +259,7 @@ function searchBox(id, placeholder) {
   const input = el("input");
   input.id = id; input.name = "q"; input.type = "search";
   input.placeholder = placeholder; input.autocomplete = "off";
-  input.setAttribute("aria-label", "Cari hero");
+  input.setAttribute("aria-label", placeholder || t("tier.searchPlaceholder"));
   label.appendChild(input);
   return { label, input };
 }
@@ -228,19 +276,21 @@ function heroButton(h) {
 
 /* ---------- HOME ---------- */
 function renderHome() {
-  document.title = "Lawanku — counter hero Honor of Kings";
+  document.title = (typeof getLang === "function" && getLang() === "en") ? "Lawanku — Honor of Kings hero counter" : "Lawanku — counter hero Honor of Kings";
   const main = $("#main");
   main.replaceChildren();
-  main.appendChild(el("h1", null, "Lawan siapa?"));
+  main.appendChild(el("h1", null, t("home.title")));
   const sub = el("p", "mut");
   const n = el("span"); n.id = "n"; n.textContent = String(HEROES.length);
+  const subText = el("span");
+  subText.textContent = " " + (getLang() === "en" ? "heroes, A–Z." : "hero, A–Z.");
   sub.appendChild(n);
-  sub.appendChild(document.createTextNode(" hero, A–Z."));
+  sub.appendChild(subText);
   main.appendChild(sub);
   const stats = el("div", "stats");
-  const totalCtr = HEROES.reduce((n, h) => n + (h.naturalCounters || []).length, 0);
-  const totalItems = HEROES.reduce((n, h) => n + (h.itemCounters || []).length, 0);
-  for (const [v, l] of [[HEROES.length, "hero"], [totalCtr, "counter alami"], [totalItems, "rekomendasi item"]]) {
+  const totalCtr = HEROES.reduce((sum, h) => sum + (h.naturalCounters || []).length, 0);
+  const totalItems = HEROES.reduce((sum, h) => sum + (h.itemCounters || []).length, 0);
+  for (const [v, l] of [[HEROES.length, t("about.statHero")], [totalCtr, t("about.statNatural")], [totalItems, t("about.statItem")]]) {
     const s = el("span", "stat");
     s.appendChild(el("b", null, String(v)));
     s.appendChild(document.createTextNode(" " + l));
@@ -250,7 +300,7 @@ function renderHome() {
   const indexed = withKeys(HEROES);
   let role = "all";
   const tools = el("div", "ctl");
-  const { label, input } = searchBox("q", "Cari hero musuh…");
+  const { label, input } = searchBox("q", t("home.searchPlaceholder"));
   input.setAttribute("enterkeyhint", "go");
   tools.appendChild(label);
   const roles = roleButtons(role, (r) => {
@@ -294,7 +344,7 @@ function renderHome() {
     bedahShown = h.id;
     bedah.replaceChildren();
     const x = el("button", "bedah-x");
-    x.type = "button"; x.setAttribute("aria-label", "Tutup Bedah Counter");
+    x.type = "button"; x.setAttribute("aria-label", t("common.close") + " Bedah Counter");
     x.textContent = "×";
     x.addEventListener("click", () => { bedahDismissed = input.value.trim(); bedah.hidden = true; bedahShown = 0; });
     bedah.appendChild(x);
@@ -306,24 +356,24 @@ function renderHome() {
     const ctrs = h.naturalCounters || [];
     const hardN = ctrs.filter(c => c.strength === "hard").length;
     const stats = el("div", "bedah-stats");
-    stats.appendChild(el("span", "chip", ctrs.length + " counter alami"));
-    stats.appendChild(el("span", "chip", hardN + " hard · " + (ctrs.length - hardN) + " soft"));
-    if ((h.itemCounters || []).length) stats.appendChild(el("span", "chip", h.itemCounters.length + " rekomendasi item"));
+    stats.appendChild(el("span", "chip", ctrs.length + " " + t("bedah.natural").toLowerCase()));
+    stats.appendChild(el("span", "chip", hardN + " " + t("hero.hard").toLowerCase() + " · " + (ctrs.length - hardN) + " " + t("hero.soft").toLowerCase()));
+    if ((h.itemCounters || []).length) stats.appendChild(el("span", "chip", h.itemCounters.length + " " + t("nav.dockItems").toLowerCase()));
     hi.appendChild(stats);
     head.appendChild(hi);
     bedah.appendChild(head);
-    if (h.howToPlayAgainst) bedah.appendChild(el("p", "mut why", "Cara melawan: " + h.howToPlayAgainst));
+    if (h.howToPlayAgainst) bedah.appendChild(el("p", "mut why", t("bedah.howTo") + ": " + h.howToPlayAgainst));
     const grid2 = el("div", "bedah-grid");
     const colA = el("div");
-    colA.appendChild(el("h2", "lbl", "Counter alami"));
+    colA.appendChild(el("h2", "lbl", t("bedah.natural")));
     let bedahRole = "all";
     const bedahCountEl = el("p", "mut");
     const bedahListEl = el("div", "clist");
     function paintBedahCounters() {
       bedahListEl.replaceChildren();
       if (!ctrs.length) {
-        bedahCountEl.textContent = "0 counter alami";
-        bedahListEl.appendChild(el("p", "mut", "Belum ada data counter alami."));
+        bedahCountEl.textContent = "0 " + t("bedah.natural").toLowerCase();
+        bedahListEl.appendChild(el("p", "mut", t("bedah.noNatural")));
         return;
       }
       const filtered = ctrs.filter(c => {
@@ -333,13 +383,13 @@ function renderHome() {
       }).sort((a, b) => (a.strength === "hard" ? 0 : 1) - (b.strength === "hard" ? 0 : 1)).slice(0, 5);
 
       if (bedahRole === "all") {
-        bedahCountEl.textContent = filtered.length + " counter alami";
+        bedahCountEl.textContent = filtered.length + " " + t("bedah.natural").toLowerCase();
       } else {
         bedahCountEl.textContent = filtered.length + " counter · role " + ROLE_LABEL[bedahRole];
       }
 
       if (!filtered.length) {
-        bedahListEl.appendChild(el("p", "mut", "Tidak ada counter alami untuk role " + ROLE_LABEL[bedahRole] + "."));
+        bedahListEl.appendChild(el("p", "mut", t("bedah.noNatural")));
         return;
       }
 
@@ -357,18 +407,18 @@ function renderHome() {
     paintBedahCounters();
     grid2.appendChild(colA);
     const colB = el("div");
-    colB.appendChild(el("h2", "lbl", "Counter item"));
-    if (!(h.itemCounters || []).length) colB.appendChild(el("p", "mut", "Belum ada data."));
+    colB.appendChild(el("h2", "lbl", t("bedah.items")));
+    if (!(h.itemCounters || []).length) colB.appendChild(el("p", "mut", t("bedah.noItems")));
     else for (const c of h.itemCounters) {
       const it = el("div", "bitem");
       const row = el("div", "row");
       row.appendChild(el("b", null, c.items));
-      row.appendChild(el("span", "tag" + (c.needsReview ? "" : " ok"), c.needsReview ? "belum dikurasi" : "terkurasi"));
+      row.appendChild(el("span", "tag" + (c.needsReview ? "" : " ok"), c.needsReview ? t("hero.needsReview") : t("hero.curated")));
       it.appendChild(row);
       if (c.why) it.appendChild(el("p", "mut why", c.why));
       colB.appendChild(it);
     }
-    colB.appendChild(el("h2", "lbl", "Jangan pick"));
+    colB.appendChild(el("h2", "lbl", t("bedah.dontPick")));
     const rev = [];
     for (const xh of HEROES) {
       if (xh.id === h.id) continue;
@@ -377,20 +427,20 @@ function renderHome() {
       }
     }
     rev.sort((a, b) => (a.c.strength === "hard" ? 0 : 1) - (b.c.strength === "hard" ? 0 : 1));
-    if (!rev.length) colB.appendChild(el("p", "mut", "Belum ada data."));
+    if (!rev.length) colB.appendChild(el("p", "mut", t("bedah.noNatural")));
     else {
       for (const r of rev.slice(0, 5)) colB.appendChild(bedahRow(r.hero, r.c));
-      if (rev.length > 5) colB.appendChild(el("p", "mut", "…dan " + (rev.length - 5) + " hero lagi."));
+      if (rev.length > 5) colB.appendChild(el("p", "mut", t("bedah.dontPickMore", { n: rev.length - 5 })));
     }
     grid2.appendChild(colB);
     bedah.appendChild(grid2);
     const actions = el("div", "row");
     actions.style.marginTop = "var(--s2)";
-    const more = el("a", "link", "Buka halaman hero →");
+    const more = el("a", "link", t("bedah.viewHero", { name: h.en }));
     more.href = "#/hero/" + slug(h.en);
-    const h2hLink = el("a", "link", "Bandingkan hero ini ⇄");
+    const h2hLink = el("a", "link", t("bedah.compare", { name: h.en }));
     h2hLink.href = "#/h2h?a=" + slug(h.en);
-    const shareHeroBtn = el("button", "link", "Bagikan kartu ⎘");
+    const shareHeroBtn = el("button", "link", t("hero.shareCardBtn") + " ⎘");
     shareHeroBtn.id = "sharebedahbtn";
     shareHeroBtn.type = "button";
     shareHeroBtn.addEventListener("click", () => showHeroShareCard(h));
@@ -415,7 +465,7 @@ function renderHome() {
     hIdx++;
   }
   main.appendChild(grid);
-  const empty = el("p", "mut", "Hero tidak ketemu.");
+  const empty = el("p", "mut", t("common.notFound"));
   empty.id = "empty"; empty.hidden = true;
   main.appendChild(empty);
 
@@ -465,18 +515,18 @@ function renderHero(slugName) {
   const h = bySlug.get(slugName);
   const main = $("#main");
   if (!h) {
-    document.title = "Hero tidak ketemu — Lawanku";
+    document.title = t("common.notFound") + " — Lawanku";
     main.replaceChildren();
-    main.appendChild(el("h1", null, "Hero tidak ketemu."));
+    main.appendChild(el("h1", null, t("hero.notFound")));
     const p = el("p", "mut");
-    const a = el("a", "link", "Balik ke daftar hero");
+    const a = el("a", "link", t("hero.backToList"));
     a.href = "#/";
     p.appendChild(a);
     main.appendChild(p);
     renderDock("hero", null);
     return;
   }
-  document.title = h.en + " — Lawanku";
+  document.title = (typeof getLang === "function" && getLang() === "en") ? (h.en + " — Hero Counter Lawanku") : (h.en + " — Counter Hero Lawanku");
   main.replaceChildren();
   const heroHead = el("div", "herohead");
   const head = el("div", "tgt");
@@ -497,8 +547,8 @@ function renderHero(slugName) {
   const paintFav = () => {
     const on = getFavs().includes(h.id);
     favBtn.setAttribute("aria-pressed", String(on));
-    favBtn.setAttribute("aria-label", on ? "Hapus " + h.en + " dari favorit" : "Tambah " + h.en + " ke favorit");
-    favSpan.textContent = on ? "Di Favorit" : "Tambah ke Favorit";
+    favBtn.setAttribute("aria-label", on ? (t("hero.favRemove") + " " + h.en) : (t("hero.favAdd") + " " + h.en));
+    favSpan.textContent = on ? t("hero.favIn") : t("hero.favAddShort");
   };
   paintFav();
   favBtn.addEventListener("click", () => { toggleFav(h.id); paintFav(); });
@@ -507,7 +557,7 @@ function renderHero(slugName) {
   const h2hBtn = el("a", "btn-sec");
   h2hBtn.href = "#/h2h?a=" + slug(h.en);
   h2hBtn.appendChild(icon("i-swords"));
-  h2hBtn.appendChild(document.createTextNode("Bandingkan"));
+  h2hBtn.appendChild(document.createTextNode(t("hero.compareBtn")));
   actRow.appendChild(h2hBtn);
   heroHead.appendChild(actRow);
   main.appendChild(heroHead);
@@ -518,7 +568,7 @@ function renderHero(slugName) {
   cols.appendChild(colA);
   cols.appendChild(colB);
   main.appendChild(cols);
-  colA.appendChild(el("h2", null, "Counter alami"));
+  colA.appendChild(el("h2", null, t("bedah.natural")));
   const ctrs = h.naturalCounters || [];
   let currentRole = "all";
   const countEl = el("p", "mut");
@@ -526,8 +576,8 @@ function renderHero(slugName) {
   function paintCounters() {
     listEl.replaceChildren();
     if (!ctrs.length) {
-      countEl.textContent = "0 counter alami";
-      listEl.appendChild(el("p", "mut", "Belum ada data"));
+      countEl.textContent = t("hero.naturalCount", { n: 0 });
+      listEl.appendChild(el("p", "mut", t("hero.noData")));
       return;
     }
     const filtered = ctrs.filter(c => {
@@ -537,13 +587,13 @@ function renderHero(slugName) {
     }).sort((a, b) => (a.strength === "hard" ? 0 : 1) - (b.strength === "hard" ? 0 : 1)).slice(0, 5);
 
     if (currentRole === "all") {
-      countEl.textContent = filtered.length + " counter alami";
+      countEl.textContent = t("hero.naturalCount", { n: filtered.length });
     } else {
-      countEl.textContent = filtered.length + " counter · role " + ROLE_LABEL[currentRole];
+      countEl.textContent = t("hero.roleCount", { n: filtered.length, role: ROLE_LABEL[currentRole] });
     }
 
     if (!filtered.length) {
-      listEl.appendChild(el("p", "mut", "Tidak ada counter alami untuk role " + ROLE_LABEL[currentRole] + "."));
+      listEl.appendChild(el("p", "mut", t("hero.noRoleCounter", { role: ROLE_LABEL[currentRole] })));
       return;
     }
 
@@ -570,15 +620,15 @@ function renderHero(slugName) {
   colA.appendChild(listEl);
   paintCounters();
 
-  colB.appendChild(el("h2", null, "Counter item"));
+  colB.appendChild(el("h2", null, t("bedah.items")));
   if (!h.itemCounters || !h.itemCounters.length) {
-    colB.appendChild(el("p", "mut", "Belum ada data"));
+    colB.appendChild(el("p", "mut", t("hero.noData")));
   } else for (const c of h.itemCounters) {
     const card = el("div", "card");
     const row = el("div", "row");
     row.appendChild(el("b", null, c.items));
-    if (c.needsReview) row.appendChild(el("span", "tag", "belum dikurasi"));
-    else row.appendChild(el("span", "tag ok", "terkurasi"));
+    if (c.needsReview) row.appendChild(el("span", "tag", t("hero.needsReview")));
+    else row.appendChild(el("span", "tag ok", t("hero.curated")));
     card.appendChild(row);
     const pl = itemPriceLine(c.items);
     if (pl) card.appendChild(el("p", "mut iprice", pl));
@@ -587,11 +637,11 @@ function renderHero(slugName) {
   }
 
   if (h.howToPlayAgainst) {
-    colB.appendChild(el("h2", null, "Cara melawan"));
+    colB.appendChild(el("h2", null, t("bedah.howTo")));
     colB.appendChild(el("p", null, h.howToPlayAgainst));
   }
 
-  const usulBtn = el("button", "favbtn", "Usulkan / laporkan");
+  const usulBtn = el("button", "favbtn", t("hero.suggestBtn"));
   usulBtn.id = "usulbtn";
   usulBtn.type = "button";
   colB.appendChild(usulBtn);
@@ -601,11 +651,11 @@ function renderHero(slugName) {
   const form = el("form");
   form.id = "usulF";
   form.method = "dialog";
-  form.appendChild(el("h2", null, "Usulan untuk " + h.en));
+  form.appendChild(el("h2", null, t("suggest.titleFor", { name: h.en })));
   const fs = document.createElement("fieldset");
   fs.className = "kind";
-  fs.appendChild(el("legend", "mut", "Jenis"));
-  for (const [v, label] of [["hero", "Counter hero"], ["item", "Counter item"], ["error", "Data salah"]]) {
+  fs.appendChild(el("legend", "mut", t("suggest.kind")));
+  for (const [v, label] of [["hero", t("suggest.kindHero")], ["item", t("suggest.kindItem")], ["error", t("suggest.kindError")]]) {
     const lab = el("label");
     const radio = document.createElement("input");
     radio.type = "radio"; radio.name = "kind"; radio.value = v;
@@ -615,11 +665,11 @@ function renderHero(slugName) {
     fs.appendChild(lab);
   }
   form.appendChild(fs);
-  const fHero = el("label", "f", "Hero counter");
+  const fHero = el("label", "f", t("suggest.heroCounter"));
   fHero.dataset.for = "hero";
   const sel = document.createElement("select");
   sel.name = "counter";
-  sel.appendChild(el("option", null, "Pilih hero…")).value = "";
+  sel.appendChild(el("option", null, t("suggest.selectHero"))).value = "";
   for (const x of HEROES) {
     if (x.id === h.id) continue;
     const o = el("option", null, x.en);
@@ -628,14 +678,14 @@ function renderHero(slugName) {
   }
   fHero.appendChild(sel);
   form.appendChild(fHero);
-  const fItem = el("label", "f", "Item");
+  const fItem = el("label", "f", t("nav.dockItems"));
   fItem.dataset.for = "item"; fItem.hidden = true;
   const itemInput = document.createElement("input");
   itemInput.type = "text"; itemInput.name = "items";
-  itemInput.placeholder = "Contoh: Overlord's Might";
+  itemInput.placeholder = t("suggest.itemPlaceholder");
   fItem.appendChild(itemInput);
   form.appendChild(fItem);
-  const fNote = el("label", "f", "Catatan");
+  const fNote = el("label", "f", t("suggest.note"));
   const note = document.createElement("textarea");
   note.name = "note"; note.rows = 3;
   fNote.appendChild(note);
@@ -644,9 +694,9 @@ function renderHero(slugName) {
   msg.id = "usulMsg";
   form.appendChild(msg);
   const rowBtn = el("div", "row");
-  const closeBtn = el("button", "x", "Tutup");
+  const closeBtn = el("button", "x", t("common.close"));
   closeBtn.id = "usulX"; closeBtn.type = "button";
-  const sendBtn = el("button", "send", "Kirim");
+  const sendBtn = el("button", "send", t("suggest.sendBtn"));
   sendBtn.type = "submit";
   rowBtn.appendChild(closeBtn);
   rowBtn.appendChild(sendBtn);
@@ -682,7 +732,7 @@ function renderHero(slugName) {
     } catch {}
 
     sendBtn.disabled = true;
-    msg.textContent = "Mengirim usulan…";
+    msg.textContent = t("suggest.sending");
 
     let messageBody = "[Hero: " + h.en + " (ID " + h.id + ")] Jenis: " + kind;
     if (counterHero) messageBody += " | Counter: " + counterHero + " (ID " + counterId + ")";
@@ -695,9 +745,9 @@ function renderHero(slugName) {
     if (res && res.error) {
       msg.textContent = res.error;
     } else if (res && res.queued) {
-      msg.textContent = "Usulan disimpan di antrean perangkat dan dikirim otomatis saat online. Makasih!";
+      msg.textContent = t("suggest.queuedToast");
     } else {
-      msg.textContent = "Usulan berhasil dikirim ke server Lawanku. Makasih!";
+      msg.textContent = t("suggest.successToast");
     }
   });
   syncKind();
@@ -1383,10 +1433,10 @@ function openSyncModal() {
     dlg.replaceChildren();
 
     const head = el("div", "dlg-head");
-    head.appendChild(el("h2", null, "Sinkronisasi Perangkat"));
+    head.appendChild(el("h2", null, t("sync.modalTitle")));
     const closeBtn = el("button", "x", "×");
     closeBtn.type = "button";
-    closeBtn.setAttribute("aria-label", "Tutup dialog sinkronisasi");
+    closeBtn.setAttribute("aria-label", t("common.close"));
     closeBtn.onclick = () => dlg.close();
     head.appendChild(closeBtn);
     dlg.appendChild(head);
@@ -1395,15 +1445,15 @@ function openSyncModal() {
 
     if (!accountId) {
       // STATE 1: BELUM TERHUBUNG
-      const desc = el("p", "mut", "Sinkronkan daftar Favorit dan simpanan Draft antar perangkat kamu secara otomatis (Cloudflare Workers + D1). Tanpa akun password.");
+      const desc = el("p", "mut", t("sync.descNotConnected"));
       dlg.appendChild(desc);
 
       const secGen = el("div", "card");
-      secGen.appendChild(el("b", null, "1. Minta Kode Pairing"));
-      secGen.appendChild(el("p", "mut why", "Buat kode 6 digit untuk menghubungkan perangkat ini dengan perangkat baru."));
+      secGen.appendChild(el("b", null, t("sync.secGenTitle")));
+      secGen.appendChild(el("p", "mut why", t("sync.secGenDesc")));
 
       const genArea = el("div");
-      const genBtn = el("button", "btn-acc", "Minta Kode Pairing");
+      const genBtn = el("button", "btn-acc", t("sync.newCodeBtn"));
       genBtn.type = "button";
       genArea.appendChild(genBtn);
       secGen.appendChild(genArea);
@@ -1411,7 +1461,7 @@ function openSyncModal() {
 
       genBtn.onclick = async () => {
         genBtn.disabled = true;
-        genBtn.textContent = "Menghubungkan ke server…";
+        genBtn.textContent = t("sync.connecting");
         try {
           const res = await fetch(API_BASE + "/api/pair", {
             method: "POST",
@@ -1427,24 +1477,24 @@ function openSyncModal() {
           showCodeDisplay(genArea, data.code, data.expiresIn || 600);
         } catch (err) {
           genBtn.disabled = false;
-          genBtn.textContent = "Minta Kode Pairing";
+          genBtn.textContent = t("sync.newCodeBtn");
           alert("Gagal: " + (err.message || "Koneksi bermasalah"));
         }
       };
 
       const secClaim = el("div", "card");
-      secClaim.appendChild(el("b", null, "2. Atau Punya Kode dari Perangkat Lain?"));
-      secClaim.appendChild(el("p", "mut why", "Masukkan kode 6 digit yang tampil di perangkat kamu yang lain:"));
+      secClaim.appendChild(el("b", null, t("sync.enterCodeTitle")));
+      secClaim.appendChild(el("p", "mut why", t("sync.secClaimDesc")));
 
       const claimForm = el("form", "sync-input-row");
       const inp = document.createElement("input");
       inp.type = "text";
       inp.maxLength = 6;
-      inp.placeholder = "KODE6X";
-      inp.setAttribute("aria-label", "Kode pairing 6 digit");
+      inp.placeholder = t("sync.codePlaceholder");
+      inp.setAttribute("aria-label", t("sync.codePlaceholder"));
       inp.autocomplete = "off";
 
-      const subBtn = el("button", "btn-acc", "Hubungkan");
+      const subBtn = el("button", "btn-acc", t("sync.claimBtn"));
       subBtn.type = "submit";
       claimForm.appendChild(inp);
       claimForm.appendChild(subBtn);
@@ -1458,12 +1508,12 @@ function openSyncModal() {
         e.preventDefault();
         const code = inp.value.trim().toUpperCase();
         if (!code || code.length !== 6) {
-          claimMsg.textContent = "Masukkan 6 karakter kode pairing.";
+          claimMsg.textContent = t("sync.enter6Chars");
           claimMsg.style.color = "var(--hard)";
           return;
         }
         subBtn.disabled = true;
-        subBtn.textContent = "Mengecek…";
+        subBtn.textContent = t("sync.checking");
         claimMsg.textContent = "";
 
         try {
@@ -1478,14 +1528,14 @@ function openSyncModal() {
           }
           setSyncAccount(data.accountId);
           claimMsg.style.color = "var(--soft)";
-          claimMsg.textContent = "Berhasil terhubung! Menyinkronkan data…";
+          claimMsg.textContent = t("sync.claimSuccess");
           await syncPull();
           setTimeout(() => {
             renderModalContent();
           }, 800);
         } catch (err) {
           subBtn.disabled = false;
-          subBtn.textContent = "Hubungkan";
+          subBtn.textContent = t("sync.claimBtn");
           claimMsg.style.color = "var(--hard)";
           claimMsg.textContent = "Gagal: " + (err.message || "Periksa kembali kode.");
         }
@@ -1497,14 +1547,14 @@ function openSyncModal() {
       // STATE 2: SUDAH TERHUBUNG (PERINGATAN: JANGAN PERNAH TAMPILKAN accountId DI LAYAR)
       const card = el("div", "sync-status-card");
       const badgeRow = el("div", "row");
-      const badge = el("span", "sync-badge", "● Terhubung ke Cloud");
+      const badge = el("span", "sync-badge", t("sync.connectedStatus"));
       badgeRow.appendChild(badge);
       card.appendChild(badgeRow);
 
       const ts = getLastSyncUpdated();
-      const timeStr = ts ? new Date(ts).toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" }) : "Belum pernah";
-      const infoP = el("p", "mut", "Perangkat ini aktif tersinkronisasi. Favorit & Draft tersimpan aman di Cloudflare D1.");
-      const syncInfo = el("small", "mut", "Terakhir sinkron: " + timeStr);
+      const timeStr = ts ? new Date(ts).toLocaleString((typeof getLang === "function" && getLang() === "en") ? "en-US" : "id-ID", { dateStyle: "medium", timeStyle: "short" }) : t("sync.never");
+      const infoP = el("p", "mut", t("sync.infoConnected"));
+      const syncInfo = el("small", "mut", t("sync.lastSync", { time: timeStr }));
       card.appendChild(infoP);
       card.appendChild(syncInfo);
       dlg.appendChild(card);
@@ -1514,19 +1564,19 @@ function openSyncModal() {
       actRow.style.gap = "8px";
       actRow.style.marginTop = "12px";
 
-      const manualBtn = el("button", "btn-acc", "Sinkronkan Sekarang");
+      const manualBtn = el("button", "btn-acc", t("sync.syncNow"));
       manualBtn.type = "button";
       manualBtn.onclick = async () => {
         manualBtn.disabled = true;
-        manualBtn.textContent = "Menyinkronkan…";
+        manualBtn.textContent = t("sync.syncing");
         await syncPull();
         manualBtn.disabled = false;
-        manualBtn.textContent = "Tersinkron!";
+        manualBtn.textContent = t("sync.synced");
         setTimeout(() => renderModalContent(), 600);
       };
       actRow.appendChild(manualBtn);
 
-      const addDevBtn = el("button", "btn-sec", "Tambah Perangkat Baru");
+      const addDevBtn = el("button", "btn-sec", t("sync.addNewDevice"));
       addDevBtn.type = "button";
       actRow.appendChild(addDevBtn);
 
@@ -1538,7 +1588,7 @@ function openSyncModal() {
 
       addDevBtn.onclick = async () => {
         addDevBtn.disabled = true;
-        addDevBtn.textContent = "Membuat kode…";
+        addDevBtn.textContent = t("sync.creatingCode");
         try {
           const res = await fetch(API_BASE + "/api/pair", {
             method: "POST",
@@ -1551,7 +1601,7 @@ function openSyncModal() {
           addDevBtn.hidden = true;
         } catch (err) {
           addDevBtn.disabled = false;
-          addDevBtn.textContent = "Tambah Perangkat Baru";
+          addDevBtn.textContent = t("sync.addNewDevice");
           alert("Gagal: " + err.message);
         }
       };
@@ -1560,11 +1610,11 @@ function openSyncModal() {
       discSec.style.marginTop = "24px";
       discSec.style.borderTop = "1px solid var(--line)";
       discSec.style.paddingTop = "12px";
-      const discBtn = el("button", "mini", "Putus Sambungan Perangkat Ini");
+      const discBtn = el("button", "mini", t("sync.disconnectBtn"));
       discBtn.type = "button";
       discBtn.style.color = "var(--hard)";
       discBtn.onclick = () => {
-        if (confirm("Putus sambungan perangkat ini dari sinkronisasi cloud? Data lokal di perangkat ini tidak akan dihapus.")) {
+        if (confirm(t("sync.disconnectConfirm"))) {
           setSyncAccount(null);
           setLastSyncUpdated(0);
           renderModalContent();
@@ -1578,42 +1628,43 @@ function openSyncModal() {
   function showCodeDisplay(container, code, expiresInSec) {
     container.replaceChildren();
     const box = el("div", "sync-code-box");
-    box.appendChild(el("b", null, "KODE PAIRING PERANGKAT:"));
+    box.appendChild(el("b", null, t("sync.codeLabel")));
     const val = el("div", "sync-code-val", code);
     box.appendChild(val);
 
     let secLeft = expiresInSec;
-    const timerTxt = el("small", "mut", "Berlaku " + Math.floor(secLeft / 60) + ":" + String(secLeft % 60).padStart(2, "0"));
+    const formatTime = (s) => Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+    const timerTxt = el("small", "mut", t("sync.expiresIn", { time: formatTime(secLeft) }));
     box.appendChild(timerTxt);
 
     countdownTimer = setInterval(() => {
       secLeft--;
       if (secLeft <= 0) {
         clearInterval(countdownTimer);
-        timerTxt.textContent = "Kode sudah kedaluwarsa. Silakan minta kode baru.";
+        timerTxt.textContent = t("sync.expired");
         timerTxt.style.color = "var(--hard)";
       } else {
-        timerTxt.textContent = "Berlaku " + Math.floor(secLeft / 60) + ":" + String(secLeft % 60).padStart(2, "0");
+        timerTxt.textContent = t("sync.expiresIn", { time: formatTime(secLeft) });
       }
     }, 1000);
 
-    const btnSalin = el("button", "btn-sec", "Salin Kode");
+    const btnSalin = el("button", "btn-sec", t("sync.copyCode"));
     btnSalin.type = "button";
     btnSalin.style.marginTop = "8px";
     btnSalin.onclick = () => {
       if (navigator.clipboard) {
         navigator.clipboard.writeText(code).then(() => {
-          btnSalin.textContent = "Tersalin!";
-          setTimeout(() => { btnSalin.textContent = "Salin Kode"; }, 2000);
+          btnSalin.textContent = t("sync.copied");
+          setTimeout(() => { btnSalin.textContent = t("sync.copyCode"); }, 2000);
         }).catch(() => {
-          prompt("Salin kode pairing:", code);
+          prompt(t("sync.copyCode") + ":", code);
         });
       } else {
-        prompt("Salin kode pairing:", code);
+        prompt(t("sync.copyCode") + ":", code);
       }
     };
     box.appendChild(btnSalin);
-    const hint = el("p", "mut why", "Buka Lawanku di perangkat lain → buka Sinkronisasi → masukkan kode ini di kolom 'Punya Kode dari Perangkat Lain'.");
+    const hint = el("p", "mut why", t("sync.hintInstruction"));
     hint.style.fontSize = "13px";
     hint.style.marginTop = "8px";
     box.appendChild(hint);
@@ -1744,7 +1795,7 @@ function drawDraftCard(canvas, draftState, imgMap) {
   drawRoundRect(ctx, 40, 84, 545, 336, 12, "#0b1220", "#1e293b");
   ctx.fillStyle = "#38bdf8";
   ctx.font = "800 15px 'Outfit', sans-serif";
-  ctx.fillText("TIM KITA", 58, 112);
+  ctx.fillText(t("share.canvasOurTeam"), 58, 112);
 
   for (let i = 0; i < 5; i++) {
     const sy = 128 + i * 55;
@@ -1762,7 +1813,7 @@ function drawDraftCard(canvas, draftState, imgMap) {
     } else {
       ctx.fillStyle = "#475569";
       ctx.font = "500 13px 'Inter', sans-serif";
-      ctx.fillText("+ Slot Kosong", 72, sy + 30);
+      ctx.fillText(t("share.canvasEmptySlot"), 72, sy + 30);
     }
   }
 
@@ -1770,7 +1821,7 @@ function drawDraftCard(canvas, draftState, imgMap) {
   drawRoundRect(ctx, 615, 84, 545, 336, 12, "#180f19", "#341724");
   ctx.fillStyle = "#ef4444";
   ctx.font = "800 15px 'Outfit', sans-serif";
-  ctx.fillText("TIM MUSUH", 633, 112);
+  ctx.fillText(t("share.canvasEnemyTeam"), 633, 112);
 
   for (let i = 0; i < 5; i++) {
     const sy = 128 + i * 55;
@@ -1788,7 +1839,7 @@ function drawDraftCard(canvas, draftState, imgMap) {
     } else {
       ctx.fillStyle = "#475569";
       ctx.font = "500 13px 'Inter', sans-serif";
-      ctx.fillText("+ Slot Kosong", 647, sy + 30);
+      ctx.fillText(t("share.canvasEmptySlot"), 647, sy + 30);
     }
   }
 
@@ -1805,13 +1856,13 @@ function drawDraftCard(canvas, draftState, imgMap) {
   // Bottom Left: Saran Pick Counter
   ctx.fillStyle = "#f59e0b";
   ctx.font = "800 14px 'Outfit', sans-serif";
-  ctx.fillText("⚔ TOP COUNTER LAWAN MUSUH", 58, 460);
+  ctx.fillText(t("share.canvasTopCounters"), 58, 460);
 
   const topCounters = draftSuggestions(null, 3);
   if (!topCounters.length) {
     ctx.fillStyle = "#64748b";
     ctx.font = "500 13px 'Inter', sans-serif";
-    ctx.fillText("Pilih hero musuh di atas untuk melihat saran counter.", 58, 500);
+    ctx.fillText(t("share.canvasPromptPickEnemy"), 58, 500);
   } else {
     for (let i = 0; i < topCounters.length; i++) {
       const s = topCounters[i];
@@ -1836,13 +1887,13 @@ function drawDraftCard(canvas, draftState, imgMap) {
   // Bottom Right: Saran Item Counter
   ctx.fillStyle = "#38bdf8";
   ctx.font = "800 14px 'Outfit', sans-serif";
-  ctx.fillText("🛡 SARAN ITEM ANTI-MUSUH", 620, 460);
+  ctx.fillText(t("share.canvasItemAdvice"), 620, 460);
 
   const topItems = itemSuggestions();
   if (!topItems.length) {
     ctx.fillStyle = "#64748b";
     ctx.font = "500 13px 'Inter', sans-serif";
-    ctx.fillText("Pilih hero musuh di atas untuk melihat rekomendasi item counter.", 620, 500);
+    ctx.fillText(t("share.canvasPromptItemEnemy"), 620, 500);
   } else {
     for (let i = 0; i < topItems.length; i++) {
       const it = topItems[i];
@@ -1853,11 +1904,11 @@ function drawDraftCard(canvas, draftState, imgMap) {
 
       ctx.fillStyle = "#f59e0b";
       ctx.font = "600 11px 'Inter', sans-serif";
-      ctx.fillText("lawan " + it.n + " hero", 620 + ctx.measureText(it.items).width + 8, iy + 15);
+      ctx.fillText(t("share.canvasVsCount", { n: it.n }), 620 + ctx.measureText(it.items).width + 8, iy + 15);
 
       ctx.fillStyle = "#94a3b8";
       ctx.font = "500 11px 'Inter', sans-serif";
-      const vsText = "Lawan: " + (it.vs || []).join(", ");
+      const vsText = t("share.canvasVsList", { list: (it.vs || []).join(", ") });
       ctx.fillText(vsText.length > 58 ? vsText.slice(0, 55) + "…" : vsText, 620, iy + 30);
     }
   }
@@ -1865,7 +1916,7 @@ function drawDraftCard(canvas, draftState, imgMap) {
   // 6. Footer
   ctx.fillStyle = "#64748b";
   ctx.font = "500 11px 'Inter', sans-serif";
-  ctx.fillText("Dibuat otomatis di lawanku.vercel.app · Draft pick, counter hero, item & meta Honor of Kings", 40, 652);
+  ctx.fillText(t("share.canvasFooter"), 40, 652);
 }
 
 function drawHeroCounterCard(canvas, hero, imgMap) {
@@ -1896,7 +1947,7 @@ function drawHeroCounterCard(canvas, hero, imgMap) {
 
   ctx.fillStyle = "#94a3b8";
   ctx.font = "600 13px 'Inter', sans-serif";
-  ctx.fillText("BEDAH COUNTER HERO · " + hero.en.toUpperCase(), 195, 47);
+  ctx.fillText(t("share.canvasHeroTitle", { name: hero.en.toUpperCase() }), 195, 47);
 
   ctx.fillStyle = "#38bdf8";
   ctx.font = "700 14px 'Inter', sans-serif";
@@ -1927,7 +1978,7 @@ function drawHeroCounterCard(canvas, hero, imgMap) {
   drawRoundRect(ctx, 58, 200, 424, 410, 8, "#131b2e", "#1e293b");
   ctx.fillStyle = "#f59e0b";
   ctx.font = "800 14px 'Outfit', sans-serif";
-  ctx.fillText("CARA MELAWAN", 74, 230);
+  ctx.fillText(t("share.canvasHowTo"), 74, 230);
 
   ctx.fillStyle = "#cbd5e1";
   ctx.font = "500 14px 'Inter', sans-serif";
@@ -1939,13 +1990,13 @@ function drawHeroCounterCard(canvas, hero, imgMap) {
   // Natural Counters Section
   ctx.fillStyle = "#10b981";
   ctx.font = "800 15px 'Outfit', sans-serif";
-  ctx.fillText("COUNTER ALAMI", 544, 112);
+  ctx.fillText(t("share.canvasNaturalCounters"), 544, 112);
 
   const counters = (hero.naturalCounters || []).slice(0, 4);
   if (!counters.length) {
     ctx.fillStyle = "#64748b";
     ctx.font = "500 13px 'Inter', sans-serif";
-    ctx.fillText("Tidak ada data counter alami.", 544, 140);
+    ctx.fillText(t("share.canvasNoNatural"), 544, 140);
   } else {
     for (let i = 0; i < counters.length; i++) {
       const c = counters[i];
@@ -1961,7 +2012,7 @@ function drawHeroCounterCard(canvas, hero, imgMap) {
       const isHard = c.strength === "hard";
       ctx.fillStyle = isHard ? "#ef4444" : "#10b981";
       ctx.font = "700 12px 'Inter', sans-serif";
-      ctx.fillText(isHard ? "Hard Counter" : "Soft Counter", 604 + ctx.measureText(ch ? ch.en : "").width + 10, cy + 24);
+      ctx.fillText(isHard ? t("share.canvasHardBadge") : t("share.canvasSoftBadge"), 604 + ctx.measureText(ch ? ch.en : "").width + 10, cy + 24);
 
       ctx.fillStyle = "#94a3b8";
       ctx.font = "500 11px 'Inter', sans-serif";
@@ -1973,13 +2024,13 @@ function drawHeroCounterCard(canvas, hero, imgMap) {
   // Item Counters Section (y: 395)
   ctx.fillStyle = "#38bdf8";
   ctx.font = "800 15px 'Outfit', sans-serif";
-  ctx.fillText("COUNTER ITEM", 544, 400);
+  ctx.fillText(t("share.canvasItemCounters"), 544, 400);
 
   const items = (hero.itemCounters || []).slice(0, 2);
   if (!items.length) {
     ctx.fillStyle = "#64748b";
     ctx.font = "500 13px 'Inter', sans-serif";
-    ctx.fillText("Hero ini tidak membutuhkan paket item khusus.", 544, 430);
+    ctx.fillText(t("share.canvasNoItems"), 544, 430);
   } else {
     for (let i = 0; i < items.length; i++) {
       const it = items[i];
@@ -2002,7 +2053,7 @@ function drawHeroCounterCard(canvas, hero, imgMap) {
   // Footer
   ctx.fillStyle = "#64748b";
   ctx.font = "500 11px 'Inter', sans-serif";
-  ctx.fillText("Dibuat otomatis di lawanku.vercel.app · Draft pick, counter hero, item & meta Honor of Kings", 40, 652);
+  ctx.fillText(t("share.canvasFooter"), 40, 652);
 }
 
 let shareDlgEl = null;
@@ -2016,7 +2067,7 @@ function openShareModal(title, renderFn) {
     head.appendChild(h2);
     const x = el("button", "x", "×");
     x.type = "button";
-    x.setAttribute("aria-label", "Tutup");
+    x.setAttribute("aria-label", t("common.close"));
     x.addEventListener("click", () => shareDlgEl.close());
     head.appendChild(x);
     shareDlgEl.appendChild(head);
@@ -2026,9 +2077,9 @@ function openShareModal(title, renderFn) {
     shareDlgEl.appendChild(prevWrap);
 
     const actRow = el("div", "share-actions");
-    const dlBtn = el("button", "btn-acc", "Unduh PNG");
+    const dlBtn = el("button", "btn-acc", t("share.downloadPng"));
     dlBtn.id = "sharecard-dl"; dlBtn.type = "button";
-    const copyBtn = el("button", "all", "Salin Gambar");
+    const copyBtn = el("button", "all", t("share.copyImage"));
     copyBtn.id = "sharecard-copy"; copyBtn.type = "button";
     actRow.appendChild(dlBtn);
     actRow.appendChild(copyBtn);
@@ -2045,7 +2096,7 @@ function openShareModal(title, renderFn) {
   if (h2) h2.textContent = title;
   const prevWrap = $("#sharecard-preview", shareDlgEl);
   prevWrap.replaceChildren();
-  const loading = el("p", "mut", "Membuat kartu gambar…");
+  const loading = el("p", "mut", t("share.rendering"));
   loading.id = "sharecard-loading";
   prevWrap.appendChild(loading);
 
@@ -2069,7 +2120,7 @@ function openShareModal(title, renderFn) {
         a.click();
         a.remove();
         if (msg) {
-          msg.textContent = "Gambar berhasil diunduh! ✓";
+          msg.textContent = t("share.downloaded");
           setTimeout(() => { if (msg) msg.textContent = ""; }, 3000);
         }
       } catch (err) {
@@ -2088,15 +2139,15 @@ function openShareModal(title, renderFn) {
           try {
             await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
             if (msg) {
-              msg.textContent = "Gambar berhasil disalin ke clipboard! ✓";
+              msg.textContent = t("share.copied");
               setTimeout(() => { if (msg) msg.textContent = ""; }, 3000);
             }
           } catch (e) {
-            if (msg) msg.textContent = "Browser tidak mengizinkan salin langsung — silakan gunakan 'Unduh PNG'.";
+            if (msg) msg.textContent = t("share.copyFail");
           }
         }, "image/png");
       } else {
-        if (msg) msg.textContent = "Fitur salin gambar tidak didukung di browser ini — silakan gunakan 'Unduh PNG'.";
+        if (msg) msg.textContent = t("share.copyUnsupported");
       }
     };
   }).catch(err => {
@@ -2105,7 +2156,7 @@ function openShareModal(title, renderFn) {
 }
 
 function showDraftShareCard(draftState) {
-  openShareModal("Kartu Draft Pick", async (canvas) => {
+  openShareModal(t("share.draftCardTitle"), async (canvas) => {
     const ids = new Set([
       ...draftState.ally.filter(Boolean),
       ...draftState.enemy.filter(Boolean),
@@ -2122,7 +2173,7 @@ function showDraftShareCard(draftState) {
 }
 
 function showHeroShareCard(hero) {
-  openShareModal("Kartu Counter " + hero.en, async (canvas) => {
+  openShareModal(t("share.heroCardTitle", { name: hero.en }), async (canvas) => {
     const ids = new Set([
       hero.id,
       ...(hero.naturalCounters || []).map(c => c.hero)
@@ -2141,7 +2192,7 @@ let draft5v5BotTimeout = null;
 let selected5v5SlotIdx = null;
 
 function renderDraft() {
-  document.title = "Draft — Lawanku";
+  document.title = (typeof getLang === "function" && getLang() === "en") ? "Draft Pick — Lawanku" : "Draft — Lawanku";
   if (draft5v5Timer) { clearInterval(draft5v5Timer); draft5v5Timer = null; }
   if (draft5v5BotTimeout) { clearTimeout(draft5v5BotTimeout); draft5v5BotTimeout = null; }
 
@@ -2157,7 +2208,7 @@ function renderDraft() {
   }
   const main = $("#main");
   main.replaceChildren();
-  main.appendChild(el("h1", null, "Draft Pick"));
+  main.appendChild(el("h1", null, t("draft.heading")));
 
   let game5v5 = loadDraft5v5Game();
   const is5v5 = !!(game5v5 && game5v5.active);
@@ -2167,16 +2218,16 @@ function renderDraft() {
 
   // Saklar mode: Sandbox Bebas vs 5v5 vs Bot
   const modeBar = el("div", "draft-mode-bar");
-  const modeLbl = el("span", "lbl", "Mode:");
+  const modeLbl = el("span", "lbl", t("draft.modeLabel"));
   modeLbl.style.margin = "0";
-  const btnSandbox = el("button", "mode-btn" + (!is5v5 ? " on" : ""), "Sandbox Bebas");
+  const btnSandbox = el("button", "mode-btn" + (!is5v5 ? " on" : ""), t("draft.sandboxMode"));
   btnSandbox.type = "button";
-  const btn5v5 = el("button", "mode-btn" + (is5v5 ? " on" : ""), "5v5 vs Bot");
+  const btn5v5 = el("button", "mode-btn" + (is5v5 ? " on" : ""), t("draft.fivev5Mode"));
   btn5v5.type = "button";
 
   btnSandbox.addEventListener("click", () => {
     if (is5v5) {
-      if (confirm("Keluar dari latihan 5v5 vs Bot? Progres latihan saat ini akan direset.")) {
+      if (confirm(t("draft.exit5v5Confirm"))) {
         clearDraft5v5Game();
         renderDraft();
       }
@@ -2187,7 +2238,7 @@ function renderDraft() {
     if (!is5v5) {
       const hasHeroes = [...draft.ally, ...draft.enemy, ...draft.ban].some(Boolean);
       if (hasHeroes) {
-        if (!confirm("Mulai latihan 5v5 vs Bot? Papan draft saat ini akan dikosongkan.")) return;
+        if (!confirm(t("draft.start5v5Confirm"))) return;
       }
       for (const t of ["ally", "enemy", "ban"]) draft[t].fill(null);
       draft.history.length = 0;
@@ -2214,17 +2265,17 @@ function renderDraft() {
       const tally = computeDraft5v5Tally(draft);
       const resCard = el("div", "draft-5v5-result");
       const resHead = el("div", "draft-5v5-banner-head");
-      resHead.appendChild(el("div", "draft-5v5-title", "🎉 Draft 5v5 Selesai!"));
+      resHead.appendChild(el("div", "draft-5v5-title", t("fivev5.finishedTitle")));
       resCard.appendChild(resHead);
 
-      const resDesc = el("p", "draft-5v5-info", "Seluruh 16 giliran draft telah selesai. Berikut evaluasi counter faktual antara tim kamu dan bot:");
+      const resDesc = el("p", "draft-5v5-info", t("fivev5.finishedDesc"));
       resCard.appendChild(resDesc);
 
       const tallyGrid = el("div", "draft-5v5-tally");
       const allyBox = el("div", "draft-5v5-tally-box");
-      allyBox.appendChild(el("div", "draft-5v5-tally-title", "👤 Tim Kamu"));
-      allyBox.appendChild(el("div", "draft-5v5-tally-stat", "Hard counter dihasilkan: " + tally.allyHard));
-      allyBox.appendChild(el("div", "draft-5v5-tally-stat", "Soft counter dihasilkan: " + tally.allySoft));
+      allyBox.appendChild(el("div", "draft-5v5-tally-title", t("fivev5.yourTeam")));
+      allyBox.appendChild(el("div", "draft-5v5-tally-stat", t("fivev5.hardGenerated", { n: tally.allyHard })));
+      allyBox.appendChild(el("div", "draft-5v5-tally-stat", t("fivev5.softGenerated", { n: tally.allySoft })));
       if (tally.allyDetails.length) {
         const list = el("ul", "draft-5v5-tally-list");
         for (const d of tally.allyDetails) list.appendChild(el("li", null, d));
@@ -2233,9 +2284,9 @@ function renderDraft() {
       tallyGrid.appendChild(allyBox);
 
       const botBox = el("div", "draft-5v5-tally-box");
-      botBox.appendChild(el("div", "draft-5v5-tally-title", "🤖 Tim Bot"));
-      botBox.appendChild(el("div", "draft-5v5-tally-stat", "Hard counter dihasilkan: " + tally.botHard));
-      botBox.appendChild(el("div", "draft-5v5-tally-stat", "Soft counter dihasilkan: " + tally.botSoft));
+      botBox.appendChild(el("div", "draft-5v5-tally-title", t("fivev5.botTeam")));
+      botBox.appendChild(el("div", "draft-5v5-tally-stat", t("fivev5.hardGenerated", { n: tally.botHard })));
+      botBox.appendChild(el("div", "draft-5v5-tally-stat", t("fivev5.softGenerated", { n: tally.botSoft })));
       if (tally.botDetails.length) {
         const list = el("ul", "draft-5v5-tally-list");
         for (const d of tally.botDetails) list.appendChild(el("li", null, d));
@@ -2245,7 +2296,7 @@ function renderDraft() {
       resCard.appendChild(tallyGrid);
 
       const actRow = el("div", "share-row");
-      const playAgainBtn = el("button", "btn-acc", "Main Lagi");
+      const playAgainBtn = el("button", "btn-acc", t("fivev5.playAgain"));
       playAgainBtn.type = "button";
       playAgainBtn.addEventListener("click", () => {
         for (const t of ["ally", "enemy", "ban"]) draft[t].fill(null);
@@ -2260,15 +2311,16 @@ function renderDraft() {
         });
         renderDraft();
       });
-      const saveResultBtn = el("button", "all", "Simpan Draft");
+      const saveResultBtn = el("button", "all", t("fivev5.saveDraft"));
       saveResultBtn.type = "button";
       saveResultBtn.addEventListener("click", () => {
         const list = loadSavedDrafts();
-        const name = "5v5 vs Bot (" + new Date().toLocaleDateString("id-ID") + ")";
+        const dateStr = new Date().toLocaleDateString((typeof getLang === "function" && getLang() === "en") ? "en-US" : "id-ID");
+        const name = "5v5 vs Bot (" + dateStr + ")";
         list.unshift({ name, savedAt: Date.now(), ally: [...draft.ally], enemy: [...draft.enemy], ban: [...draft.ban] });
         storeSavedDrafts(list.slice(0, 12));
         paintSaved();
-        alert("Draft 5v5 tersimpan di riwayat draft!");
+        alert(t("fivev5.saveSuccess"));
       });
       actRow.appendChild(playAgainBtn);
       actRow.appendChild(saveResultBtn);
@@ -2279,17 +2331,17 @@ function renderDraft() {
       const banner = el("div", "draft-5v5-banner");
       const bannerHead = el("div", "draft-5v5-banner-head");
       const titleTxt = currentTurn.who === "user"
-        ? ("👤 Giliran Kamu — " + currentTurn.label)
-        : ("🤖 Giliran Bot — " + currentTurn.label);
+        ? t("fivev5.turnUser", { label: currentTurn.label })
+        : t("fivev5.turnBot", { label: currentTurn.label });
       const titleEl = el("div", "draft-5v5-title", titleTxt);
       const timerEl = el("div", "draft-5v5-timer");
       timerEl.id = "draft-5v5-timer-val";
-      timerEl.textContent = currentTurn.who === "user" ? (game5v5.timerRemaining + "s") : "Bot memilih…";
+      timerEl.textContent = currentTurn.who === "user" ? (game5v5.timerRemaining + "s") : t("fivev5.botThinking");
 
-      const resetGameBtn = el("button", "btn-sm", "Reset Game");
+      const resetGameBtn = el("button", "btn-sm", t("fivev5.resetGame"));
       resetGameBtn.type = "button";
       resetGameBtn.addEventListener("click", () => {
-        if (confirm("Reset latihan 5v5 vs Bot?")) {
+        if (confirm(t("fivev5.resetConfirm"))) {
           for (const t of ["ally", "enemy", "ban"]) draft[t].fill(null);
           draft.history.length = 0;
           saveDraft();
@@ -2311,13 +2363,13 @@ function renderDraft() {
 
       const infoTxt = currentTurn.who === "user"
         ? (currentTurn.phase === "ban"
-            ? "Pilih 1 hero yang ingin kamu ban dari pool hero yang belum terpakai."
-            : "Pilih peran di Tim Kamu (Farm/Mid/Jungle/Roam/Clash), lalu pilih hero yang sesuai.")
-        : "Bot sedang menganalisis counter terbaik berdasarkan data HoK Camp…";
+            ? t("fivev5.infoBanUser")
+            : t("fivev5.infoPickUser"))
+        : t("fivev5.infoBot");
       banner.appendChild(el("p", "draft-5v5-info", infoTxt));
 
       if (currentTurn.who === "user") {
-        const quickPickBtn = el("button", "btn-acc", currentTurn.phase === "ban" ? "Pilih Hero Ban" : "Pilih Hero Pick");
+        const quickPickBtn = el("button", "btn-acc", currentTurn.phase === "ban" ? t("fivev5.quickBan") : t("fivev5.quickPick"));
         quickPickBtn.type = "button";
         quickPickBtn.style.marginTop = "6px";
         quickPickBtn.addEventListener("click", () => {
@@ -2343,7 +2395,7 @@ function renderDraft() {
           const hName = hObj ? hObj.en : "Hero #" + entry.id;
           const roleStr = entry.role ? ` (${roleName(entry.role)})` : "";
           const itemEl = el("div", "draft-5v5-log-item");
-          const whoTag = entry.who === "user" ? "👤 Kamu" : "🤖 Bot";
+          const whoTag = entry.who === "user" ? ("👤 " + ((typeof getLang === "function" && getLang() === "en") ? "You" : "Kamu")) : "🤖 Bot";
           const actTag = entry.action === "ban" ? "Ban" : "Pick";
           itemEl.appendChild(el("span", null, `[${whoTag} ${actTag}]`));
           itemEl.appendChild(el("b", null, hName + roleStr));
@@ -2364,13 +2416,13 @@ function renderDraft() {
   const arena = el("div", "arena");
   const center = el("div", "arena-c");
   const teamSections = {};
-  for (const [team, label] of [["ally", "Tim kamu"], ["enemy", "Musuh"]]) {
+  for (const [team, label] of [["ally", t("draft.ally")], ["enemy", t("draft.enemy")]]) {
     const sec = el("section");
     sec.dataset.team = team;
     sec.classList.add(team === "ally" ? "arena-a" : "arena-e");
     sec.appendChild(el("h2", "lbl", label));
     for (let i = 0; i < 5; i++) {
-      const s = el("div", "slot empty", "+ pick");
+      const s = el("div", "slot empty", t("draft.emptySlot"));
       s.dataset.team = team; s.dataset.idx = String(i);
       s.tabIndex = 0; s.setAttribute("role", "button");
       s.setAttribute("aria-label", label + " slot " + (i + 1));
@@ -2379,7 +2431,7 @@ function renderDraft() {
     teamSections[team] = sec;
   }
   const banH = el("h2", "lbl");
-  banH.appendChild(document.createTextNode("Ban · "));
+  banH.appendChild(document.createTextNode(t("draft.ban") + " · "));
   const banN = el("span"); banN.id = "banN"; banN.textContent = "0";
   banH.appendChild(banN);
   banH.appendChild(document.createTextNode("/6"));
@@ -2401,7 +2453,7 @@ function renderDraft() {
   const seg = el("div", "seg");
   seg.setAttribute("role", "group");
   seg.setAttribute("aria-label", "Mode");
-  for (const [m, labelTxt] of [["ally", "Pick kamu"], ["enemy", "Pick musuh"], ["ban", "Ban"]]) {
+  for (const [m, labelTxt] of [["ally", t("draft.pickAlly")], ["enemy", t("draft.pickEnemy")], ["ban", t("draft.ban")]]) {
     const b = el("button", "m" + (m === mode ? " on" : ""), labelTxt);
     b.type = "button"; b.dataset.mode = m;
     b.setAttribute("aria-pressed", String(m === mode));
@@ -2417,7 +2469,7 @@ function renderDraft() {
   seg.appendChild(undoBtn);
   seg.appendChild(resetBtn);
   pickctl.appendChild(seg);
-  const openBtn = el("button", "btn-acc", "Pilih hero");
+  const openBtn = el("button", "btn-acc", t("draft.pickHero"));
   openBtn.type = "button";
   openBtn.prepend(icon("i-all"));
   openBtn.addEventListener("click", () => openPicker(true));
@@ -2445,9 +2497,9 @@ function renderDraft() {
   const sug = el("div");
   sug.id = "sug";
   sug.setAttribute("aria-live", "polite");
-  const noteEl = el("p", "note mut", "Tap slot buat pilih target, tap hero buat isi. Skor: hard +2, soft +1 per musuh.");
-  drow1.appendChild(dsec(el("h2", "lbl", "Saran ban"), banSug));
-  drow1.appendChild(dsec(el("h2", "lbl", "Saran pick"), sug, noteEl));
+  const noteEl = el("p", "note mut", t("draft.note"));
+  drow1.appendChild(dsec(el("h2", "lbl", t("draft.banSug")), banSug));
+  drow1.appendChild(dsec(el("h2", "lbl", t("draft.pickSug")), sug, noteEl));
   const roleWrap = roleButtons(myRole, (r) => {
     myRole = r;
     try { localStorage.setItem(ROLE_KEY, r); } catch {}
@@ -2464,19 +2516,19 @@ function renderDraft() {
   const itemSug = el("div");
   itemSug.id = "itemsug";
   itemSug.setAttribute("aria-live", "polite");
-  drow1.appendChild(dsec(el("h2", "lbl", "Role kamu"), roleWrap, el("h2", "lbl", "Saran pick buat role kamu"), roleSug));
-  drow1.appendChild(dsec(el("h2", "lbl", "Saran item lawan tim musuh"), itemSug));
+  drow1.appendChild(dsec(el("h2", "lbl", t("draft.myRole")), roleWrap, el("h2", "lbl", t("draft.roleSug")), roleSug));
+  drow1.appendChild(dsec(el("h2", "lbl", t("draft.itemSug")), itemSug));
   const comp = el("div", "comp");
   comp.id = "comp";
   const shareRow = el("div", "share-row");
-  const copyBtn = el("button", "btn-acc", "Salin link draft");
+  const copyBtn = el("button", "btn-acc", t("draft.copyLink"));
   copyBtn.id = "copylink"; copyBtn.type = "button";
-  const shareImgBtn = el("button", "all", "Bagikan sebagai gambar");
+  const shareImgBtn = el("button", "all", t("draft.shareImg"));
   shareImgBtn.id = "shareimgbtn"; shareImgBtn.type = "button";
   shareImgBtn.addEventListener("click", () => showDraftShareCard(draft));
   const copyMsg = el("span", "mut", "");
   copyMsg.id = "copymsg";
-  const syncDraftBtn = el("button", "all", getSyncAccount() ? "☁ Tersinkron" : "☁ Sinkron Cloud");
+  const syncDraftBtn = el("button", "all", getSyncAccount() ? t("fav.syncedBtn") : t("fav.syncBtn"));
   syncDraftBtn.id = "syncdraftbtn"; syncDraftBtn.type = "button";
   syncDraftBtn.addEventListener("click", () => openSyncModal());
   shareRow.appendChild(copyBtn);
@@ -2486,29 +2538,29 @@ function renderDraft() {
   const saveRow = el("div", "share-row");
   const nameInput = el("input");
   nameInput.id = "savename"; nameInput.type = "text";
-  nameInput.placeholder = "Nama draft (mis. Ranked malam)";
-  nameInput.setAttribute("aria-label", "Nama draft");
-  const saveBtn = el("button", "btn-acc", "Simpan draft");
+  nameInput.placeholder = t("draft.draftNamePlaceholder");
+  nameInput.setAttribute("aria-label", t("draft.draftNamePlaceholder"));
+  const saveBtn = el("button", "btn-acc", t("draft.saveDraft"));
   saveBtn.id = "savedraft"; saveBtn.type = "button";
   saveRow.appendChild(nameInput); saveRow.appendChild(saveBtn);
   const savedList = el("div");
   savedList.id = "savedlist";
-  drow2.appendChild(dsec(el("h2", "lbl", "Komposisi tim"), comp));
-  drow2.appendChild(dsec(el("h2", "lbl", "Bagikan & simpan"), shareRow, saveRow, savedList));
+  drow2.appendChild(dsec(el("h2", "lbl", t("draft.comp")), comp));
+  drow2.appendChild(dsec(el("h2", "lbl", t("draft.shareSave")), shareRow, saveRow, savedList));
 
 
   // ---- popup pilih hero (bottom sheet) ----
   const dlg = document.createElement("dialog");
   dlg.id = "pickdlg";
   const dlgHead = el("div", "dlg-head");
-  const dlgTitle = el("h2", null, "Pilih hero");
+  const dlgTitle = el("h2", null, t("common.pickerTitle"));
   dlgHead.appendChild(dlgTitle);
   const dlgX = el("button", "x", "×");
-  dlgX.type = "button"; dlgX.setAttribute("aria-label", "Tutup");
+  dlgX.type = "button"; dlgX.setAttribute("aria-label", t("common.close"));
   dlgX.addEventListener("click", () => dlg.close());
   dlgHead.appendChild(dlgX);
   dlg.appendChild(dlgHead);
-  const pqWrap = searchBox("pq", "Cari hero…");
+  const pqWrap = searchBox("pq", t("common.search"));
   const pq = pqWrap.input;
   pq.setAttribute("enterkeyhint", "go");
   dlg.appendChild(pqWrap.label);
@@ -2521,7 +2573,7 @@ function renderDraft() {
     applyPickerFilter();
   });
   dlg.appendChild(pRoles);
-  const recentLbl = el("p", "lbl", "Terakhir dipakai");
+  const recentLbl = el("p", "lbl", t("common.recent"));
   recentLbl.hidden = true;
   dlg.appendChild(recentLbl);
   const recentStrip = el("div", "strip");
@@ -2537,7 +2589,7 @@ function renderDraft() {
     b.dataset.roles = h.roles.join(" ");
     pGrid.appendChild(b);
   }
-  const pEmpty = el("p", "mut", "Hero tidak ketemu.");
+  const pEmpty = el("p", "mut", t("common.notFound"));
   pEmpty.hidden = true;
   dlg.appendChild(pEmpty);
   main.appendChild(dlg);
@@ -2591,13 +2643,13 @@ function renderDraft() {
           if (!is5v5) {
             const x = el("button", "x", "×");
             x.type = "button";
-            x.setAttribute("aria-label", "Hapus " + hero.en);
+            x.setAttribute("aria-label", ((typeof getLang === "function" && getLang() === "en") ? "Remove " : "Hapus ") + hero.en);
             slotEl.appendChild(x);
           }
           slotEl.title = hero.en;
         } else {
           if (team !== "ban") {
-            const lbl = is5v5 ? ("+ " + COMP_ROLES[i][1]) : "+ pick";
+            const lbl = is5v5 ? ("+ " + COMP_ROLES[i][1]) : t("draft.emptySlot");
             slotEl.appendChild(document.createTextNode(lbl));
             if (is5v5) {
               slotEl.appendChild(el("span", "slot-role-tag", COMP_ROLES[i][1]));
@@ -2626,12 +2678,12 @@ function renderDraft() {
   function paintSug() {
     sug.replaceChildren();
     if (!draft.enemy.some(Boolean)) {
-      sug.appendChild(el("p", "mut", "Isi pick musuh dulu, saran muncul di sini."));
+      sug.appendChild(el("p", "mut", t("draft.enemyFirst")));
       return;
     }
     const list = draftSuggestions();
     if (!list.length) {
-      sug.appendChild(el("p", "mut", "Belum ada counter yang cocok di data."));
+      sug.appendChild(el("p", "mut", t("draft.noCounterFound")));
       return;
     }
     for (const s of list) sug.appendChild(sugButton(s));
@@ -2639,16 +2691,16 @@ function renderDraft() {
   function paintRoleSug() {
     roleSug.replaceChildren();
     if (!draft.enemy.some(Boolean)) {
-      roleSug.appendChild(el("p", "mut", "Isi pick musuh dulu, saran muncul di sini."));
+      roleSug.appendChild(el("p", "mut", t("draft.enemyFirst")));
       return;
     }
     if (myRole === "all") {
-      roleSug.appendChild(el("p", "mut", "Pilih role kamu di atas — saran pick disesuaikan sama role itu."));
+      roleSug.appendChild(el("p", "mut", t("draft.selectRolePrompt")));
       return;
     }
     const list = draftSuggestions(myRole, 3);
     if (!list.length) {
-      roleSug.appendChild(el("p", "mut", "Belum ada counter " + ROLE_LABEL[myRole] + " yang cocok di data."));
+      roleSug.appendChild(el("p", "mut", t("draft.noCounterFound")));
       return;
     }
     for (const s of list) roleSug.appendChild(sugButton(s));
@@ -2656,12 +2708,12 @@ function renderDraft() {
   function paintItemSug() {
     itemSug.replaceChildren();
     if (!draft.enemy.some(Boolean)) {
-      itemSug.appendChild(el("p", "mut", "Isi pick musuh dulu, saran item muncul di sini."));
+      itemSug.appendChild(el("p", "mut", t("draft.enemyFirst")));
       return;
     }
     const list = itemSuggestions();
     if (!list.length) {
-      itemSug.appendChild(el("p", "mut", "Belum ada item counter yang tercatat buat tim musuh ini."));
+      itemSug.appendChild(el("p", "mut", t("draft.noItemCounterFound")));
       return;
     }
     for (const s of list) {
@@ -2670,23 +2722,23 @@ function renderDraft() {
       const a = el("a", "link", s.items);
       a.href = "#/items";
       row.appendChild(a);
-      row.appendChild(el("span", s.allCurated ? "tag ok" : "tag", s.allCurated ? "terkurasi" : "sebagian belum dikurasi"));
+      row.appendChild(el("span", s.allCurated ? "tag ok" : "tag", s.allCurated ? t("hero.curated") : t("draft.partiallyCurated")));
       card.appendChild(row);
       const pl = itemPriceLine(s.items);
       if (pl) card.appendChild(el("p", "mut iprice", pl));
-      card.appendChild(el("p", "mut", "Lawan " + s.n + " hero musuh: " + s.vs.join(", ")));
+      card.appendChild(el("p", "mut", t("draft.vsEnemyCount", { n: s.n, vs: s.vs.join(", ") })));
       itemSug.appendChild(card);
     }
   }
   function paintBanSug() {
     banSug.replaceChildren();
     if (!draft.ally.some(Boolean)) {
-      banSug.appendChild(el("p", "mut", "Isi tim kamu dulu, saran ban muncul di sini."));
+      banSug.appendChild(el("p", "mut", t("draft.allyFirst")));
       return;
     }
     const list = banSuggestions();
     if (!list.length) {
-      banSug.appendChild(el("p", "mut", "Tidak ada ancaman counter yang tercatat buat tim ini."));
+      banSug.appendChild(el("p", "mut", t("draft.noBanThreat")));
       return;
     }
     for (const s of list) {
@@ -2699,7 +2751,7 @@ function renderDraft() {
       nm.appendChild(document.createTextNode(h.en));
       nm.appendChild(el("b", "sc", "+" + s.s));
       box.appendChild(nm);
-      box.appendChild(el("p", null, s.why + " — tap buat ban."));
+      box.appendChild(el("p", null, t("draft.tapToBan", { why: s.why })));
       b.appendChild(box);
       banSug.appendChild(b);
     }
@@ -2713,22 +2765,24 @@ function renderDraft() {
     const picks = draft.ally.filter(Boolean).map(id => byId.get(id)).filter(Boolean);
     const hasFront = picks.some(h => h.classes.includes("Tank") || h.classes.includes("Fighter"));
     if (picks.length && !hasFront)
-      comp.appendChild(el("p", "mut", "Belum ada frontline (Tank/Fighter) — tim gampang ditembus."));
+      comp.appendChild(el("p", "mut", t("draft.noFrontline")));
   }
   function paintSaved() {
     savedList.replaceChildren();
     const list = loadSavedDrafts();
     if (!list.length) {
-      savedList.appendChild(el("p", "mut", "Belum ada draft tersimpan."));
+      savedList.appendChild(el("p", "mut", t("draft.savedList")));
       return;
     }
     for (const [i, s] of list.entries()) {
       const row = el("div", "saved-row");
       row.appendChild(el("b", null, s.name));
-      row.appendChild(el("span", "mut", " " + new Date(s.savedAt).toLocaleString("id-ID", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) + " · " + [...s.ally, ...s.enemy, ...s.ban].filter(Boolean).length + " hero"));
-      const load = el("button", "mini", "Muat");
+      const dateStr = new Date(s.savedAt).toLocaleString((typeof getLang === "function" && getLang() === "en") ? "en-US" : "id-ID", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+      const heroCnt = [...s.ally, ...s.enemy, ...s.ban].filter(Boolean).length;
+      row.appendChild(el("span", "mut", " " + dateStr + " · " + heroCnt + " hero"));
+      const load = el("button", "mini", t("draft.load"));
       load.type = "button"; load.dataset.i = String(i);
-      const del = el("button", "mini", "Hapus");
+      const del = el("button", "mini", t("draft.delete"));
       del.type = "button"; del.dataset.i = String(i);
       row.appendChild(load); row.appendChild(del);
       savedList.appendChild(row);
@@ -2777,16 +2831,16 @@ function renderDraft() {
   function paintPickerTitle() {
     if (is5v5 && currentTurn) {
       if (currentTurn.phase === "ban") {
-        dlgTitle.textContent = "Ban Hero (Giliran Kamu)";
+        dlgTitle.textContent = t("fivev5.dlgTitleBan");
       } else {
         const rName = selected5v5SlotIdx != null ? COMP_ROLES[selected5v5SlotIdx][1] : "";
-        dlgTitle.textContent = "Pilih Hero " + rName + " (Giliran Kamu)";
+        dlgTitle.textContent = t("fivev5.dlgTitlePick", { role: rName });
       }
       return;
     }
     const target = activeSlot || { team: mode, idx: draft[mode].indexOf(null) };
-    const teamLabel = target.team === "ally" ? "Tim kamu" : target.team === "enemy" ? "Musuh" : "Ban";
-    dlgTitle.textContent = target.idx >= 0 ? "Pilih hero · " + teamLabel + " " + (target.idx + 1) : "Pilih hero · " + teamLabel;
+    const teamLabel = target.team === "ally" ? t("draft.ally") : target.team === "enemy" ? t("draft.enemy") : t("draft.ban");
+    dlgTitle.textContent = target.idx >= 0 ? t("common.pickerTarget", { team: teamLabel, idx: target.idx + 1 }) : (t("common.pickerTitle") + " · " + teamLabel);
   }
   function openPicker(sticky) {
     if (is5v5 && is5v5Finished) return;
@@ -2850,7 +2904,7 @@ function renderDraft() {
 
       if (currentTurn.phase === "ban") {
         draft.ban[currentTurn.slot] = id;
-        game5v5.log.push({ turn: currentTurn.turn, who: "user", action: "ban", id, role: null, why: "Pilihan kamu" });
+        game5v5.log.push({ turn: currentTurn.turn, who: "user", action: "ban", id, role: null, why: t("fivev5.userBanReason") });
         pushRecent(id);
         advance5v5();
         return;
@@ -2859,11 +2913,11 @@ function renderDraft() {
         if (targetIdx < 0) return;
         const reqRole = COMP_ROLES[targetIdx][0];
         if (!hero.roles.includes(reqRole)) {
-          alert("Hero " + hero.en + " bukan peran " + COMP_ROLES[targetIdx][1]);
+          alert(t("fivev5.roleMismatch", { hero: hero.en, role: COMP_ROLES[targetIdx][1] }));
           return;
         }
         draft.ally[targetIdx] = id;
-        game5v5.log.push({ turn: currentTurn.turn, who: "user", action: "pick", id, role: reqRole, why: "Pilihan kamu (" + COMP_ROLES[targetIdx][1] + ")" });
+        game5v5.log.push({ turn: currentTurn.turn, who: "user", action: "pick", id, role: reqRole, why: t("fivev5.userPickReason", { role: COMP_ROLES[targetIdx][1] }) });
         pushRecent(id);
         advance5v5();
         return;
@@ -2989,7 +3043,7 @@ function renderDraft() {
         ok = document.execCommand("copy"); ta.remove();
       } catch {}
     }
-    copyMsg.textContent = ok ? "Link disalin ✓" : "Gagal menyalin — salin manual dari address bar.";
+    copyMsg.textContent = ok ? t("draft.linkCopied") : t("draft.linkCopyFail");
     setTimeout(() => { copyMsg.textContent = ""; }, 3000);
   });
   saveBtn.addEventListener("click", () => {
@@ -3005,7 +3059,7 @@ function renderDraft() {
     if (!b) return;
     const i = Number(b.dataset.i);
     const list = loadSavedDrafts();
-    if (b.textContent === "Muat") {
+    if (b.textContent === t("draft.load") || b.textContent === "Muat") {
       const s = list[i];
       if (!s) return;
       draft = { ally: [...s.ally], enemy: [...s.enemy], ban: [...s.ban], history: [] };
@@ -3099,11 +3153,11 @@ function renderDraft() {
 let quizTimerId = null;
 function renderQuiz() {
   if (quizTimerId) { clearInterval(quizTimerId); quizTimerId = null; }
-  document.title = "Kuis — Lawanku";
+  document.title = (typeof getLang === "function" && getLang() === "en") ? "Quiz — Lawanku" : "Kuis — Lawanku";
   const main = $("#main");
   main.replaceChildren();
-  main.appendChild(el("h1", null, "Kuis"));
-  main.appendChild(el("p", "mut", "Tebak counter, tebak hero, tebak skill, atau latihan skenario draft (5 skenario, 30 detik tiap skenario: hero +150, item +100). Skor terbaik tersimpan di perangkat ini."));
+  main.appendChild(el("h1", null, t("quiz.heading")));
+  main.appendChild(el("p", "mut", t("quiz.intro")));
   const BEST_KEY = "hok-quiz-best";
   function roundLen() {
     if (mode === "skenario") return 5;
@@ -3127,7 +3181,7 @@ function renderQuiz() {
   seg.setAttribute("role", "group");
   seg.setAttribute("aria-label", "Mode quiz");
   const modeBtns = {};
-  for (const [m, labelTxt] of [["counter", "Tebak Counter"], ["tebak", "Tebak Hero"], ["skill", "Tebak Skill"], ["skenario", "Skenario"]]) {
+  for (const [m, labelTxt] of [["counter", t("quiz.modeCounter")], ["tebak", t("quiz.modeHero")], ["skill", t("quiz.modeSkill")], ["skenario", t("quiz.modeScenario")]]) {
     const b = el("button", "m" + (m === mode ? " on" : ""), labelTxt);
     b.type = "button"; b.dataset.mode = m;
     b.setAttribute("aria-pressed", String(m === mode));
@@ -3237,35 +3291,35 @@ function renderQuiz() {
     if (qi >= questions.length) { paintResult(); return; }
     if (mode === "skenario") { paintScenario(); return; }
     const q = questions[qi];
-    progEl = el("p", "mut", "Soal " + (qi + 1) + "/" + questions.length + " · Skor " + score);
+    progEl = el("p", "mut", t("quiz.questionProgress", { current: qi + 1, total: questions.length }) + " · " + t("quiz.scoreDisplay", { score }));
     progEl.id = "qprog";
     board.appendChild(progEl);
     const card = el("div", "card");
     if (mode === "counter") {
       const row = el("div", "row");
       row.appendChild(avatar(q.enemy, 56));
-      const t = el("div");
-      t.appendChild(el("b", null, "Siapa counter terkuat " + q.enemy.en + "?"));
-      t.appendChild(el("p", "mut", q.enemy.roles.map(roleName).join(" / ") + " · " + q.enemy.classes.join(", ")));
-      row.appendChild(t);
+      const tBox = el("div");
+      tBox.appendChild(el("b", null, t("quiz.qCounterTemplate", { hero: q.enemy.en })));
+      tBox.appendChild(el("p", "mut", q.enemy.roles.map(roleName).join(" / ") + " · " + q.enemy.classes.join(", ")));
+      row.appendChild(tBox);
       card.appendChild(row);
     } else if (mode === "skill") {
-      const t = el("div");
-      t.style.display = "flex";
-      t.style.flexDirection = "column";
-      t.style.gap = "var(--s1)";
+      const tBox = el("div");
+      tBox.style.display = "flex";
+      tBox.style.flexDirection = "column";
+      tBox.style.gap = "var(--s1)";
       const tag = el("span", "tag", "Skill: " + q.skill.name);
       tag.style.alignSelf = "flex-start";
-      t.appendChild(tag);
-      t.appendChild(el("b", null, "Hero manakah yang memiliki skill berikut?"));
-      t.appendChild(el("p", null, '"' + q.skill.desc + '"'));
-      card.appendChild(t);
+      tBox.appendChild(tag);
+      tBox.appendChild(el("b", null, t("quiz.qSkillTemplate")));
+      tBox.appendChild(el("p", null, '"' + q.skill.desc + '"'));
+      card.appendChild(tBox);
     } else {
       const row = el("div", "row");
       const big = avatar(q.hero, 96);
       big.style.width = "96px"; big.style.height = "96px";
       row.appendChild(big);
-      row.appendChild(el("b", null, "Hero apakah ini?"));
+      row.appendChild(el("b", null, t("quiz.qHeroTemplate")));
       card.appendChild(row);
     }
     board.appendChild(card);
@@ -3286,7 +3340,7 @@ function renderQuiz() {
     const fb = el("p", "mut");
     fb.id = "qfb";
     board.appendChild(fb);
-    const next = el("button", "btn-acc", qi === questions.length - 1 ? "Lihat hasil" : "Lanjut");
+    const next = el("button", "btn-acc", qi === questions.length - 1 ? t("quiz.finishBtn") : t("quiz.nextBtn"));
     next.id = "qnext";
     next.type = "button";
     next.hidden = true;
@@ -3301,24 +3355,24 @@ function renderQuiz() {
     let selA = null, selB = null, selABtn = null, selBBtn = null;
     const aBtns = [], bBtns = [];
     const prow = el("div", "row");
-    progEl = el("p", "mut", "Skenario " + (qi + 1) + "/" + questions.length + " · Skor " + score);
+    progEl = el("p", "mut", t("quiz.scenarioProgress", { current: qi + 1, total: questions.length, score }));
     progEl.id = "qprog";
     prow.appendChild(progEl);
-    const timerEl = el("span", "qtimer", "⏱ 30 dtk");
+    const timerEl = el("span", "qtimer", t("quiz.seconds", { n: 30 }));
     prow.appendChild(timerEl);
     board.appendChild(prow);
     const card = el("div", "card");
     const row = el("div", "row");
     row.appendChild(avatar(q.enemy, 56));
-    const t = el("div");
-    t.appendChild(el("b", null, "Musuh mengunci " + q.enemy.en));
-    t.appendChild(el("p", "mut", q.enemy.roles.map(roleName).join(" / ") + " · " + q.enemy.classes.join(", ")));
-    row.appendChild(t);
+    const tBox = el("div");
+    tBox.appendChild(el("b", null, t("quiz.enemyLocked", { hero: q.enemy.en })));
+    tBox.appendChild(el("p", "mut", q.enemy.roles.map(roleName).join(" / ") + " · " + q.enemy.classes.join(", ")));
+    row.appendChild(tBox);
     card.appendChild(row);
-    if (q.mates.length) card.appendChild(el("p", "mut", "Juga terkunci: " + q.mates.map(mh => mh.en + " (" + mh.roles.map(roleName).join("/") + ")").join(", ") + "."));
-    card.appendChild(el("p", null, "Pilih hero counter terbaik lawan " + q.enemy.en + ", lalu item pertama yang wajib di-rush sebelum teamfight."));
+    if (q.mates.length) card.appendChild(el("p", "mut", t("quiz.alsoLocked", { mates: q.mates.map(mh => mh.en + " (" + mh.roles.map(roleName).join("/") + ")").join(", ") })));
+    card.appendChild(el("p", null, t("quiz.scenarioPrompt", { hero: q.enemy.en })));
     board.appendChild(card);
-    board.appendChild(el("h2", "lbl", "Bagian A — Hero counter terbaik"));
+    board.appendChild(el("h2", "lbl", t("quiz.partA")));
     const gridA = el("div", "qgrid");
     for (const opt of q.options) {
       const b = el("button", "qopt");
@@ -3336,7 +3390,7 @@ function renderQuiz() {
       aBtns.push(b);
     }
     board.appendChild(gridA);
-    board.appendChild(el("h2", "lbl", "Bagian B — Item pertama yang di-rush"));
+    board.appendChild(el("h2", "lbl", t("quiz.partB")));
     const gridB = el("div", "qgrid");
     for (const it of q.itemOptions) {
       const b = el("button", "qopt item");
@@ -3353,7 +3407,7 @@ function renderQuiz() {
       bBtns.push(b);
     }
     board.appendChild(gridB);
-    const lockBtn = el("button", "btn-acc", "Kunci jawaban");
+    const lockBtn = el("button", "btn-acc", t("quiz.lockAnswer"));
     lockBtn.type = "button";
     lockBtn.disabled = true;
     lockBtn.addEventListener("click", () => lockScenario(false));
@@ -3361,7 +3415,7 @@ function renderQuiz() {
     const fb = el("p", "mut");
     fb.id = "qfb";
     board.appendChild(fb);
-    const next = el("button", "btn-acc", qi === questions.length - 1 ? "Lihat hasil" : "Lanjut");
+    const next = el("button", "btn-acc", qi === questions.length - 1 ? t("quiz.finishBtn") : t("quiz.nextBtn"));
     next.id = "qnext";
     next.type = "button";
     next.hidden = true;
@@ -3372,7 +3426,7 @@ function renderQuiz() {
       if (!document.body.contains(timerEl)) { stopTimer(); return; }
       timeLeft--;
       if (timeLeft <= 0) { lockScenario(true); return; }
-      timerEl.textContent = "⏱ " + timeLeft + " dtk";
+      timerEl.textContent = t("quiz.seconds", { n: timeLeft });
       if (timeLeft <= 10) timerEl.classList.add("low");
     }, 1000);
     function lockScenario(timedOut) {
@@ -3394,13 +3448,13 @@ function renderQuiz() {
         else if (b === selBBtn) b.classList.add("no");
       }
       const lines = [];
-      if (timedOut) lines.push("Waktu habis!");
-      lines.push(okA ? "Bagian A benar! " + (q.correctWhy || "") : "Bagian A: jawabannya " + q.correct.en + ". " + (q.correctWhy || ""));
-      if (!okA && selA && q.trap && selA.id === q.trap.id) lines.push("Hati-hati: " + q.trap.en + " justru dikounter " + q.enemy.en + " — jangan pick dia lawan " + q.enemy.en + ".");
-      lines.push(okB ? "Bagian B benar! " + (q.itemWhy || "") : "Bagian B: item yang tepat " + q.correctItem.items + ". " + (q.itemWhy || ""));
+      if (timedOut) lines.push(t("quiz.timeOut"));
+      lines.push(okA ? t("quiz.partACorrect", { why: q.correctWhy || "" }) : t("quiz.partAWrong", { hero: q.correct.en, why: q.correctWhy || "" }));
+      if (!okA && selA && q.trap && selA.id === q.trap.id) lines.push(t("quiz.trapWarning", { trap: q.trap.en, enemy: q.enemy.en }));
+      lines.push(okB ? t("quiz.partBCorrect", { why: q.itemWhy || "" }) : t("quiz.partBWrong", { items: q.correctItem.items, why: q.itemWhy || "" }));
       fb.textContent = lines.join(" ");
-      progEl.textContent = "Skenario " + (qi + 1) + "/" + questions.length + " · Skor " + score;
-      timerEl.textContent = "⏱ 0 dtk";
+      progEl.textContent = t("quiz.scenarioProgress", { current: qi + 1, total: questions.length, score });
+      timerEl.textContent = t("quiz.seconds", { n: 0 });
       lockBtn.hidden = true;
       next.hidden = false;
     }
@@ -3421,27 +3475,27 @@ function renderQuiz() {
     const info = correct.roles.map(roleName).join(" / ") + " · " + correct.classes.join(", ");
     if (mode === "counter") {
       fb.textContent = ok
-        ? "Benar! " + (q.why || "")
-        : "Jawabannya " + correct.en + ". " + (q.why || "");
+        ? t("quiz.correctAnswerFb", { why: q.why || "" })
+        : t("quiz.wrongAnswerFb", { hero: correct.en, why: q.why || "" });
     } else if (mode === "skill") {
       fb.textContent = ok
-        ? "Benar! Skill " + q.skill.name + " adalah milik " + correct.en + " (" + info + ")."
-        : "Salah, skill " + q.skill.name + " adalah milik " + correct.en + " (" + info + ").";
+        ? t("quiz.correctSkillFb", { skill: q.skill.name, hero: correct.en, info })
+        : t("quiz.wrongSkillFb", { skill: q.skill.name, hero: correct.en, info });
     } else {
-      fb.textContent = ok ? "Benar! " + correct.en + " — " + info : "Salah, ini " + correct.en + " — " + info;
+      fb.textContent = ok ? t("quiz.correctHeroFb", { hero: correct.en, info }) : t("quiz.wrongHeroFb", { hero: correct.en, info });
     }
-    if (progEl) progEl.textContent = "Soal " + (qi + 1) + "/" + questions.length + " · Skor " + score;
+    if (progEl) progEl.textContent = t("quiz.questionProgress", { current: qi + 1, total: questions.length }) + " · " + t("quiz.scoreDisplay", { score });
     $("#qnext").hidden = false;
   }
   function paintResult() {
     board.replaceChildren();
     setBest(mode, score);
-    board.appendChild(el("h2", null, "Hasil"));
+    board.appendChild(el("h2", null, t("quiz.completed")));
     const total = mode === "skenario" ? questions.length * 250 : questions.length;
-    board.appendChild(el("p", null, "Skor kamu: " + score + "/" + total));
-    board.appendChild(el("p", "mut", "Skor terbaik mode ini: " + getBest(mode) + "/" + total));
-    if (mode === "skenario") board.appendChild(el("p", "mut", "Bagian A (hero) benar: " + aRight + "/" + questions.length + " · Bagian B (item) benar: " + bRight + "/" + questions.length));
-    const again = el("button", "btn-acc", "Main lagi");
+    board.appendChild(el("p", null, t("quiz.finalScore", { score, total })));
+    board.appendChild(el("p", "mut", t("quiz.bestScoreMode", { score: getBest(mode), total })));
+    if (mode === "skenario") board.appendChild(el("p", "mut", t("quiz.scenarioBreakdown", { a: aRight, b: bRight, total: questions.length })));
+    const again = el("button", "btn-acc", t("quiz.retryBtn"));
     again.type = "button";
     again.addEventListener("click", startRound);
     board.appendChild(again);
@@ -3453,29 +3507,29 @@ function renderQuiz() {
 
 /* ---------- FAVORIT ---------- */
 function renderFavorit() {
-  document.title = "Favorit — Lawanku";
+  document.title = (typeof getLang === "function" && getLang() === "en") ? "Favorites — Lawanku" : "Favorit — Lawanku";
   const main = $("#main");
   main.replaceChildren();
-  main.appendChild(el("h1", null, "Favorit"));
+  main.appendChild(el("h1", null, t("fav.heading")));
   const sub = el("p", "mut");
   const n = el("span"); n.id = "n"; n.textContent = "0";
   sub.appendChild(n);
-  sub.appendChild(document.createTextNode(" hero · "));
-  const syncFavBtn = el("button", "mini", getSyncAccount() ? "☁ Tersinkron Cloud" : "☁ Sinkron Cloud");
+  sub.appendChild(document.createTextNode(" " + t("fav.countHero")));
+  const syncFavBtn = el("button", "mini", getSyncAccount() ? t("fav.syncedBtn") : t("fav.syncBtn"));
   syncFavBtn.id = "syncfavbtn"; syncFavBtn.type = "button";
   syncFavBtn.onclick = () => openSyncModal();
   sub.appendChild(syncFavBtn);
   main.appendChild(sub);
-  const none = el("p", "mut", "Belum ada. Cari hero di bawah, tap buat tambah.");
+  const none = el("p", "mut", t("fav.empty"));
   none.id = "none";
   main.appendChild(none);
-  const awasL = el("h2", null, "Awas counter-nya");
+  const awasL = el("h2", null, t("fav.watchCounters"));
   awasL.id = "awasL";
   main.appendChild(awasL);
   const awas = el("div");
   awas.id = "awas";
   main.appendChild(awas);
-  const poolL = el("h2", null, "Semua hero");
+  const poolL = el("h2", null, t("fav.allHeroes"));
   poolL.id = "poolL";
   main.appendChild(poolL);
   const pool = el("ul", "pool");
@@ -3489,17 +3543,17 @@ function renderFavorit() {
     pool.appendChild(li);
   }
   main.appendChild(pool);
-  const tip = el("p", "mut", "Tap hero buat tambah atau hapus favorit.");
+  const tip = el("p", "mut", t("fav.tipTap"));
   tip.id = "tip";
   main.appendChild(tip);
 
   const ctl = el("div", "ctl");
-  const { label, input } = searchBox("q", "Cari hero…");
+  const { label, input } = searchBox("q", t("common.search"));
   ctl.appendChild(label);
   const strip = el("div", "strip");
   strip.id = "strip";
-  strip.setAttribute("aria-label", "Hasil pencarian");
-  const empty = el("p", "mut", "Hero tidak ketemu.");
+  strip.setAttribute("aria-label", t("common.search"));
+  const empty = el("p", "mut", t("common.notFound"));
   empty.id = "empty"; empty.hidden = true;
   strip.appendChild(empty);
   for (const h of HEROES) strip.appendChild(heroButton(h));
@@ -3523,7 +3577,7 @@ function renderFavorit() {
       const box = el("div");
       box.appendChild(el("b", null, h.en));
       const counters = (h.naturalCounters || []).slice(0, 3).map(c => byId.get(c.hero)).filter(Boolean);
-      box.appendChild(el("small", null, counters.length ? "Kalah lawan " + counters.map(c => c.en).join(", ") : "Belum ada data counter"));
+      box.appendChild(el("small", null, counters.length ? t("fav.losesAgainst", { heroes: counters.map(c => c.en).join(", ") }) : t("fav.noCounterData")));
       row.appendChild(box);
       awas.appendChild(row);
     }
@@ -3583,22 +3637,22 @@ const ITEM_TAGS = {
   "anti-autoattack": "Anti-Auto Attack",
 };
 function renderItems() {
-  document.title = "Item Counter — Lawanku";
+  document.title = (getLang() === "en" ? "Counter Items — Lawanku" : "Item Counter — Lawanku");
   const main = $("#main");
   main.replaceChildren();
-  main.appendChild(el("h1", null, "Item Counter"));
-  main.appendChild(el("p", "mut", "Wiki item counter: 8 paket item untuk 116 hero. Harga dan stat di bawah sudah terverifikasi dari data Season 16 (dicek silang HoKStats dan hub-game). Yang tampil hanya rekomendasi dan alasan dari data kurasi."));
+  main.appendChild(el("h1", null, t("items.heading")));
+  main.appendChild(el("p", "mut", t("items.intro")));
   const ctl = el("div", "ctl");
   const srch = el("label", "srch");
   srch.appendChild(icon("i-search"));
   const input = document.createElement("input");
   input.type = "search";
-  input.placeholder = "Cari item, kategori, atau hero…";
-  input.setAttribute("aria-label", "Cari item");
+  input.placeholder = t("items.searchPlaceholder");
+  input.setAttribute("aria-label", t("items.heading"));
   srch.appendChild(input);
   ctl.appendChild(srch);
   const row = el("div", "row");
-  const tog = el("button", "all", "Hanya yang terkurasi");
+  const tog = el("button", "all", t("items.curatedOnly"));
   tog.type = "button";
   tog.setAttribute("aria-pressed", "false");
   row.appendChild(tog);
@@ -3607,25 +3661,25 @@ function renderItems() {
   const chips = el("div", "fchips");
   let cat = "all";
   const chipBtns = {};
-  for (const [t, labelTxt] of [["all", "Semua"], ...Object.entries(ITEM_TAGS)]) {
-    const b = el("button", "fchip" + (t === cat ? " on" : ""), labelTxt);
-    b.type = "button"; b.dataset.tag = t;
-    b.setAttribute("aria-pressed", String(t === cat));
+  for (const [tTag, labelTxt] of [["all", t("items.all")], ...Object.entries(ITEM_TAGS)]) {
+    const b = el("button", "fchip" + (tTag === cat ? " on" : ""), labelTxt);
+    b.type = "button"; b.dataset.tag = tTag;
+    b.setAttribute("aria-pressed", String(tTag === cat));
     b.addEventListener("click", () => {
-      cat = t;
+      cat = tTag;
       for (const k in chipBtns) {
-        chipBtns[k].classList.toggle("on", k === t);
-        chipBtns[k].setAttribute("aria-pressed", String(k === t));
+        chipBtns[k].classList.toggle("on", k === tTag);
+        chipBtns[k].setAttribute("aria-pressed", String(k === tTag));
       }
       paint();
     });
-    chipBtns[t] = b;
+    chipBtns[tTag] = b;
     chips.appendChild(b);
   }
   main.appendChild(chips);
   const list = el("div", "wikigrid");
   main.appendChild(list);
-  const empty = el("p", "mut", "Tidak ada yang cocok.");
+  const empty = el("p", "mut", t("items.noMatch"));
   empty.hidden = true;
   main.appendChild(empty);
   const groups = [];
@@ -3656,7 +3710,7 @@ function renderItems() {
       const card = el("div", "card wikicard");
       const head = el("div", "row");
       head.appendChild(el("b", null, g.items));
-      head.appendChild(el("span", "badge soft", rows.length + " hero"));
+      head.appendChild(el("span", "badge soft", t("items.heroCount", { n: rows.length })));
       card.appendChild(head);
       card.appendChild(el("span", "tag", ITEM_TAGS[g.tag] || g.tag));
       const detItems = ITEM_DETAILS[g.items];
@@ -3684,13 +3738,13 @@ function renderItems() {
       }
       if (rows.length > 8) strip.appendChild(el("span", "mut", "+" + (rows.length - 8)));
       card.appendChild(strip);
-      const det = el("button", "mini", "Lihat hero & alasan");
+      const det = el("button", "mini", t("items.seeHeroes"));
       det.type = "button";
       const body = el("div", "wikidet");
       body.hidden = true;
       det.addEventListener("click", () => {
         body.hidden = !body.hidden;
-        det.textContent = body.hidden ? "Lihat hero & alasan" : "Sembunyikan";
+        det.textContent = body.hidden ? t("items.seeHeroes") : t("items.hideHeroes");
       });
       card.appendChild(det);
       for (const { h, c } of rows) {
@@ -3704,7 +3758,7 @@ function renderItems() {
         txt.appendChild(el("small", null, c.items));
         if (c.why) txt.appendChild(el("small", null, c.why));
         r.appendChild(txt);
-        if (!c.needsReview) r.appendChild(el("span", "tag ok", "terkurasi"));
+        if (!c.needsReview) r.appendChild(el("span", "tag ok", t("hero.curated")));
         body.appendChild(r);
       }
       card.appendChild(body);
@@ -3719,27 +3773,32 @@ function renderItems() {
 }
 
 /* ---------- TIER LIST ---------- */
-/* ---------- TIER LIST ---------- */
 // Tier resmi HoK Camp (Global), snapshot 6 Nov 2026 — di-fetch dari tiers.json
 // (seperti items.json). Format: {version, source, asOf, tiers: {id: {t, w, p, b}}}.
 let TIER_DATA = null;
 const TIER_MONTHS = { "01": "Jan", "02": "Feb", "03": "Mar", "04": "Apr", "05": "Mei", "06": "Jun", "07": "Jul", "08": "Agu", "09": "Sep", "10": "Okt", "11": "Nov", "12": "Des" };
+const TIER_MONTHS_EN = { "01": "Jan", "02": "Feb", "03": "Mar", "04": "Apr", "05": "May", "06": "Jun", "07": "Jul", "08": "Aug", "09": "Sep", "10": "Oct", "11": "Nov", "12": "Dec" };
 function fmtTierDate(iso) {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || "");
-  return m ? (Number(m[3]) + " " + TIER_MONTHS[m[2]] + " " + m[1]) : (iso || "");
+  if (!m) return iso || "";
+  const lang = typeof getLang === "function" ? getLang() : "id";
+  if (lang === "en") {
+    return (TIER_MONTHS_EN[m[2]] || m[2]) + " " + Number(m[3]) + ", " + m[1];
+  }
+  return Number(m[3]) + " " + (TIER_MONTHS[m[2]] || m[2]) + " " + m[1];
 }
 function pct1(v) { const r = Math.round(v * 10) / 10; return (r % 1 === 0 ? String(r) : r.toFixed(1)).replace(".", ","); }
 function renderTier() {
-  document.title = "Tier List — Lawanku";
+  document.title = (getLang() === "en" ? "Tier List — Lawanku" : "Tier List — Lawanku");
   const main = $("#main");
   main.replaceChildren();
-  main.appendChild(el("h1", null, "Tier List"));
+  main.appendChild(el("h1", null, t("tier.heading")));
   const asOf = (TIER_DATA && TIER_DATA.asOf) || "2026-11-06";
-  main.appendChild(el("p", "mut", "Tier resmi HoK Camp (Global), data per " + fmtTierDate(asOf) + " — rating resmi di dalam game, bukan hitungan Lawanku."));
-  main.appendChild(el("p", "mut", "Tier mengikuti seberapa sering hero di-pick dan di-ban di ranked, bukan urutan win rate. Contoh: Lapulapu win rate-nya 54,8% tapi tier C, sementara Dunshan 45,5% tapi tier S."));
+  main.appendChild(el("p", "mut", t("tier.intro1", { date: fmtTierDate(asOf) })));
+  main.appendChild(el("p", "mut", t("tier.intro2")));
   const tiers = (TIER_DATA && TIER_DATA.tiers) || {};
   if (!Object.keys(tiers).length) {
-    main.appendChild(el("p", "mut", "Data tier resmi belum termuat — periksa koneksi lalu muat ulang halaman."));
+    main.appendChild(el("p", "mut", t("tier.loadError")));
     renderDock("tier", null);
     return;
   }
@@ -3748,8 +3807,8 @@ function renderTier() {
   srch.appendChild(icon("i-search"));
   const input = document.createElement("input");
   input.type = "search";
-  input.placeholder = "Cari hero…";
-  input.setAttribute("aria-label", "Cari hero");
+  input.placeholder = t("tier.searchPlaceholder");
+  input.setAttribute("aria-label", t("tier.searchPlaceholder"));
   srch.appendChild(input);
   ctl.appendChild(srch);
   main.appendChild(ctl);
@@ -3765,7 +3824,7 @@ function renderTier() {
   main.appendChild(roles);
   const list = el("div");
   main.appendChild(list);
-  const empty = el("p", "mut", "Tidak ada hero yang cocok.");
+  const empty = el("p", "mut", t("tier.noMatch"));
   empty.hidden = true;
   main.appendChild(empty);
   const paint = () => {
@@ -3781,16 +3840,16 @@ function renderTier() {
       shown += members.length;
       const sec = el("section", "tiersec");
       const head = el("div", "row");
-      head.appendChild(el("span", "tierbadge t" + tier.toLowerCase(), "Tier " + tier));
-      head.appendChild(el("span", "mut", members.length + " hero"));
+      head.appendChild(el("span", "tierbadge t" + tier.toLowerCase(), t("tier.tierName", { tier })));
+      head.appendChild(el("span", "mut", t("tier.heroCount", { n: members.length })));
       sec.appendChild(head);
       const grid = el("div", "grid");
       for (const h of members) {
         const card = heroCard("a", h);
         card.href = "#/hero/" + slug(h.en);
-        const t = tiers[String(h.id)];
-        card.appendChild(el("small", "mut", "Win " + pct1(t.w) + "%"));
-        card.appendChild(el("small", "mut", "Pick " + pct1(t.p) + "% · Ban " + pct1(t.b) + "%"));
+        const tStat = tiers[String(h.id)];
+        card.appendChild(el("small", "mut", "Win " + pct1(tStat.w) + "%"));
+        card.appendChild(el("small", "mut", "Pick " + pct1(tStat.p) + "% · Ban " + pct1(tStat.b) + "%"));
         grid.appendChild(card);
       }
       sec.appendChild(grid);
@@ -3808,30 +3867,45 @@ function renderTier() {
 // Link donasi Saweria — isi kalau sudah ada, mis. "https://saweria.co/USERNAME".
 const SAWERIA_URL = "https://sawermaz.com/jembodfiraun";
 function renderTentang() {
-  document.title = "Tentang — Lawanku";
+  document.title = (getLang() === "en" ? "About — Lawanku" : "Tentang — Lawanku");
   const main = $("#main");
   main.replaceChildren();
-  main.appendChild(el("h1", null, "Tentang Lawanku"));
-  main.appendChild(el("p", "mut", "Lawanku adalah alat bantu buat nyari counter hero Honor of Kings — counter alami, counter item, saran draft, kuis, dan tier list. Dibikin supaya latihan draft kamu makin tajam, bukan buat pamer angka."));
+  main.appendChild(el("h1", null, t("about.heading")));
+
+  const langWrap = el("div", "lang-switch-wrap");
+  langWrap.appendChild(el("span", "mut", t("about.langLabel")));
+  const langSw = el("div", "lang-switch");
+  langSw.setAttribute("role", "group");
+  langSw.setAttribute("aria-label", t("about.langLabel"));
+  const btnId = el("button", "lang-btn" + (getLang() === "id" ? " on" : ""), "ID");
+  btnId.type = "button"; btnId.dataset.lang = "id"; btnId.setAttribute("aria-pressed", String(getLang() === "id"));
+  const btnEn = el("button", "lang-btn" + (getLang() === "en" ? " on" : ""), "EN");
+  btnEn.type = "button"; btnEn.dataset.lang = "en"; btnEn.setAttribute("aria-pressed", String(getLang() === "en"));
+  langSw.appendChild(btnId);
+  langSw.appendChild(btnEn);
+  langWrap.appendChild(langSw);
+  main.appendChild(langWrap);
+
+  main.appendChild(el("p", "mut", t("about.intro")));
   const totalCtr = HEROES.reduce((n, h) => n + (h.naturalCounters || []).length, 0);
   const totalItems = HEROES.reduce((n, h) => n + (h.itemCounters || []).length, 0);
   const stats = el("div", "stats");
-  for (const [v, l] of [[HEROES.length, "hero"], [totalCtr, "counter alami"], [totalItems, "rekomendasi item"], ["S16", "data patch"]]) {
+  for (const [v, l] of [[HEROES.length, t("about.statHero")], [totalCtr, t("about.statNatural")], [totalItems, t("about.statItem")], ["S16", t("about.statPatch")]]) {
     const s = el("span", "stat");
     s.appendChild(el("b", null, String(v)));
     s.appendChild(document.createTextNode(" " + l));
     stats.appendChild(s);
   }
   main.appendChild(stats);
-  main.appendChild(el("p", "mut", "Data patch S16 · Terakhir diperbarui 10 Nov 2026."));
-  main.appendChild(el("h2", "lbl", "Fitur"));
+  main.appendChild(el("p", "mut", t("about.patchDate")));
+  main.appendChild(el("h2", "lbl", t("about.featuresTitle")));
   const list = el("div", "list");
   const feats = [
-    ["#/", "i-swords", "Counter Hero", "Lihat counter alami dan counter item tiap hero, beserta alasan kenapa hero itu ngecounter."],
-    ["#/draft", "i-draft", "Draft Pick", "Rakit draft 5v5 sesuka kamu, lengkap dengan saran pick, saran ban, cek komposisi tim, dan simpan draft."],
-    ["#/quiz", "i-quiz", "Kuis Counter", "Asah insting counter lewat tebak hero, tebak counter, dan simulasi skenario draft 30 detik."],
-    ["#/items", "i-item", "Item Counter", "Panduan 8 paket item counter yang dipakai buat ngelawan 116 hero."],
-    ["#/tier", "i-gem", "Tier Hero", "Tier resmi HoK Camp per 6 Nov 2026, lengkap dengan win, pick, dan ban rate tiap hero."],
+    ["#/", "i-swords", t("about.featCounter"), t("about.featCounterDesc")],
+    ["#/draft", "i-draft", t("about.featDraft"), t("about.featDraftDesc")],
+    ["#/quiz", "i-quiz", t("about.featQuiz"), t("about.featQuizDesc")],
+    ["#/items", "i-item", t("about.featItems"), t("about.featItemsDesc")],
+    ["#/tier", "i-gem", t("about.featTier"), t("about.featTierDesc")],
   ];
   for (const [href, ic, name, desc] of feats) {
     const a = el("a", "item");
@@ -3850,18 +3924,18 @@ function renderTentang() {
   }
   main.appendChild(list);
   const how = el("div", "card");
-  how.appendChild(el("b", null, "Cara data dibuat"));
-  how.appendChild(el("p", "mut", "Counter alami disusun dari patch Season 16 (531 counter: 243 hard, 288 soft). Item counter hanya memakai 8 paket item yang sudah terverifikasi lewat data kurasi — harga dan stat item ditampilkan dari data Season 16 yang sudah dicek silang (HoKStats dan hub-game). Tier list memakai tier resmi HoK Camp (Global) per 6 Nov 2026, lengkap dengan win, pick, dan ban rate — angka-angka itu disalin dari data resmi dan dicek silang antara hub-game dan HoKStats. Kuis skenario dibangkitkan dari data counter. Di sini tidak ada data pemain — Lawanku tidak terhubung ke API resmi HoK, dan tidak pernah mengarang angka."));
+  how.appendChild(el("b", null, t("about.howDataTitle")));
+  how.appendChild(el("p", "mut", t("about.howDataText")));
   main.appendChild(how);
 
   const syncSec = el("div", "card");
   const sHead = el("div", "row");
-  sHead.appendChild(el("b", null, "Sinkronisasi Antar-Perangkat"));
+  sHead.appendChild(el("b", null, t("about.syncTitle")));
   const isLinked = !!getSyncAccount();
-  sHead.appendChild(el("span", "sync-badge" + (isLinked ? "" : " off"), isLinked ? "● Terhubung" : "Belum aktif"));
+  sHead.appendChild(el("span", "sync-badge" + (isLinked ? "" : " off"), isLinked ? t("about.syncConnected") : t("about.syncNotActive")));
   syncSec.appendChild(sHead);
-  syncSec.appendChild(el("p", "mut", "Simpan dan sinkronkan daftar Favorit serta racikan Draft kamu antara HP, laptop, dan tablet secara otomatis tanpa perlu registrasi akun (Cloudflare Workers + D1)."));
-  const syncBtn = el("button", "btn-acc", isLinked ? "Buka Pengaturan Sinkronisasi" : "Aktifkan Sinkronisasi");
+  syncSec.appendChild(el("p", "mut", t("about.syncText")));
+  const syncBtn = el("button", "btn-acc", isLinked ? t("about.syncBtnOpen") : t("about.syncBtnActivate"));
   syncBtn.type = "button";
   syncBtn.onclick = () => openSyncModal();
   syncSec.appendChild(syncBtn);
@@ -3870,33 +3944,32 @@ function renderTentang() {
   const don = el("div", "card donasi");
   const dHead = el("div", "row");
   dHead.appendChild(icon("i-heart"));
-  dHead.appendChild(el("b", null, "Dukung Lawanku"));
+  dHead.appendChild(el("b", null, t("about.donateTitle")));
   don.appendChild(dHead);
-  don.appendChild(el("p", "mut", "Lawanku bisa dipakai gratis, tanpa iklan. Kalau kamu merasa terbantu, dukungannya bisa disalurkan lewat Sawermaz — dananya dipakai buat bayar domain dan server."));
+  don.appendChild(el("p", "mut", t("about.donateText")));
   if (SAWERIA_URL) {
-    const a = el("a", "btn-acc", "Donasi via Sawermaz");
+    const a = el("a", "btn-acc", t("about.donateBtn"));
     a.href = SAWERIA_URL;
     a.target = "_blank";
     a.rel = "noopener";
     don.appendChild(a);
   } else {
-    const b = el("button", "btn-acc", "Donasi via Sawermaz");
+    const b = el("button", "btn-acc", t("about.donateBtn"));
     b.type = "button";
     b.disabled = true;
     don.appendChild(b);
-    don.appendChild(el("p", "mut", "Link Saweria belum dipasang."));
   }
   main.appendChild(don);
   const about = el("div", "card");
-  about.appendChild(el("b", null, "Disclaimer"));
-  about.appendChild(el("p", "mut", "Lawanku adalah proyek buatan penggemar, bukan produk resmi dan tidak terafiliasi dengan Tencent, TiMi, atau Level Infinite. Honor of Kings serta seluruh aset hero di dalamnya tetap menjadi milik pemegang hak ciptanya."));
+  about.appendChild(el("b", null, t("about.disclaimerTitle")));
+  about.appendChild(el("p", "mut", t("about.disclaimerText")));
   main.appendChild(about);
   renderDock("tentang", null);
 }
 
 /* ---------- HEAD-TO-HEAD ---------- */
 function renderH2H() {
-  document.title = "Head-to-head — Lawanku";
+  document.title = (getLang() === "en" ? "Head-to-head — Lawanku" : "Head-to-head — Lawanku");
   const main = $("#main");
   main.replaceChildren();
 
@@ -3906,25 +3979,25 @@ function renderH2H() {
   let heroB = bySlug.get(slug(params.get("b") || "")) || byId.get(Number(params.get("b"))) || null;
 
   const head = el("div", "herohead");
-  head.appendChild(el("h1", null, "Head-to-Head"));
-  head.appendChild(el("p", "mut", "Bandingkan dua hero: relasi counter dua arah, rekomendasi item lawan, dan perbandingan tier resmi."));
+  head.appendChild(el("h1", null, t("h2h.heading")));
+  head.appendChild(el("p", "mut", t("h2h.intro")));
   main.appendChild(head);
 
   const pickers = el("div", "h2h-pickers");
   const slotA = el("div", "h2h-slot");
   slotA.tabIndex = 0;
   slotA.setAttribute("role", "button");
-  slotA.setAttribute("aria-label", "Pilih Hero A");
+  slotA.setAttribute("aria-label", t("h2h.selectA"));
   slotA.addEventListener("keydown", (e) => {
     if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openPicker("A"); }
   });
   const swapBtn = el("button", "h2h-swap", "⇄");
   swapBtn.type = "button";
-  swapBtn.setAttribute("aria-label", "Tukar posisi hero");
+  swapBtn.setAttribute("aria-label", t("h2h.swap"));
   const slotB = el("div", "h2h-slot");
   slotB.tabIndex = 0;
   slotB.setAttribute("role", "button");
-  slotB.setAttribute("aria-label", "Pilih Hero B");
+  slotB.setAttribute("aria-label", t("h2h.selectB"));
   slotB.addEventListener("keydown", (e) => {
     if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openPicker("B"); }
   });
@@ -3940,15 +4013,15 @@ function renderH2H() {
   const dlg = document.createElement("dialog");
   dlg.id = "h2hdlg";
   const dlgHead = el("div", "dlg-head");
-  const dlgTitle = el("h2", null, "Pilih Hero");
+  const dlgTitle = el("h2", null, t("h2h.selectA"));
   dlgHead.appendChild(dlgTitle);
   const dlgX = el("button", "x", "×");
-  dlgX.type = "button"; dlgX.setAttribute("aria-label", "Tutup");
+  dlgX.type = "button"; dlgX.setAttribute("aria-label", t("common.close"));
   dlgX.addEventListener("click", () => dlg.close());
   dlgHead.appendChild(dlgX);
   dlg.appendChild(dlgHead);
 
-  const pqWrap = searchBox("h2h-pq", "Cari hero…");
+  const pqWrap = searchBox("h2h-pq", t("tier.searchPlaceholder"));
   const pq = pqWrap.input;
   dlg.appendChild(pqWrap.label);
 
@@ -3963,7 +4036,7 @@ function renderH2H() {
   });
   dlg.appendChild(pRoles);
 
-  const recentLbl = el("p", "lbl", "Terakhir dipakai");
+  const recentLbl = el("p", "lbl", t("common.recent"));
   dlg.appendChild(recentLbl);
   const recentStrip = el("div", "strip");
   dlg.appendChild(recentStrip);
@@ -3986,7 +4059,7 @@ function renderH2H() {
     pGrid.appendChild(b);
   }
 
-  const pEmpty = el("p", "mut", "Hero tidak ketemu.");
+  const pEmpty = el("p", "mut", t("tier.noMatch"));
   pEmpty.hidden = true;
   dlg.appendChild(pEmpty);
   main.appendChild(dlg);
@@ -4010,7 +4083,7 @@ function renderH2H() {
 
   function openPicker(target) {
     pickingTarget = target;
-    dlgTitle.textContent = target === "A" ? "Pilih Hero A" : "Pilih Hero B";
+    dlgTitle.textContent = target === "A" ? t("h2h.selectA") : t("h2h.selectB");
     pq.value = "";
     pRole = "all";
     $$(".role", pRoles).forEach(b => {
@@ -4070,7 +4143,7 @@ function renderH2H() {
       slotEl.appendChild(avatar(h, 56));
       slotEl.appendChild(el("p", "hname", h.en));
       slotEl.appendChild(el("span", "mut", h.roles.map(roleName).join(" / ") + " · " + h.classes.join(", ")));
-      const changeBtn = el("button", "btn-sec", "Ganti " + label);
+      const changeBtn = el("button", "btn-sec", t("h2h.change", { label }));
       changeBtn.type = "button";
       changeBtn.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -4080,8 +4153,8 @@ function renderH2H() {
     } else {
       slotEl.classList.remove("filled");
       slotEl.appendChild(icon("i-swords"));
-      slotEl.appendChild(el("p", "hname", "+ Pilih " + label));
-      slotEl.appendChild(el("span", "mut", "Klik untuk memilih"));
+      slotEl.appendChild(el("p", "hname", t("h2h.pickSlot", { label })));
+      slotEl.appendChild(el("span", "mut", t("h2h.clickToPick")));
       slotEl.onclick = () => openPicker(target);
     }
   }
@@ -4094,21 +4167,21 @@ function renderH2H() {
 
     if (!heroA || !heroB) {
       const guide = el("div", "card");
-      guide.appendChild(el("p", "mut", "Silakan pilih Hero A dan Hero B di atas untuk melihat analisis head-to-head."));
+      guide.appendChild(el("p", "mut", t("h2h.guide")));
       results.appendChild(guide);
       return;
     }
 
     if (heroA.id === heroB.id) {
       const warn = el("div", "card");
-      warn.appendChild(el("p", "mut", "Kamu memilih hero yang sama (" + heroA.en + "). Silakan pilih dua hero yang berbeda untuk membandingkan."));
+      warn.appendChild(el("p", "mut", t("h2h.sameHeroWarn", { name: heroA.en })));
       results.appendChild(warn);
       return;
     }
 
     // --- (a) Hubungan Counter Dua Arah ---
     const secCtr = el("section");
-    secCtr.appendChild(el("h2", "lbl", "Hubungan Counter"));
+    secCtr.appendChild(el("h2", "lbl", t("h2h.matchupTitle")));
 
     const aCountersB = (heroB.naturalCounters || []).find(c => c.hero === heroA.id);
     const bCountersA = (heroA.naturalCounters || []).find(c => c.hero === heroB.id);
@@ -4116,16 +4189,16 @@ function renderH2H() {
     if (!aCountersB && !bCountersA) {
       const card = el("div", "card");
       const r = el("div", "row");
-      r.appendChild(el("b", null, "Tidak Ada Hubungan Counter Langsung"));
-      r.appendChild(el("span", "tag", "Netral"));
+      r.appendChild(el("b", null, t("h2h.neutralTitle")));
+      r.appendChild(el("span", "tag", t("h2h.neutralTag")));
       card.appendChild(r);
-      card.appendChild(el("p", "mut", "Tidak ada hubungan counter langsung antara " + heroA.en + " dan " + heroB.en + " dalam data kurasi. Hasil pertarungan lebih ditentukan oleh posisi, timing skill, dan gold."));
+      card.appendChild(el("p", "mut", t("h2h.neutralDesc", { heroA: heroA.en, heroB: heroB.en })));
       secCtr.appendChild(card);
     } else {
       if (aCountersB) {
         const card = el("div", "card");
         const r = el("div", "row");
-        r.appendChild(el("b", null, heroA.en + " meng-counter " + heroB.en));
+        r.appendChild(el("b", null, t("h2h.counters", { heroA: heroA.en, heroB: heroB.en })));
         r.appendChild(el("span", "badge " + aCountersB.strength, aCountersB.strength));
         card.appendChild(r);
         card.appendChild(el("p", null, aCountersB.why));
@@ -4134,7 +4207,7 @@ function renderH2H() {
       if (bCountersA) {
         const card = el("div", "card");
         const r = el("div", "row");
-        r.appendChild(el("b", null, heroB.en + " meng-counter " + heroA.en));
+        r.appendChild(el("b", null, t("h2h.counters", { heroA: heroB.en, heroB: heroA.en })));
         r.appendChild(el("span", "badge " + bCountersA.strength, bCountersA.strength));
         card.appendChild(r);
         card.appendChild(el("p", null, bCountersA.why));
@@ -4145,20 +4218,20 @@ function renderH2H() {
 
     // --- (b) Rekomendasi Item Tiap Pihak ---
     const secItem = el("section");
-    secItem.appendChild(el("h2", "lbl", "Rekomendasi Item Lawan"));
+    secItem.appendChild(el("h2", "lbl", t("h2h.itemsTitle")));
     const gridItem = el("div", "h2h-grid2");
 
     const boxItemA = el("div", "card");
-    boxItemA.appendChild(el("b", null, "Item untuk melawan " + heroA.en));
-    boxItemA.appendChild(el("p", "mut why", "Disarankan untuk " + heroB.en + " / timnya:"));
+    boxItemA.appendChild(el("b", null, t("h2h.itemsFor", { name: heroA.en })));
+    boxItemA.appendChild(el("p", "mut why", t("h2h.recommendedFor", { name: heroB.en })));
     if (!(heroA.itemCounters || []).length) {
-      boxItemA.appendChild(el("p", "mut", "Belum ada rekomendasi item khusus untuk melawan " + heroA.en + "."));
+      boxItemA.appendChild(el("p", "mut", t("h2h.noItems", { name: heroA.en })));
     } else {
       for (const c of heroA.itemCounters) {
         const it = el("div", "bitem");
         const r = el("div", "row");
         r.appendChild(el("b", null, c.items));
-        r.appendChild(el("span", "tag" + (c.needsReview ? "" : " ok"), c.needsReview ? "belum dikurasi" : "terkurasi"));
+        r.appendChild(el("span", "tag" + (c.needsReview ? "" : " ok"), c.needsReview ? t("hero.needsReview") : t("hero.curated")));
         it.appendChild(r);
         const pl = itemPriceLine(c.items);
         if (pl) it.appendChild(el("p", "mut iprice", pl));
@@ -4169,16 +4242,16 @@ function renderH2H() {
     gridItem.appendChild(boxItemA);
 
     const boxItemB = el("div", "card");
-    boxItemB.appendChild(el("b", null, "Item untuk melawan " + heroB.en));
-    boxItemB.appendChild(el("p", "mut why", "Disarankan untuk " + heroA.en + " / timnya:"));
+    boxItemB.appendChild(el("b", null, t("h2h.itemsFor", { name: heroB.en })));
+    boxItemB.appendChild(el("p", "mut why", t("h2h.recommendedFor", { name: heroA.en })));
     if (!(heroB.itemCounters || []).length) {
-      boxItemB.appendChild(el("p", "mut", "Belum ada rekomendasi item khusus untuk melawan " + heroB.en + "."));
+      boxItemB.appendChild(el("p", "mut", t("h2h.noItems", { name: heroB.en })));
     } else {
       for (const c of heroB.itemCounters) {
         const it = el("div", "bitem");
         const r = el("div", "row");
         r.appendChild(el("b", null, c.items));
-        r.appendChild(el("span", "tag" + (c.needsReview ? "" : " ok"), c.needsReview ? "belum dikurasi" : "terkurasi"));
+        r.appendChild(el("span", "tag" + (c.needsReview ? "" : " ok"), c.needsReview ? t("hero.needsReview") : t("hero.curated")));
         it.appendChild(r);
         const pl = itemPriceLine(c.items);
         if (pl) it.appendChild(el("p", "mut iprice", pl));
@@ -4192,7 +4265,7 @@ function renderH2H() {
 
     // --- (c) Tier Resmi & Statistik (HoK Camp) ---
     const secTier = el("section");
-    secTier.appendChild(el("h2", "lbl", "Tier & Statistik Resmi (HoK Camp)"));
+    secTier.appendChild(el("h2", "lbl", t("h2h.officialTierTitle")));
     const gridStats = el("div", "h2h-grid2");
 
     function renderStatBox(h) {
@@ -4205,30 +4278,30 @@ function renderH2H() {
       headRow.appendChild(info);
       box.appendChild(headRow);
 
-      const t = TIER_DATA && TIER_DATA.tiers ? TIER_DATA.tiers[String(h.id)] : null;
-      if (!t) {
-        box.appendChild(el("p", "mut", "Data tier belum termuat."));
+      const tStat = TIER_DATA && TIER_DATA.tiers ? TIER_DATA.tiers[String(h.id)] : null;
+      if (!tStat) {
+        box.appendChild(el("p", "mut", t("h2h.tierNotLoaded")));
         return box;
       }
 
       const rTier = el("div", "h2h-statrow");
-      rTier.appendChild(el("span", "mut", "Tier"));
-      rTier.appendChild(el("span", "tierbadge t" + t.t.toLowerCase(), "Tier " + t.t));
+      rTier.appendChild(el("span", "mut", t("h2h.tierCol")));
+      rTier.appendChild(el("span", "tierbadge t" + tStat.t.toLowerCase(), t("tier.tierName", { tier: tStat.t })));
       box.appendChild(rTier);
 
       const rWin = el("div", "h2h-statrow");
-      rWin.appendChild(el("span", "mut", "Win Rate"));
-      rWin.appendChild(el("b", null, pct1(t.w) + "%"));
+      rWin.appendChild(el("span", "mut", t("h2h.winCol")));
+      rWin.appendChild(el("b", null, pct1(tStat.w) + "%"));
       box.appendChild(rWin);
 
       const rPick = el("div", "h2h-statrow");
-      rPick.appendChild(el("span", "mut", "Pick Rate"));
-      rPick.appendChild(el("span", null, pct1(t.p) + "%"));
+      rPick.appendChild(el("span", "mut", t("h2h.pickCol")));
+      rPick.appendChild(el("span", null, pct1(tStat.p) + "%"));
       box.appendChild(rPick);
 
       const rBan = el("div", "h2h-statrow");
-      rBan.appendChild(el("span", "mut", "Ban Rate"));
-      rBan.appendChild(el("span", null, pct1(t.b) + "%"));
+      rBan.appendChild(el("span", "mut", t("h2h.banCol")));
+      rBan.appendChild(el("span", null, pct1(tStat.b) + "%"));
       box.appendChild(rBan);
 
       return box;
@@ -4266,6 +4339,9 @@ function route() {
   else renderHome();
   scrollTo(0, 0);
 }
+if (typeof window !== "undefined") {
+  window.route = route;
+}
 async function boot() {
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
@@ -4291,13 +4367,17 @@ async function boot() {
     ITEM_DETAILS = (itemsD && itemsD.itemDetails) || d1.itemDetails || d2.itemDetails || {};
     TIER_DATA = tiersD || null;
   } catch {
-    $("#main").replaceChildren(el("p", "mut", "Gagal memuat data — buka lewat server lokal (mis. python3 -m http.server), bukan file://."));
+    $("#main").replaceChildren(el("p", "mut", t("home.loadError")));
     return;
   }
   for (const h of HEROES) {
     byId.set(h.id, h);
     bySlug.set(slug(h.en), h);
   }
+  if (typeof getLang === "function" && typeof setLang === "function") {
+    setLang(getLang());
+  }
+  updateNavLanguage();
   window.addEventListener("hashchange", route);
   route();
   getDeviceId();
