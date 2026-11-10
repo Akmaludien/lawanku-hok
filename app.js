@@ -35,20 +35,23 @@ function icon(id) {
   s.appendChild(u);
   return s;
 }
-function avatar(hero, size) {
+function avatar(hero, size, isAboveFold = false) {
   const img = el("img", "av r-" + hero.roles[0]);
   img.src = "icons/hero/" + hero.id + ".webp";
-  img.alt = ""; img.width = img.height = size || 40;
-  img.loading = "lazy"; img.decoding = "async";
+  img.alt = hero.en || "";
+  img.width = img.height = size || 40;
+  img.loading = isAboveFold ? "eager" : "lazy";
+  if (isAboveFold) img.fetchPriority = "high";
+  img.decoding = "async";
   return img;
 }
 function roleName(r) { return r.charAt(0).toUpperCase() + r.slice(1); }
 /* Kartu hero vertikal: gambar di atas, nama di bawah, badge role di pojok. */
-function heroCard(tag, h, cls) {
+function heroCard(tag, h, cls, isAboveFold = false) {
   const c = el(tag, "hcard" + (cls ? " " + cls : ""));
   c.dataset.hero = String(h.id);
   const wrap = el("span", "himg");
-  wrap.appendChild(avatar(h, 96));
+  wrap.appendChild(avatar(h, 96, isAboveFold));
   const badge = el("span", "rolebadge");
   const lane = el("i", "lane");
   lane.style.setProperty("--m", "url(icons/role/" + h.roles[0] + ".png)");
@@ -136,6 +139,7 @@ function applyFavStars() {
 function tabEl(href, ic, label, active, extra) {
   const a = el("a", "tab" + (active ? " on" : ""));
   a.href = href;
+  a.setAttribute("aria-label", label);
   if (active) a.setAttribute("aria-current", "page");
   a.appendChild(icon(ic));
   a.appendChild(document.createTextNode(label));
@@ -397,14 +401,17 @@ function renderHome() {
   }
   renderDock("home", null);
   const grid = el("ul", "grid"); grid.id = "grid";
+  let hIdx = 0;
   for (const h of HEROES) {
     const li = el("li");
     li.dataset.id = String(h.id);
     li.dataset.roles = h.roles.join(" ");
-    const a = heroCard("a", h);
+    const isAboveFold = hIdx < 12;
+    const a = heroCard("a", h, null, isAboveFold);
     a.href = "#/hero/" + slug(h.en);
     li.appendChild(a);
     grid.appendChild(li);
+    hIdx++;
   }
   main.appendChild(grid);
   const empty = el("p", "mut", "Hero tidak ketemu.");
@@ -489,6 +496,7 @@ function renderHero(slugName) {
   const paintFav = () => {
     const on = getFavs().includes(h.id);
     favBtn.setAttribute("aria-pressed", String(on));
+    favBtn.setAttribute("aria-label", on ? "Hapus " + h.en + " dari favorit" : "Tambah " + h.en + " ke favorit");
     favSpan.textContent = on ? "Di Favorit" : "Tambah ke Favorit";
   };
   paintFav();
@@ -2701,10 +2709,22 @@ function renderH2H() {
 
   const pickers = el("div", "h2h-pickers");
   const slotA = el("div", "h2h-slot");
+  slotA.tabIndex = 0;
+  slotA.setAttribute("role", "button");
+  slotA.setAttribute("aria-label", "Pilih Hero A");
+  slotA.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openPicker("A"); }
+  });
   const swapBtn = el("button", "h2h-swap", "⇄");
   swapBtn.type = "button";
   swapBtn.setAttribute("aria-label", "Tukar posisi hero");
   const slotB = el("div", "h2h-slot");
+  slotB.tabIndex = 0;
+  slotB.setAttribute("role", "button");
+  slotB.setAttribute("aria-label", "Pilih Hero B");
+  slotB.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openPicker("B"); }
+  });
   pickers.appendChild(slotA);
   pickers.appendChild(swapBtn);
   pickers.appendChild(slotB);
