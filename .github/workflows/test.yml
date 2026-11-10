@@ -1,0 +1,42 @@
+name: CI Tests
+
+on:
+  push:
+    branches: [main, 'fase*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Integrity & E2E Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: 'tests/package.json'
+
+      - name: Check JavaScript Syntax
+        run: node --check app.js
+
+      - name: Run Data Integrity Tests
+        run: node tests/data-test.mjs
+
+      - name: Install Test Dependencies
+        run: |
+          cd tests
+          npm install
+          npx playwright install --with-deps chromium
+
+      - name: Run E2E Browser Tests
+        run: |
+          cd tests
+          node e2e-test.mjs

@@ -6,3 +6,5 @@ slugs.json
 _split_data.py
 .vercel
 AGENTS.md
+tests
+.github
