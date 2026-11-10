@@ -42,6 +42,7 @@ jobs:
           node e2e-test.mjs
           node sync-test.mjs
           node prerender-test.mjs
+          node draft5v5-test.mjs
 
       - name: Verify Prerender & Sitemap Up-to-Date
         run: |

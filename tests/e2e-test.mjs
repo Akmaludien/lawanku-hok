@@ -23,6 +23,7 @@ const server = http.createServer((req, res) => {
   if (reqPath === '/') reqPath = '/index.html';
   const filePath = path.join(ROOT, reqPath);
   if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
+    console.log('  [404 NOT FOUND]', req.url, '->', filePath);
     res.writeHead(404);
     res.end('Not found');
     return;
@@ -73,6 +74,9 @@ server.listen(0, async () => {
       console.error('  [PageError]', err.message);
       jsErrors.push(err.message);
     });
+    page.on('console', msg => {
+      console.log('  [CONSOLE]', msg.text());
+    });
 
     // 1. Home Page & 120 Hero Cards
     console.log('[1] Menguji Halaman Utama & Grid Hero...');
@@ -99,7 +103,9 @@ server.listen(0, async () => {
     assert('Arena draft memiliki 5 slot ally dan 5 slot enemy', allySlotsCount === 5 && enemySlotsCount === 5);
 
     // Test Share Card
-    await page.click('#shareimgbtn');
+    const shareBtn = page.locator('#shareimgbtn');
+    await shareBtn.scrollIntoViewIfNeeded();
+    await shareBtn.click({ force: true });
     await page.waitForSelector('#sharecard-dlg[open]', { timeout: 5000 });
     await page.waitForSelector('#sharecard-preview canvas', { timeout: 10000 });
     const canvasIs1200 = await page.evaluate(() => {

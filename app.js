@@ -746,10 +746,11 @@ function loadDraft() {
 function saveDraft() {
   try { localStorage.setItem(DRAFT_KEY, JSON.stringify(draft)); } catch {}
 }
-function draftSuggestions(role, n) {
-  const used = new Set([...draft.ban, ...draft.ally, ...draft.enemy].filter(Boolean));
+function draftSuggestions(role, n, customDraft) {
+  const d = customDraft || draft || { ally: [], enemy: [], ban: [] };
+  const used = new Set([...d.ban, ...d.ally, ...d.enemy].filter(Boolean));
   const score = new Map(), why = new Map();
-  for (const id of draft.enemy.filter(Boolean)) {
+  for (const id of d.enemy.filter(Boolean)) {
     const enemy = byId.get(id);
     if (!enemy) continue;
     for (const c of enemy.naturalCounters || []) {
@@ -788,11 +789,12 @@ function itemSuggestions() {
     .slice(0, 3)
     .map(([items, n]) => ({ items, n, vs: vs.get(items), allCurated: curated.get(items) }));
 }
-function banSuggestions() {
+function banSuggestions(customDraft) {
+  const d = customDraft || draft || { ally: [], enemy: [], ban: [] };
   // Ancaman buat tim kamu: hero yang counter pick tim kamu (hard +2, soft +1).
-  const used = new Set([...draft.ban, ...draft.ally, ...draft.enemy].filter(Boolean));
+  const used = new Set([...d.ban, ...d.ally, ...d.enemy].filter(Boolean));
   const score = new Map(), why = new Map();
-  for (const id of draft.ally.filter(Boolean)) {
+  for (const id of d.ally.filter(Boolean)) {
     const ally = byId.get(id);
     if (!ally) continue;
     for (const c of ally.naturalCounters || []) {
@@ -815,6 +817,289 @@ function teamComposition() {
     role, label,
     n: picks.filter(h => h.roles.includes(role)).length,
   }));
+}
+
+/* ---------- DRAFT 5v5 vs BOT ENGINE (Fase 29) ---------- */
+const KEY_DRAFT5V5 = "hok-draft5v5";
+
+function mulberry32(seed) {
+  let s = (Number(seed) || 1234567) >>> 0;
+  return function() {
+    s |= 0; s = s + 0x6D2B79F5 | 0;
+    let t = Math.imul(s ^ s >>> 15, 1 | s);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+function fivev5Turns() {
+  return [
+    // 6 Fase Ban: bergantian Kamu, Bot (3 ban per tim)
+    { turn: 0, phase: "ban", who: "user", slot: 0, label: "Ban 1 (Kamu)" },
+    { turn: 1, phase: "ban", who: "bot", slot: 1, label: "Ban 1 (Bot)" },
+    { turn: 2, phase: "ban", who: "user", slot: 2, label: "Ban 2 (Kamu)" },
+    { turn: 3, phase: "ban", who: "bot", slot: 3, label: "Ban 2 (Bot)" },
+    { turn: 4, phase: "ban", who: "user", slot: 4, label: "Ban 3 (Kamu)" },
+    { turn: 5, phase: "ban", who: "bot", slot: 5, label: "Ban 3 (Bot)" },
+    // 10 Fase Pick: snake 1-2-2-2-2-1
+    { turn: 6, phase: "pick", who: "user", pickNum: 1, label: "Pick 1 (Kamu)" },
+    { turn: 7, phase: "pick", who: "bot", pickNum: 1, label: "Pick 1 (Bot)" },
+    { turn: 8, phase: "pick", who: "bot", pickNum: 2, label: "Pick 2 (Bot)" },
+    { turn: 9, phase: "pick", who: "user", pickNum: 2, label: "Pick 2 (Kamu)" },
+    { turn: 10, phase: "pick", who: "user", pickNum: 3, label: "Pick 3 (Kamu)" },
+    { turn: 11, phase: "pick", who: "bot", pickNum: 3, label: "Pick 3 (Bot)" },
+    { turn: 12, phase: "pick", who: "bot", pickNum: 4, label: "Pick 4 (Bot)" },
+    { turn: 13, phase: "pick", who: "user", pickNum: 4, label: "Pick 4 (Kamu)" },
+    { turn: 14, phase: "pick", who: "user", pickNum: 5, label: "Pick 5 (Kamu)" },
+    { turn: 15, phase: "pick", who: "bot", pickNum: 5, label: "Pick 5 (Bot)" },
+  ];
+}
+
+function getHeroTierScore(id) {
+  if (!TIER_DATA || !TIER_DATA.tiers) return 0;
+  const t = TIER_DATA.tiers[String(id)];
+  if (!t || !t.t) return 0;
+  const letter = t.t.toUpperCase();
+  if (letter === "S") return 4;
+  if (letter === "A") return 3;
+  if (letter === "B") return 2;
+  if (letter === "C") return 1;
+  return 0;
+}
+
+function getHeroTierLetter(id) {
+  if (!TIER_DATA || !TIER_DATA.tiers) return null;
+  const t = TIER_DATA.tiers[String(id)];
+  return (t && t.t) ? t.t.toUpperCase() : null;
+}
+
+function fivev5NextRole(draft, who = "bot") {
+  const teamPicks = who === "bot" ? draft.enemy : draft.ally;
+  for (let i = 0; i < COMP_ROLES.length; i++) {
+    if (teamPicks[i] == null) {
+      return COMP_ROLES[i][0];
+    }
+  }
+  return null;
+}
+
+function fivev5BotBan(draft, rng) {
+  const used = new Set([...draft.ban, ...draft.ally, ...draft.enemy].filter(Boolean));
+  const score = new Map(), why = new Map();
+
+  // Ancaman buat bot: hero yang meng-counter pick bot (draft.enemy)
+  for (const id of draft.enemy.filter(Boolean)) {
+    const enemyHero = byId.get(id);
+    if (!enemyHero) continue;
+    for (const c of enemyHero.naturalCounters || []) {
+      if (used.has(c.hero)) continue;
+      const pts = c.strength === "hard" ? 2 : 1;
+      score.set(c.hero, (score.get(c.hero) || 0) + pts);
+      if (!why.has(c.hero) || pts > (why.get(c.hero)[0] || 0)) {
+        why.set(c.hero, [pts, (c.strength === "hard" ? "Hard" : "Soft") + " counter " + enemyHero.en]);
+      }
+    }
+  }
+
+  const candidates = [];
+  if (score.size > 0) {
+    for (const [id, s] of score.entries()) {
+      candidates.push({
+        id,
+        score: s,
+        tier: getHeroTierScore(id),
+        why: why.get(id)[1],
+      });
+    }
+  } else {
+    // Jika belum ada pick bot (mis. fase ban awal): ban hero Tier S/A meta HoK Camp teratas yang belum terpakai
+    for (const h of HEROES) {
+      if (used.has(h.id)) continue;
+      const tScore = getHeroTierScore(h.id);
+      const tLetter = getHeroTierLetter(h.id);
+      candidates.push({
+        id: h.id,
+        score: 0,
+        tier: tScore,
+        why: tLetter ? "Tier " + tLetter + " meta HoK Camp" : "Hero pilihan meta",
+      });
+    }
+  }
+
+  const randMap = new Map();
+  if (typeof rng === "function") {
+    for (const c of candidates) randMap.set(c.id, rng());
+  }
+
+  candidates.sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    if (b.tier !== a.tier) return b.tier - a.tier;
+    if (typeof rng === "function") {
+      const diff = (randMap.get(b.id) || 0) - (randMap.get(a.id) || 0);
+      if (Math.abs(diff) > 0.000001) return diff;
+    }
+    return a.id - b.id;
+  });
+
+  const best = candidates[0];
+  return best ? { id: best.id, why: best.why } : null;
+}
+
+function fivev5BotPick(draft, role, rng) {
+  const targetRole = role || fivev5NextRole(draft, "bot") || "all";
+  const used = new Set([...draft.ban, ...draft.ally, ...draft.enemy].filter(Boolean));
+  const score = new Map(), why = new Map();
+
+  // Hitung skor counter bot terhadap pick pengguna (draft.ally)
+  for (const id of draft.ally.filter(Boolean)) {
+    const ally = byId.get(id);
+    if (!ally) continue;
+    for (const c of ally.naturalCounters || []) {
+      if (used.has(c.hero)) continue;
+      const ch = byId.get(c.hero);
+      if (!ch || (targetRole !== "all" && !ch.roles.includes(targetRole))) continue;
+      const pts = c.strength === "hard" ? 2 : 1;
+      score.set(c.hero, (score.get(c.hero) || 0) + pts);
+      if (!why.has(c.hero) || pts > (why.get(c.hero)[0] || 0)) {
+        why.set(c.hero, [pts, (c.strength === "hard" ? "Hard" : "Soft") + " counter " + ally.en]);
+      }
+    }
+  }
+
+  const candidates = [];
+  for (const h of HEROES) {
+    if (used.has(h.id)) continue;
+    if (targetRole !== "all" && !h.roles.includes(targetRole)) continue;
+
+    const s = score.get(h.id) || 0;
+    const tScore = getHeroTierScore(h.id);
+    const tLetter = getHeroTierLetter(h.id);
+    const w = why.has(h.id) ? why.get(h.id)[1] : ("Pilihan " + roleName(targetRole) + (tLetter ? " (Tier " + tLetter + ")" : ""));
+    candidates.push({
+      id: h.id,
+      score: s,
+      tier: tScore,
+      why: w,
+    });
+  }
+
+  const randMap = new Map();
+  if (typeof rng === "function") {
+    for (const c of candidates) randMap.set(c.id, rng());
+  }
+
+  candidates.sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    if (b.tier !== a.tier) return b.tier - a.tier;
+    if (typeof rng === "function") {
+      const diff = (randMap.get(b.id) || 0) - (randMap.get(a.id) || 0);
+      if (Math.abs(diff) > 0.000001) return diff;
+    }
+    return a.id - b.id;
+  });
+
+  const best = candidates[0];
+  return best ? { id: best.id, why: best.why } : null;
+}
+
+function fivev5AutoAction(draft, who) {
+  const turns = fivev5Turns();
+  const game = loadDraft5v5Game();
+  const currentTurnIdx = game ? game.turnIndex : 0;
+  const currentStep = turns[currentTurnIdx] || turns[0];
+  const used = new Set([...draft.ban, ...draft.ally, ...draft.enemy].filter(Boolean));
+
+  if (currentStep.phase === "ban") {
+    if (who === "user") {
+      const sugs = banSuggestions(draft);
+      if (sugs.length > 0) {
+        return { action: "ban", id: sugs[0].id, why: "Otomatis (waktu habis)" };
+      }
+      for (const h of HEROES) {
+        if (!used.has(h.id)) {
+          return { action: "ban", id: h.id, why: "Otomatis (waktu habis)" };
+        }
+      }
+    }
+    const botBan = fivev5BotBan(draft);
+    return { action: "ban", id: botBan ? botBan.id : null, why: "Otomatis (waktu habis)" };
+  } else {
+    const role = fivev5NextRole(draft, who) || "farm";
+    if (who === "user") {
+      const sugs = draftSuggestions(role, 1, draft);
+      if (sugs.length > 0) {
+        return { action: "pick", id: sugs[0].id, role, why: "Otomatis (waktu habis)" };
+      }
+      for (const h of HEROES) {
+        if (!used.has(h.id) && h.roles.includes(role)) {
+          return { action: "pick", id: h.id, role, why: "Otomatis (waktu habis)" };
+        }
+      }
+    }
+    const botPick = fivev5BotPick(draft, role);
+    return { action: "pick", id: botPick ? botPick.id : null, role, why: "Otomatis (waktu habis)" };
+  }
+}
+
+function computeDraft5v5Tally(d) {
+  let allyHard = 0, allySoft = 0;
+  let botHard = 0, botSoft = 0;
+  const allyDetails = [];
+  const botDetails = [];
+
+  for (const eId of d.enemy.filter(Boolean)) {
+    const enemy = byId.get(eId);
+    if (!enemy) continue;
+    for (const c of enemy.naturalCounters || []) {
+      if (d.ally.includes(c.hero)) {
+        const allyHero = byId.get(c.hero);
+        if (c.strength === "hard") {
+          allyHard++;
+          allyDetails.push((allyHero ? allyHero.en : c.hero) + " (hard counter " + enemy.en + ")");
+        } else {
+          allySoft++;
+          allyDetails.push((allyHero ? allyHero.en : c.hero) + " (soft counter " + enemy.en + ")");
+        }
+      }
+    }
+  }
+
+  for (const aId of d.ally.filter(Boolean)) {
+    const ally = byId.get(aId);
+    if (!ally) continue;
+    for (const c of ally.naturalCounters || []) {
+      if (d.enemy.includes(c.hero)) {
+        const botHero = byId.get(c.hero);
+        if (c.strength === "hard") {
+          botHard++;
+          botDetails.push((botHero ? botHero.en : c.hero) + " (hard counter " + ally.en + ")");
+        } else {
+          botSoft++;
+          botDetails.push((botHero ? botHero.en : c.hero) + " (soft counter " + ally.en + ")");
+        }
+      }
+    }
+  }
+
+  return { allyHard, allySoft, allyDetails, botHard, botSoft, botDetails };
+}
+
+function loadDraft5v5Game() {
+  try {
+    const v = JSON.parse(localStorage.getItem(KEY_DRAFT5V5) || "null");
+    return (v && v.active) ? v : null;
+  } catch { return null; }
+}
+
+function saveDraft5v5Game(st) {
+  try {
+    if (st) localStorage.setItem(KEY_DRAFT5V5, JSON.stringify(st));
+    else localStorage.removeItem(KEY_DRAFT5V5);
+  } catch {}
+}
+
+function clearDraft5v5Game() {
+  try { localStorage.removeItem(KEY_DRAFT5V5); } catch {}
 }
 
 /* ---------- draft tersimpan & link berbagi ---------- */
@@ -1851,8 +2136,15 @@ function showHeroShareCard(hero) {
   });
 }
 
+let draft5v5Timer = null;
+let draft5v5BotTimeout = null;
+let selected5v5SlotIdx = null;
+
 function renderDraft() {
   document.title = "Draft — Lawanku";
+  if (draft5v5Timer) { clearInterval(draft5v5Timer); draft5v5Timer = null; }
+  if (draft5v5BotTimeout) { clearTimeout(draft5v5BotTimeout); draft5v5BotTimeout = null; }
+
   if (!draft) draft = loadDraft();
   let myRole = "all";
   try { const r = localStorage.getItem(ROLE_KEY); if (ROLES.includes(r)) myRole = r; } catch {}
@@ -1866,6 +2158,205 @@ function renderDraft() {
   const main = $("#main");
   main.replaceChildren();
   main.appendChild(el("h1", null, "Draft Pick"));
+
+  let game5v5 = loadDraft5v5Game();
+  const is5v5 = !!(game5v5 && game5v5.active);
+  const turns = fivev5Turns();
+  const is5v5Finished = is5v5 && game5v5.turnIndex >= turns.length;
+  const currentTurn = (is5v5 && !is5v5Finished) ? turns[game5v5.turnIndex] : null;
+
+  // Saklar mode: Sandbox Bebas vs 5v5 vs Bot
+  const modeBar = el("div", "draft-mode-bar");
+  const modeLbl = el("span", "lbl", "Mode:");
+  modeLbl.style.margin = "0";
+  const btnSandbox = el("button", "mode-btn" + (!is5v5 ? " on" : ""), "Sandbox Bebas");
+  btnSandbox.type = "button";
+  const btn5v5 = el("button", "mode-btn" + (is5v5 ? " on" : ""), "5v5 vs Bot");
+  btn5v5.type = "button";
+
+  btnSandbox.addEventListener("click", () => {
+    if (is5v5) {
+      if (confirm("Keluar dari latihan 5v5 vs Bot? Progres latihan saat ini akan direset.")) {
+        clearDraft5v5Game();
+        renderDraft();
+      }
+    }
+  });
+
+  btn5v5.addEventListener("click", () => {
+    if (!is5v5) {
+      const hasHeroes = [...draft.ally, ...draft.enemy, ...draft.ban].some(Boolean);
+      if (hasHeroes) {
+        if (!confirm("Mulai latihan 5v5 vs Bot? Papan draft saat ini akan dikosongkan.")) return;
+      }
+      for (const t of ["ally", "enemy", "ban"]) draft[t].fill(null);
+      draft.history.length = 0;
+      saveDraft();
+      saveDraft5v5Game({
+        active: true,
+        seed: Math.floor(Math.random() * 10000000) + 1,
+        turnIndex: 0,
+        timerRemaining: 30,
+        log: []
+      });
+      renderDraft();
+    }
+  });
+
+  modeBar.appendChild(modeLbl);
+  modeBar.appendChild(btnSandbox);
+  modeBar.appendChild(btn5v5);
+  main.appendChild(modeBar);
+
+  if (is5v5) {
+    if (is5v5Finished) {
+      // Layar Hasil Draft 5v5
+      const tally = computeDraft5v5Tally(draft);
+      const resCard = el("div", "draft-5v5-result");
+      const resHead = el("div", "draft-5v5-banner-head");
+      resHead.appendChild(el("div", "draft-5v5-title", "🎉 Draft 5v5 Selesai!"));
+      resCard.appendChild(resHead);
+
+      const resDesc = el("p", "draft-5v5-info", "Seluruh 16 giliran draft telah selesai. Berikut evaluasi counter faktual antara tim kamu dan bot:");
+      resCard.appendChild(resDesc);
+
+      const tallyGrid = el("div", "draft-5v5-tally");
+      const allyBox = el("div", "draft-5v5-tally-box");
+      allyBox.appendChild(el("div", "draft-5v5-tally-title", "👤 Tim Kamu"));
+      allyBox.appendChild(el("div", "draft-5v5-tally-stat", "Hard counter dihasilkan: " + tally.allyHard));
+      allyBox.appendChild(el("div", "draft-5v5-tally-stat", "Soft counter dihasilkan: " + tally.allySoft));
+      if (tally.allyDetails.length) {
+        const list = el("ul", "draft-5v5-tally-list");
+        for (const d of tally.allyDetails) list.appendChild(el("li", null, d));
+        allyBox.appendChild(list);
+      }
+      tallyGrid.appendChild(allyBox);
+
+      const botBox = el("div", "draft-5v5-tally-box");
+      botBox.appendChild(el("div", "draft-5v5-tally-title", "🤖 Tim Bot"));
+      botBox.appendChild(el("div", "draft-5v5-tally-stat", "Hard counter dihasilkan: " + tally.botHard));
+      botBox.appendChild(el("div", "draft-5v5-tally-stat", "Soft counter dihasilkan: " + tally.botSoft));
+      if (tally.botDetails.length) {
+        const list = el("ul", "draft-5v5-tally-list");
+        for (const d of tally.botDetails) list.appendChild(el("li", null, d));
+        botBox.appendChild(list);
+      }
+      tallyGrid.appendChild(botBox);
+      resCard.appendChild(tallyGrid);
+
+      const actRow = el("div", "share-row");
+      const playAgainBtn = el("button", "btn-acc", "Main Lagi");
+      playAgainBtn.type = "button";
+      playAgainBtn.addEventListener("click", () => {
+        for (const t of ["ally", "enemy", "ban"]) draft[t].fill(null);
+        draft.history.length = 0;
+        saveDraft();
+        saveDraft5v5Game({
+          active: true,
+          seed: Math.floor(Math.random() * 10000000) + 1,
+          turnIndex: 0,
+          timerRemaining: 30,
+          log: []
+        });
+        renderDraft();
+      });
+      const saveResultBtn = el("button", "all", "Simpan Draft");
+      saveResultBtn.type = "button";
+      saveResultBtn.addEventListener("click", () => {
+        const list = loadSavedDrafts();
+        const name = "5v5 vs Bot (" + new Date().toLocaleDateString("id-ID") + ")";
+        list.unshift({ name, savedAt: Date.now(), ally: [...draft.ally], enemy: [...draft.enemy], ban: [...draft.ban] });
+        storeSavedDrafts(list.slice(0, 12));
+        paintSaved();
+        alert("Draft 5v5 tersimpan di riwayat draft!");
+      });
+      actRow.appendChild(playAgainBtn);
+      actRow.appendChild(saveResultBtn);
+      resCard.appendChild(actRow);
+      main.appendChild(resCard);
+    } else {
+      // Banner Giliran 5v5
+      const banner = el("div", "draft-5v5-banner");
+      const bannerHead = el("div", "draft-5v5-banner-head");
+      const titleTxt = currentTurn.who === "user"
+        ? ("👤 Giliran Kamu — " + currentTurn.label)
+        : ("🤖 Giliran Bot — " + currentTurn.label);
+      const titleEl = el("div", "draft-5v5-title", titleTxt);
+      const timerEl = el("div", "draft-5v5-timer");
+      timerEl.id = "draft-5v5-timer-val";
+      timerEl.textContent = currentTurn.who === "user" ? (game5v5.timerRemaining + "s") : "Bot memilih…";
+
+      const resetGameBtn = el("button", "btn-sm", "Reset Game");
+      resetGameBtn.type = "button";
+      resetGameBtn.addEventListener("click", () => {
+        if (confirm("Reset latihan 5v5 vs Bot?")) {
+          for (const t of ["ally", "enemy", "ban"]) draft[t].fill(null);
+          draft.history.length = 0;
+          saveDraft();
+          saveDraft5v5Game({
+            active: true,
+            seed: Math.floor(Math.random() * 10000000) + 1,
+            turnIndex: 0,
+            timerRemaining: 30,
+            log: []
+          });
+          renderDraft();
+        }
+      });
+
+      bannerHead.appendChild(titleEl);
+      bannerHead.appendChild(timerEl);
+      bannerHead.appendChild(resetGameBtn);
+      banner.appendChild(bannerHead);
+
+      const infoTxt = currentTurn.who === "user"
+        ? (currentTurn.phase === "ban"
+            ? "Pilih 1 hero yang ingin kamu ban dari pool hero yang belum terpakai."
+            : "Pilih peran di Tim Kamu (Farm/Mid/Jungle/Roam/Clash), lalu pilih hero yang sesuai.")
+        : "Bot sedang menganalisis counter terbaik berdasarkan data HoK Camp…";
+      banner.appendChild(el("p", "draft-5v5-info", infoTxt));
+
+      if (currentTurn.who === "user") {
+        const quickPickBtn = el("button", "btn-acc", currentTurn.phase === "ban" ? "Pilih Hero Ban" : "Pilih Hero Pick");
+        quickPickBtn.type = "button";
+        quickPickBtn.style.marginTop = "6px";
+        quickPickBtn.addEventListener("click", () => {
+          if (currentTurn.phase === "ban") {
+            openPicker(false);
+          } else {
+            const nextRole = fivev5NextRole(draft, "user") || "farm";
+            let targetIdx = COMP_ROLES.findIndex(([r]) => r === nextRole);
+            if (targetIdx < 0 || draft.ally[targetIdx] != null) targetIdx = draft.ally.indexOf(null);
+            selected5v5SlotIdx = targetIdx;
+            popupRole = COMP_ROLES[targetIdx][0];
+            openPicker(false);
+          }
+        });
+        banner.appendChild(quickPickBtn);
+      }
+
+      if (game5v5.log && game5v5.log.length > 0) {
+        const logBox = el("div", "draft-5v5-log");
+        for (let li = game5v5.log.length - 1; li >= 0; li--) {
+          const entry = game5v5.log[li];
+          const hObj = byId.get(entry.id);
+          const hName = hObj ? hObj.en : "Hero #" + entry.id;
+          const roleStr = entry.role ? ` (${roleName(entry.role)})` : "";
+          const itemEl = el("div", "draft-5v5-log-item");
+          const whoTag = entry.who === "user" ? "👤 Kamu" : "🤖 Bot";
+          const actTag = entry.action === "ban" ? "Ban" : "Pick";
+          itemEl.appendChild(el("span", null, `[${whoTag} ${actTag}]`));
+          itemEl.appendChild(el("b", null, hName + roleStr));
+          if (entry.why) itemEl.appendChild(el("span", "mut", "— " + entry.why));
+          logBox.appendChild(itemEl);
+        }
+        banner.appendChild(logBox);
+      }
+
+      main.appendChild(banner);
+    }
+  }
+
   let mode = "ally", popupRole = "all";
   let activeSlot = null; // {team, idx} | null — slot yang dipilih user jadi target isi
   const indexed = withKeys(HEROES);
@@ -1932,6 +2423,7 @@ function renderDraft() {
   openBtn.addEventListener("click", () => openPicker(true));
   pickctl.appendChild(openBtn);
   center.appendChild(pickctl);
+  if (is5v5) pickctl.hidden = true;
   center.appendChild(banH);
   center.appendChild(bans);
   // Fase 23: seksi advisor pindah ke 2 baris penuh di bawah arena (desktop):
@@ -2061,8 +2553,28 @@ function renderDraft() {
       $$(".slot", container).forEach((slotEl, i) => {
         const id = draft[team][i];
         const hero = id ? byId.get(id) : null;
-        const isActive = !!activeSlot && activeSlot.team === team && activeSlot.idx === i;
-        const isNext = !activeSlot && team === mode && i === nextIdx;
+        let isActive = false, isNext = false;
+
+        if (is5v5) {
+          if (!is5v5Finished && currentTurn) {
+            if (currentTurn.phase === "ban" && team === "ban" && i === currentTurn.slot) {
+              isNext = true;
+            } else if (currentTurn.phase === "pick") {
+              if (currentTurn.who === "user" && team === "ally") {
+                if (selected5v5SlotIdx === i) isActive = true;
+                else if (selected5v5SlotIdx == null && i === draft.ally.indexOf(null)) isNext = true;
+              } else if (currentTurn.who === "bot" && team === "enemy") {
+                const bRole = fivev5NextRole(draft, "bot");
+                const bIdx = COMP_ROLES.findIndex(([r]) => r === bRole);
+                if (bIdx === i) isNext = true;
+              }
+            }
+          }
+        } else {
+          isActive = !!activeSlot && activeSlot.team === team && activeSlot.idx === i;
+          isNext = !activeSlot && team === mode && i === nextIdx;
+        }
+
         slotEl.className = "slot" + (team === "ban" ? " ban" : "") + (hero ? "" : " empty") + (isActive ? " active" : isNext ? " next" : "");
         slotEl.replaceChildren();
         if (hero) {
@@ -2073,13 +2585,24 @@ function renderDraft() {
             tx.appendChild(el("span", "sub", hero.roles.map(roleName).join(" / ") + " · " + hero.classes.join(", ")));
             slotEl.appendChild(tx);
           }
-          const x = el("button", "x", "×");
-          x.type = "button";
-          x.setAttribute("aria-label", "Hapus " + hero.en);
-          slotEl.appendChild(x);
+          if (is5v5 && team !== "ban") {
+            slotEl.appendChild(el("span", "slot-role-tag", COMP_ROLES[i][1]));
+          }
+          if (!is5v5) {
+            const x = el("button", "x", "×");
+            x.type = "button";
+            x.setAttribute("aria-label", "Hapus " + hero.en);
+            slotEl.appendChild(x);
+          }
           slotEl.title = hero.en;
         } else {
-          if (team !== "ban") slotEl.appendChild(document.createTextNode("+ pick"));
+          if (team !== "ban") {
+            const lbl = is5v5 ? ("+ " + COMP_ROLES[i][1]) : "+ pick";
+            slotEl.appendChild(document.createTextNode(lbl));
+            if (is5v5) {
+              slotEl.appendChild(el("span", "slot-role-tag", COMP_ROLES[i][1]));
+            }
+          }
           slotEl.removeAttribute("title");
         }
       });
@@ -2241,18 +2764,54 @@ function renderDraft() {
     return first;
   }
   let pickerSticky = false; // true: panel tetap buka setelah pick (rapid pick)
+  function advance5v5() {
+    if (draft5v5Timer) { clearInterval(draft5v5Timer); draft5v5Timer = null; }
+    if (draft5v5BotTimeout) { clearTimeout(draft5v5BotTimeout); draft5v5BotTimeout = null; }
+    selected5v5SlotIdx = null;
+    game5v5.turnIndex++;
+    game5v5.timerRemaining = 30;
+    saveDraft5v5Game(game5v5);
+    saveDraft();
+    renderDraft();
+  }
   function paintPickerTitle() {
+    if (is5v5 && currentTurn) {
+      if (currentTurn.phase === "ban") {
+        dlgTitle.textContent = "Ban Hero (Giliran Kamu)";
+      } else {
+        const rName = selected5v5SlotIdx != null ? COMP_ROLES[selected5v5SlotIdx][1] : "";
+        dlgTitle.textContent = "Pilih Hero " + rName + " (Giliran Kamu)";
+      }
+      return;
+    }
     const target = activeSlot || { team: mode, idx: draft[mode].indexOf(null) };
     const teamLabel = target.team === "ally" ? "Tim kamu" : target.team === "enemy" ? "Musuh" : "Ban";
     dlgTitle.textContent = target.idx >= 0 ? "Pilih hero · " + teamLabel + " " + (target.idx + 1) : "Pilih hero · " + teamLabel;
   }
   function openPicker(sticky) {
-    pickerSticky = !!sticky;
+    if (is5v5 && is5v5Finished) return;
+    if (is5v5 && currentTurn && currentTurn.who === "bot") return;
+
+    pickerSticky = !is5v5 && !!sticky;
     pq.value = "";
-    popupRole = "all";
+    if (is5v5 && currentTurn) {
+      if (currentTurn.phase === "ban") {
+        popupRole = "all";
+      } else {
+        if (selected5v5SlotIdx == null) {
+          selected5v5SlotIdx = draft.ally.indexOf(null);
+        }
+        if (selected5v5SlotIdx >= 0) {
+          popupRole = COMP_ROLES[selected5v5SlotIdx][0];
+        }
+      }
+    } else {
+      popupRole = "all";
+    }
+
     $$(".role", pRoles).forEach(b => {
-      b.classList.toggle("on", b.dataset.role === "all");
-      b.setAttribute("aria-pressed", String(b.dataset.role === "all"));
+      b.classList.toggle("on", b.dataset.role === popupRole);
+      b.setAttribute("aria-pressed", String(b.dataset.role === popupRole));
     });
     paintPickerTitle();
     applyPickerFilter();
@@ -2274,6 +2833,7 @@ function renderDraft() {
     openPicker(false);
   }
   function removeSlot(team, idx) {
+    if (is5v5) return;
     if (draft[team][idx] == null) return;
     draft[team][idx] = null;
     draft.history = draft.history.filter(([t, i]) => !(t === team && i === idx));
@@ -2281,6 +2841,35 @@ function renderDraft() {
   }
   function sync() { saveDraft(); paintSlots(); paintSug(); paintBanSug(); paintComp(); paintRoleSug(); paintItemSug(); }
   function pickHero(id, team) {
+    if (is5v5) {
+      if (is5v5Finished || !currentTurn || currentTurn.who !== "user") return;
+      const used = new Set([...draft.ally, ...draft.enemy, ...draft.ban]);
+      if (used.has(id)) return;
+      const hero = byId.get(id);
+      if (!hero) return;
+
+      if (currentTurn.phase === "ban") {
+        draft.ban[currentTurn.slot] = id;
+        game5v5.log.push({ turn: currentTurn.turn, who: "user", action: "ban", id, role: null, why: "Pilihan kamu" });
+        pushRecent(id);
+        advance5v5();
+        return;
+      } else {
+        let targetIdx = selected5v5SlotIdx != null ? selected5v5SlotIdx : draft.ally.indexOf(null);
+        if (targetIdx < 0) return;
+        const reqRole = COMP_ROLES[targetIdx][0];
+        if (!hero.roles.includes(reqRole)) {
+          alert("Hero " + hero.en + " bukan peran " + COMP_ROLES[targetIdx][1]);
+          return;
+        }
+        draft.ally[targetIdx] = id;
+        game5v5.log.push({ turn: currentTurn.turn, who: "user", action: "pick", id, role: reqRole, why: "Pilihan kamu (" + COMP_ROLES[targetIdx][1] + ")" });
+        pushRecent(id);
+        advance5v5();
+        return;
+      }
+    }
+
     team = team || mode;
     for (const t of ["ally", "enemy", "ban"]) {
       const i = draft[t].indexOf(id);
@@ -2311,6 +2900,28 @@ function renderDraft() {
     sync();
   }
   function onSlotAreaClick(e) {
+    if (is5v5) {
+      if (is5v5Finished || !currentTurn || currentTurn.who !== "user") return;
+      const slotEl = e.target.closest(".slot");
+      if (!slotEl) return;
+      const team = slotEl.dataset.team;
+      const idx = Number(slotEl.dataset.idx);
+
+      if (currentTurn.phase === "ban") {
+        if (team === "ban" && idx === currentTurn.slot) {
+          openPicker(false);
+        }
+      } else {
+        if (team === "ally") {
+          if (draft.ally[idx] != null) return;
+          selected5v5SlotIdx = idx;
+          paintSlots();
+          openPicker(false);
+        }
+      }
+      return;
+    }
+
     const x = e.target.closest(".x");
     if (x) {
       const slotEl = x.closest(".slot");
@@ -2323,6 +2934,10 @@ function renderDraft() {
   function onSlotKey(e) {
     if ((e.key === "Enter" || e.key === " ") && e.target.classList.contains("slot")) {
       e.preventDefault();
+      if (is5v5) {
+        onSlotAreaClick(e);
+        return;
+      }
       selectSlot(e.target.dataset.team, Number(e.target.dataset.idx));
     }
   }
@@ -2425,6 +3040,58 @@ function renderDraft() {
   paintSaved();
   sync();
   applyFavStars();
+
+  // Penggerak otomatis giliran 5v5 (Countdown 30s untuk user & Jeda ~800ms untuk bot)
+  if (is5v5 && !is5v5Finished && currentTurn) {
+    if (currentTurn.who === "user") {
+      draft5v5Timer = setInterval(() => {
+        game5v5.timerRemaining--;
+        if (game5v5.timerRemaining <= 0) {
+          clearInterval(draft5v5Timer);
+          draft5v5Timer = null;
+          const auto = fivev5AutoAction(draft, "user");
+          if (auto) {
+            if (auto.action === "ban") {
+              draft.ban[currentTurn.slot] = auto.id;
+              game5v5.log.push({ turn: currentTurn.turn, who: "user", action: "ban", id: auto.id, role: null, why: "Otomatis (waktu habis)" });
+            } else {
+              let targetIdx = selected5v5SlotIdx != null ? selected5v5SlotIdx : COMP_ROLES.findIndex(([r]) => r === auto.role);
+              if (targetIdx < 0 || draft.ally[targetIdx] != null) targetIdx = draft.ally.indexOf(null);
+              if (targetIdx >= 0) {
+                draft.ally[targetIdx] = auto.id;
+                game5v5.log.push({ turn: currentTurn.turn, who: "user", action: "pick", id: auto.id, role: COMP_ROLES[targetIdx][0], why: "Otomatis (waktu habis)" });
+              }
+            }
+          }
+          advance5v5();
+        } else {
+          saveDraft5v5Game(game5v5);
+          const tVal = $("#draft-5v5-timer-val");
+          if (tVal) tVal.textContent = game5v5.timerRemaining + "s";
+        }
+      }, 1000);
+    } else if (currentTurn.who === "bot") {
+      draft5v5BotTimeout = setTimeout(() => {
+        const rng = mulberry32(game5v5.seed + currentTurn.turn);
+        if (currentTurn.phase === "ban") {
+          const b = fivev5BotBan(draft, rng);
+          if (b) {
+            draft.ban[currentTurn.slot] = b.id;
+            game5v5.log.push({ turn: currentTurn.turn, who: "bot", action: "ban", id: b.id, role: null, why: b.why });
+          }
+        } else {
+          const botRole = fivev5NextRole(draft, "bot");
+          const roleIdx = COMP_ROLES.findIndex(([r]) => r === botRole);
+          const p = fivev5BotPick(draft, botRole, rng);
+          if (p && roleIdx >= 0) {
+            draft.enemy[roleIdx] = p.id;
+            game5v5.log.push({ turn: currentTurn.turn, who: "bot", action: "pick", id: p.id, role: botRole, why: p.why });
+          }
+        }
+        advance5v5();
+      }, 800);
+    }
+  }
 }
 
 /* ---------- QUIZ ---------- */
@@ -3582,6 +4249,10 @@ function route() {
   const hash = location.hash.replace(/^#/, "") || "/";
   const [path] = hash.split("?");
   const parts = path.split("/").filter(Boolean);
+  if (parts[0] !== "draft") {
+    if (draft5v5Timer) { clearInterval(draft5v5Timer); draft5v5Timer = null; }
+    if (draft5v5BotTimeout) { clearTimeout(draft5v5BotTimeout); draft5v5BotTimeout = null; }
+  }
   if (parts.length === 0) renderHome();
   else if (parts[0] === "draft") renderDraft();
   else if (parts[0] === "favorit") renderFavorit();
@@ -3636,4 +4307,30 @@ async function boot() {
   }
   flushUsulanQueue().catch(() => {});
 }
-boot();
+if (typeof window !== "undefined" && typeof document !== "undefined") {
+  boot();
+}
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = {
+    mulberry32,
+    fivev5Turns,
+    getHeroTierScore,
+    getHeroTierLetter,
+    fivev5NextRole,
+    fivev5BotBan,
+    fivev5BotPick,
+    fivev5AutoAction,
+    computeDraft5v5Tally,
+    loadDraft5v5Game,
+    saveDraft5v5Game,
+    clearDraft5v5Game,
+    init5v5TestData: (heroes, tiers) => {
+      HEROES = heroes;
+      byId.clear();
+      for (const h of HEROES) byId.set(h.id, h);
+      TIER_DATA = tiers;
+      draft = { ally: [null, null, null, null, null], enemy: [null, null, null, null, null], ban: [null, null, null, null, null, null], history: [] };
+    }
+  };
+}
