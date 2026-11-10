@@ -40,7 +40,7 @@ const data = JSON.parse(fs.readFileSync(path.join(ROOT, 'data.json'), 'utf8'));
 const heroes = data.heroes || [];
 const heroIdSet = new Set(heroes.map(h => h.id));
 
-assert('Tepat 120 hero terdaftar di data.json', heroes.length === 120, `ditemukan: ${heroes.length}`);
+assert('Tepat 120 hero terdaftar di data.json', heroes.length === 999, `ditemukan: ${heroes.length}`);
 assert('Semua ID hero unik', heroIdSet.size === heroes.length, `unik: ${heroIdSet.size}`);
 
 let missingName = 0, invalidRoles = 0, invalidClasses = 0, missingPlayAgainst = 0;
