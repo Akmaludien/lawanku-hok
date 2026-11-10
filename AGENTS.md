@@ -256,6 +256,17 @@ Key `localStorage`: `hok-draft`, `hok-fav`, `hok-recent` (maks 8),
   `hero` counter = id angka; tanggal "Terakhir diperbarui" ada di 2
   tempat (`app.js` renderTentang + footer `index.html`).
 
+### Prerender SEO & Sitemap (Fase 28)
+
+- **120 halaman hero statis** di `hero/<slug>/index.html` dan `sitemap.xml` di-generate otomatis oleh `scripts/prerender.mjs` (Node vanilla, tanpa dependensi).
+- **Aturan CI Sinkronisasi:** CI GitHub Actions menjalankan `node scripts/prerender.mjs` lalu `git diff --exit-code hero/ sitemap.xml`. Jika ada agen yang mengedit `data.json` atau `tiers.json` tanpa menjalankan `node scripts/prerender.mjs`, **CI otomatis GAGAL**.
+- **Checklist agen Data & Riset saat update data:**
+  1. Edit `data.json` / `tiers.json`.
+  2. Jalankan `python3 _split_data.py` (untuk update chunk `data-1.json` & `data-2.json`).
+  3. Jalankan `node scripts/prerender.mjs` (untuk regenerasi 120 halaman `hero/` & `sitemap.xml`).
+  4. Jalankan `node tests/prerender-test.mjs`.
+  5. Baru commit & push.
+
 ## 11. Backlog (urut prioritas)
 
 - **Kecil:** head-to-head 2 hero; filter counter per role di halaman
