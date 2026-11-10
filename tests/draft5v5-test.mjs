@@ -187,6 +187,44 @@ server.listen(0, async () => {
     const roleTags = await page.$$eval('.slot-role-tag', els => els.map(e => e.textContent));
     assert('Slot draft 5v5 menampilkan tag peran (Farm/Mid/Jungle/Roam/Clash)', roleTags.length > 0);
 
+    // 6.b Pengujian Pick Bebas Lane (User bebas pilih lane apa saja tanpa harus urut farm)
+    await page.evaluate(() => {
+      const KEY = 'hok-draft5v5';
+      const DRAFT_KEY = 'hok-draft';
+      const st = JSON.parse(localStorage.getItem(KEY)) || {};
+      st.turnIndex = 6; // Turn 6 = Pick 1 (Kamu)
+      st.active = true;
+      st.timerRemaining = 30;
+      st.log = [];
+      const draftObj = {
+        ally: [null, null, null, null, null],
+        enemy: [null, null, null, null, null],
+        ban: [101, 102, 103, 104, 105, 106],
+        history: []
+      };
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(draftObj));
+      localStorage.setItem(KEY, JSON.stringify(st));
+    });
+
+    await page.reload({ waitUntil: 'networkidle' });
+    await page.waitForSelector('.draft-5v5-banner');
+
+    const pickBtn = await page.$('button.btn-acc:has-text("Pilih Hero")');
+    assert('Tombol pick bebas lane muncul pada giliran pick user', pickBtn !== null);
+    await pickBtn.click();
+    await page.waitForSelector('#pickdlg[open]');
+
+    const bironCard = await page.$('#pickdlg .pickhero:has-text("Biron")');
+    assert('Hero Biron (Clash) ditemukan di picker dialog', bironCard !== null);
+    if (bironCard) {
+      await bironCard.click();
+      await page.waitForTimeout(300);
+      const clashSlotText = await page.$eval('.arena-a .slot[data-idx="4"]', el => el.textContent);
+      assert('Hero Biron berhasil masuk ke slot Clash (idx 4) secara bebas tanpa harus urut Farm', clashSlotText.includes('Biron'));
+      const farmSlotText = await page.$eval('.arena-a .slot[data-idx="0"]', el => el.textContent);
+      assert('Slot Farm (idx 0) tetap kosong dan siap dipilih kapan saja', farmSlotText.includes('Farm') && !farmSlotText.includes('Biron'));
+    }
+
     // 7. Simulasikan permainan cepat hingga selesai (16 turn)
     // Di browser context, kita bisa panggil advance / auto actions untuk mensimulasikan full match
     await page.evaluate(() => {

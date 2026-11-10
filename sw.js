@@ -1,5 +1,5 @@
 /* Lawanku — service worker: cache-first biar jalan offline. */
-const CACHE = "lawanku-v33";
+const CACHE = "lawanku-v34";
 const SHELL = [
   "./", "index.html", "i18n.js", "app.js", "styles.css",
   "manifest.webmanifest", "logo.svg", "data-1.json", "data-2.json", "items.json", "tiers.json",

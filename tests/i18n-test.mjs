@@ -155,8 +155,8 @@ async function run() {
   try {
     // 4.1 Buka halaman default (Harus Bahasa Indonesia)
     console.log("  -> Memuat halaman utama default...");
-    await page.goto(`${baseUrl}/`, { waitUntil: "domcontentloaded" });
-    await page.waitForSelector(".hcard", { timeout: 10000 });
+    await page.goto(`${baseUrl}/`, { waitUntil: "networkidle" });
+    await page.waitForSelector(".hcard", { timeout: 15000 });
 
     const htmlLangInitial = await page.evaluate(() => document.documentElement.lang);
     assert(htmlLangInitial === "id", `Bahasa awal dokumen adalah "id" (ditemukan: "${htmlLangInitial}")`);

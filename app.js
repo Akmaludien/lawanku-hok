@@ -2369,20 +2369,16 @@ function renderDraft() {
       banner.appendChild(el("p", "draft-5v5-info", infoTxt));
 
       if (currentTurn.who === "user") {
-        const quickPickBtn = el("button", "btn-acc", currentTurn.phase === "ban" ? t("fivev5.quickBan") : t("fivev5.quickPick"));
+        const btnLabel = currentTurn.phase === "ban"
+          ? t("fivev5.quickBan")
+          : (selected5v5SlotIdx != null && COMP_ROLES[selected5v5SlotIdx]
+              ? t("fivev5.quickPick", { role: COMP_ROLES[selected5v5SlotIdx][1] })
+              : t("fivev5.quickPickAny"));
+        const quickPickBtn = el("button", "btn-acc", btnLabel);
         quickPickBtn.type = "button";
         quickPickBtn.style.marginTop = "6px";
         quickPickBtn.addEventListener("click", () => {
-          if (currentTurn.phase === "ban") {
-            openPicker(false);
-          } else {
-            const nextRole = fivev5NextRole(draft, "user") || "farm";
-            let targetIdx = COMP_ROLES.findIndex(([r]) => r === nextRole);
-            if (targetIdx < 0 || draft.ally[targetIdx] != null) targetIdx = draft.ally.indexOf(null);
-            selected5v5SlotIdx = targetIdx;
-            popupRole = COMP_ROLES[targetIdx][0];
-            openPicker(false);
-          }
+          openPicker(false);
         });
         banner.appendChild(quickPickBtn);
       }
@@ -2614,7 +2610,7 @@ function renderDraft() {
             } else if (currentTurn.phase === "pick") {
               if (currentTurn.who === "user" && team === "ally") {
                 if (selected5v5SlotIdx === i) isActive = true;
-                else if (selected5v5SlotIdx == null && i === draft.ally.indexOf(null)) isNext = true;
+                else if (draft.ally[i] == null) isNext = true;
               } else if (currentTurn.who === "bot" && team === "enemy") {
                 const bRole = fivev5NextRole(draft, "bot");
                 const bIdx = COMP_ROLES.findIndex(([r]) => r === bRole);
@@ -2832,9 +2828,11 @@ function renderDraft() {
     if (is5v5 && currentTurn) {
       if (currentTurn.phase === "ban") {
         dlgTitle.textContent = t("fivev5.dlgTitleBan");
-      } else {
-        const rName = selected5v5SlotIdx != null ? COMP_ROLES[selected5v5SlotIdx][1] : "";
+      } else if (selected5v5SlotIdx != null && COMP_ROLES[selected5v5SlotIdx]) {
+        const rName = COMP_ROLES[selected5v5SlotIdx][1];
         dlgTitle.textContent = t("fivev5.dlgTitlePick", { role: rName });
+      } else {
+        dlgTitle.textContent = t("fivev5.dlgTitlePickAny");
       }
       return;
     }
@@ -2852,11 +2850,10 @@ function renderDraft() {
       if (currentTurn.phase === "ban") {
         popupRole = "all";
       } else {
-        if (selected5v5SlotIdx == null) {
-          selected5v5SlotIdx = draft.ally.indexOf(null);
-        }
-        if (selected5v5SlotIdx >= 0) {
+        if (selected5v5SlotIdx != null && COMP_ROLES[selected5v5SlotIdx] && draft.ally[selected5v5SlotIdx] == null) {
           popupRole = COMP_ROLES[selected5v5SlotIdx][0];
+        } else {
+          popupRole = "all";
         }
       }
     } else {
@@ -2909,15 +2906,52 @@ function renderDraft() {
         advance5v5();
         return;
       } else {
-        let targetIdx = selected5v5SlotIdx != null ? selected5v5SlotIdx : draft.ally.indexOf(null);
-        if (targetIdx < 0) return;
-        const reqRole = COMP_ROLES[targetIdx][0];
-        if (!hero.roles.includes(reqRole)) {
-          alert(t("fivev5.roleMismatch", { hero: hero.en, role: COMP_ROLES[targetIdx][1] }));
+        let targetIdx = null;
+
+        // 1. Jika tab role spesifik aktif di dialog dan hero memilikinya & slotnya kosong
+        if (popupRole && popupRole !== "all" && hero.roles.includes(popupRole)) {
+          const roleSlot = COMP_ROLES.findIndex(([r]) => r === popupRole);
+          if (roleSlot >= 0 && draft.ally[roleSlot] == null) {
+            targetIdx = roleSlot;
+          }
+        }
+
+        // 2. Jika user mengklik slot tertentu di arena dan hero cocok
+        if (targetIdx == null && selected5v5SlotIdx != null && draft.ally[selected5v5SlotIdx] == null) {
+          const reqRole = COMP_ROLES[selected5v5SlotIdx][0];
+          if (hero.roles.includes(reqRole)) {
+            targetIdx = selected5v5SlotIdx;
+          }
+        }
+
+        // 3. Cari slot kosong pertama di tim user yang cocok dengan salah satu role hero
+        if (targetIdx == null) {
+          for (const r of hero.roles) {
+            const slotI = COMP_ROLES.findIndex(([roleKey]) => roleKey === r);
+            if (slotI >= 0 && draft.ally[slotI] == null) {
+              targetIdx = slotI;
+              break;
+            }
+          }
+        }
+
+        // 4. Jika semua role hero ini sudah terisi di tim kamu
+        if (targetIdx == null) {
+          const roleNames = hero.roles.map(roleName).join(" / ");
+          alert(t("fivev5.roleAlreadyFilled", { hero: hero.en, role: roleNames }));
           return;
         }
+
+        const assignedRole = COMP_ROLES[targetIdx][0];
         draft.ally[targetIdx] = id;
-        game5v5.log.push({ turn: currentTurn.turn, who: "user", action: "pick", id, role: reqRole, why: t("fivev5.userPickReason", { role: COMP_ROLES[targetIdx][1] }) });
+        game5v5.log.push({
+          turn: currentTurn.turn,
+          who: "user",
+          action: "pick",
+          id,
+          role: assignedRole,
+          why: t("fivev5.userPickReason", { role: COMP_ROLES[targetIdx][1] })
+        });
         pushRecent(id);
         advance5v5();
         return;
