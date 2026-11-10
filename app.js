@@ -385,8 +385,13 @@ function renderHome() {
     more.href = "#/hero/" + slug(h.en);
     const h2hLink = el("a", "link", "Bandingkan hero ini ⇄");
     h2hLink.href = "#/h2h?a=" + slug(h.en);
+    const shareHeroBtn = el("button", "link", "Bagikan kartu ⎘");
+    shareHeroBtn.id = "sharebedahbtn";
+    shareHeroBtn.type = "button";
+    shareHeroBtn.addEventListener("click", () => showHeroShareCard(h));
     actions.appendChild(more);
     actions.appendChild(h2hLink);
+    actions.appendChild(shareHeroBtn);
     bedah.appendChild(actions);
     bedah.hidden = false;
   }
@@ -811,6 +816,519 @@ function draftFromParam(qs) {
   }
   return any ? fresh : null;
 }
+
+/* ---------- SHARE CARD (CANVAS GENERATOR) ---------- */
+function loadAvatarImg(id) {
+  return new Promise(resolve => {
+    if (!id) return resolve(null);
+    const img = new Image();
+    img.onload = () => resolve({ id, img });
+    img.onerror = () => resolve(null);
+    img.src = "icons/hero/" + id + ".webp";
+  });
+}
+
+function drawRoundRect(ctx, x, y, w, h, r, fill, stroke) {
+  ctx.beginPath();
+  if (ctx.roundRect) {
+    ctx.roundRect(x, y, w, h, r);
+  } else {
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+  if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+  if (stroke) { ctx.strokeStyle = stroke; ctx.stroke(); }
+}
+
+function drawAvatarOnCanvas(ctx, img, x, y, size, r = 8) {
+  ctx.save();
+  ctx.beginPath();
+  if (ctx.roundRect) {
+    ctx.roundRect(x, y, size, size, r);
+  } else {
+    ctx.rect(x, y, size, size);
+  }
+  ctx.clip();
+  if (img) {
+    ctx.drawImage(img, x, y, size, size);
+  } else {
+    ctx.fillStyle = "#1e293b";
+    ctx.fillRect(x, y, size, size);
+  }
+  ctx.restore();
+}
+
+function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 6) {
+  if (!text) return;
+  const words = text.split(" ");
+  let line = "";
+  let currentY = y;
+  let linesCount = 0;
+  for (let n = 0; n < words.length; n++) {
+    const testLine = line + words[n] + " ";
+    const metrics = ctx.measureText(testLine);
+    if (metrics.width > maxWidth && n > 0) {
+      ctx.fillText(line.trim(), x, currentY);
+      line = words[n] + " ";
+      currentY += lineHeight;
+      linesCount++;
+      if (linesCount >= maxLines - 1 && n < words.length - 1) {
+        ctx.fillText(line.trim() + "…", x, currentY);
+        return;
+      }
+    } else {
+      line = testLine;
+    }
+  }
+  ctx.fillText(line.trim(), x, currentY);
+}
+
+function drawDraftCard(canvas, draftState, imgMap) {
+  canvas.width = 1200;
+  canvas.height = 675;
+  const ctx = canvas.getContext("2d");
+
+  // 1. Background
+  const grad = ctx.createLinearGradient(0, 0, 0, 675);
+  grad.addColorStop(0, "#090d16");
+  grad.addColorStop(1, "#0f172a");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1200, 675);
+
+  // Top accent bar
+  ctx.fillStyle = "#f59e0b";
+  ctx.fillRect(0, 0, 1200, 4);
+
+  // Outer subtle border
+  ctx.strokeStyle = "#1e293b";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(0, 0, 1200, 675);
+
+  // 2. Header
+  ctx.fillStyle = "#f59e0b";
+  ctx.font = "800 26px 'Outfit', 'Inter', sans-serif";
+  ctx.fillText("⚔ LAWANKU", 40, 50);
+
+  ctx.fillStyle = "#94a3b8";
+  ctx.font = "600 13px 'Inter', sans-serif";
+  ctx.fillText("HONOR OF KINGS DRAFT ADVISOR", 195, 47);
+
+  ctx.fillStyle = "#38bdf8";
+  ctx.font = "700 14px 'Inter', sans-serif";
+  ctx.textAlign = "right";
+  ctx.fillText("lawanku.vercel.app", 1160, 48);
+  ctx.textAlign = "left";
+
+  ctx.strokeStyle = "#1e293b";
+  ctx.beginPath();
+  ctx.moveTo(40, 68);
+  ctx.lineTo(1160, 68);
+  ctx.stroke();
+
+  // 3. Left Panel (Tim Kita)
+  drawRoundRect(ctx, 40, 84, 545, 336, 12, "#0b1220", "#1e293b");
+  ctx.fillStyle = "#38bdf8";
+  ctx.font = "800 15px 'Outfit', sans-serif";
+  ctx.fillText("TIM KITA", 58, 112);
+
+  for (let i = 0; i < 5; i++) {
+    const sy = 128 + i * 55;
+    const id = draftState.ally[i];
+    const hero = id ? byId.get(id) : null;
+    drawRoundRect(ctx, 58, sy, 509, 48, 8, "#131b2e", "#1e293b");
+    if (hero) {
+      drawAvatarOnCanvas(ctx, imgMap.get(hero.id), 64, sy + 6, 36, 6);
+      ctx.fillStyle = "#f1f5f9";
+      ctx.font = "700 14px 'Inter', sans-serif";
+      ctx.fillText(hero.en, 110, sy + 23);
+      ctx.fillStyle = "#94a3b8";
+      ctx.font = "500 11px 'Inter', sans-serif";
+      ctx.fillText(hero.roles.map(roleName).join(" / ") + " · " + hero.classes.join(", "), 110, sy + 40);
+    } else {
+      ctx.fillStyle = "#475569";
+      ctx.font = "500 13px 'Inter', sans-serif";
+      ctx.fillText("+ Slot Kosong", 72, sy + 30);
+    }
+  }
+
+  // 4. Right Panel (Tim Musuh)
+  drawRoundRect(ctx, 615, 84, 545, 336, 12, "#180f19", "#341724");
+  ctx.fillStyle = "#ef4444";
+  ctx.font = "800 15px 'Outfit', sans-serif";
+  ctx.fillText("TIM MUSUH", 633, 112);
+
+  for (let i = 0; i < 5; i++) {
+    const sy = 128 + i * 55;
+    const id = draftState.enemy[i];
+    const hero = id ? byId.get(id) : null;
+    drawRoundRect(ctx, 633, sy, 509, 48, 8, "#22131e", "#381927");
+    if (hero) {
+      drawAvatarOnCanvas(ctx, imgMap.get(hero.id), 639, sy + 6, 36, 6);
+      ctx.fillStyle = "#f1f5f9";
+      ctx.font = "700 14px 'Inter', sans-serif";
+      ctx.fillText(hero.en, 685, sy + 23);
+      ctx.fillStyle = "#94a3b8";
+      ctx.font = "500 11px 'Inter', sans-serif";
+      ctx.fillText(hero.roles.map(roleName).join(" / ") + " · " + hero.classes.join(", "), 685, sy + 40);
+    } else {
+      ctx.fillStyle = "#475569";
+      ctx.font = "500 13px 'Inter', sans-serif";
+      ctx.fillText("+ Slot Kosong", 647, sy + 30);
+    }
+  }
+
+  // 5. Bottom Panel (Saran Counter & Item)
+  drawRoundRect(ctx, 40, 434, 1120, 196, 12, "#0d1424", "#1e293b");
+
+  // Vertical divider between left and right bottom sections
+  ctx.strokeStyle = "#1e293b";
+  ctx.beginPath();
+  ctx.moveTo(600, 448);
+  ctx.lineTo(600, 616);
+  ctx.stroke();
+
+  // Bottom Left: Saran Pick Counter
+  ctx.fillStyle = "#f59e0b";
+  ctx.font = "800 14px 'Outfit', sans-serif";
+  ctx.fillText("⚔ TOP COUNTER LAWAN MUSUH", 58, 460);
+
+  const topCounters = draftSuggestions(null, 3);
+  if (!topCounters.length) {
+    ctx.fillStyle = "#64748b";
+    ctx.font = "500 13px 'Inter', sans-serif";
+    ctx.fillText("Pilih hero musuh di atas untuk melihat saran counter.", 58, 500);
+  } else {
+    for (let i = 0; i < topCounters.length; i++) {
+      const s = topCounters[i];
+      const h = byId.get(s.id);
+      const cy = 478 + i * 46;
+      drawAvatarOnCanvas(ctx, imgMap.get(s.id), 58, cy, 34, 6);
+      ctx.fillStyle = "#f1f5f9";
+      ctx.font = "700 13px 'Inter', sans-serif";
+      ctx.fillText(h.en, 102, cy + 15);
+      // Badge score
+      ctx.fillStyle = "#10b981";
+      ctx.font = "700 12px 'Inter', sans-serif";
+      ctx.fillText("+" + s.s, 102 + ctx.measureText(h.en).width + 8, cy + 15);
+
+      ctx.fillStyle = "#94a3b8";
+      ctx.font = "500 11px 'Inter', sans-serif";
+      const whyText = s.why ? (s.why.length > 55 ? s.why.slice(0, 52) + "…" : s.why) : "";
+      ctx.fillText(whyText, 102, cy + 30);
+    }
+  }
+
+  // Bottom Right: Saran Item Counter
+  ctx.fillStyle = "#38bdf8";
+  ctx.font = "800 14px 'Outfit', sans-serif";
+  ctx.fillText("🛡 SARAN ITEM ANTI-MUSUH", 620, 460);
+
+  const topItems = itemSuggestions();
+  if (!topItems.length) {
+    ctx.fillStyle = "#64748b";
+    ctx.font = "500 13px 'Inter', sans-serif";
+    ctx.fillText("Pilih hero musuh di atas untuk melihat rekomendasi item counter.", 620, 500);
+  } else {
+    for (let i = 0; i < topItems.length; i++) {
+      const it = topItems[i];
+      const iy = 478 + i * 46;
+      ctx.fillStyle = "#f1f5f9";
+      ctx.font = "700 13px 'Inter', sans-serif";
+      ctx.fillText(it.items, 620, iy + 15);
+
+      ctx.fillStyle = "#f59e0b";
+      ctx.font = "600 11px 'Inter', sans-serif";
+      ctx.fillText("lawan " + it.n + " hero", 620 + ctx.measureText(it.items).width + 8, iy + 15);
+
+      ctx.fillStyle = "#94a3b8";
+      ctx.font = "500 11px 'Inter', sans-serif";
+      const vsText = "Lawan: " + (it.vs || []).join(", ");
+      ctx.fillText(vsText.length > 58 ? vsText.slice(0, 55) + "…" : vsText, 620, iy + 30);
+    }
+  }
+
+  // 6. Footer
+  ctx.fillStyle = "#64748b";
+  ctx.font = "500 11px 'Inter', sans-serif";
+  ctx.fillText("Dibuat otomatis di lawanku.vercel.app · Draft pick, counter hero, item & meta Honor of Kings", 40, 652);
+}
+
+function drawHeroCounterCard(canvas, hero, imgMap) {
+  canvas.width = 1200;
+  canvas.height = 675;
+  const ctx = canvas.getContext("2d");
+
+  // Background
+  const grad = ctx.createLinearGradient(0, 0, 0, 675);
+  grad.addColorStop(0, "#090d16");
+  grad.addColorStop(1, "#0f172a");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1200, 675);
+
+  // Top accent bar
+  ctx.fillStyle = "#f59e0b";
+  ctx.fillRect(0, 0, 1200, 4);
+
+  // Outer border
+  ctx.strokeStyle = "#1e293b";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(0, 0, 1200, 675);
+
+  // Header
+  ctx.fillStyle = "#f59e0b";
+  ctx.font = "800 26px 'Outfit', 'Inter', sans-serif";
+  ctx.fillText("⚔ LAWANKU", 40, 50);
+
+  ctx.fillStyle = "#94a3b8";
+  ctx.font = "600 13px 'Inter', sans-serif";
+  ctx.fillText("BEDAH COUNTER HERO · " + hero.en.toUpperCase(), 195, 47);
+
+  ctx.fillStyle = "#38bdf8";
+  ctx.font = "700 14px 'Inter', sans-serif";
+  ctx.textAlign = "right";
+  ctx.fillText("lawanku.vercel.app", 1160, 48);
+  ctx.textAlign = "left";
+
+  ctx.strokeStyle = "#1e293b";
+  ctx.beginPath();
+  ctx.moveTo(40, 68);
+  ctx.lineTo(1160, 68);
+  ctx.stroke();
+
+  // Left Column: Hero Profile & Cara Melawan (x: 40, y: 84, w: 460, h: 546)
+  drawRoundRect(ctx, 40, 84, 460, 546, 12, "#0b1220", "#1e293b");
+
+  // Hero Avatar & Names
+  drawAvatarOnCanvas(ctx, imgMap.get(hero.id), 60, 104, 76, 10);
+  ctx.fillStyle = "#f1f5f9";
+  ctx.font = "800 24px 'Outfit', sans-serif";
+  ctx.fillText(hero.en, 150, 136);
+
+  ctx.fillStyle = "#94a3b8";
+  ctx.font = "600 13px 'Inter', sans-serif";
+  ctx.fillText(hero.roles.map(roleName).join(" / ") + " · " + hero.classes.join(", "), 150, 160);
+
+  // Cara Melawan Section
+  drawRoundRect(ctx, 58, 200, 424, 410, 8, "#131b2e", "#1e293b");
+  ctx.fillStyle = "#f59e0b";
+  ctx.font = "800 14px 'Outfit', sans-serif";
+  ctx.fillText("CARA MELAWAN", 74, 230);
+
+  ctx.fillStyle = "#cbd5e1";
+  ctx.font = "500 14px 'Inter', sans-serif";
+  drawWrappedText(ctx, hero.howToPlayAgainst, 74, 260, 392, 22, 14);
+
+  // Right Column: Natural Counters & Items (x: 520, y: 84, w: 640, h: 546)
+  drawRoundRect(ctx, 520, 84, 640, 546, 12, "#0d1424", "#1e293b");
+
+  // Natural Counters Section
+  ctx.fillStyle = "#10b981";
+  ctx.font = "800 15px 'Outfit', sans-serif";
+  ctx.fillText("COUNTER ALAMI", 544, 112);
+
+  const counters = (hero.naturalCounters || []).slice(0, 4);
+  if (!counters.length) {
+    ctx.fillStyle = "#64748b";
+    ctx.font = "500 13px 'Inter', sans-serif";
+    ctx.fillText("Tidak ada data counter alami.", 544, 140);
+  } else {
+    for (let i = 0; i < counters.length; i++) {
+      const c = counters[i];
+      const ch = byId.get(c.hero);
+      const cy = 130 + i * 62;
+      drawRoundRect(ctx, 544, cy, 592, 54, 8, "#141c2f", "#1e293b");
+      if (ch) drawAvatarOnCanvas(ctx, imgMap.get(ch.id), 552, cy + 7, 40, 6);
+      ctx.fillStyle = "#f1f5f9";
+      ctx.font = "700 14px 'Inter', sans-serif";
+      ctx.fillText(ch ? ch.en : "Hero #" + c.hero, 604, cy + 24);
+
+      // Hard / Soft badge
+      const isHard = c.strength === "hard";
+      ctx.fillStyle = isHard ? "#ef4444" : "#10b981";
+      ctx.font = "700 12px 'Inter', sans-serif";
+      ctx.fillText(isHard ? "Hard Counter" : "Soft Counter", 604 + ctx.measureText(ch ? ch.en : "").width + 10, cy + 24);
+
+      ctx.fillStyle = "#94a3b8";
+      ctx.font = "500 11px 'Inter', sans-serif";
+      const whyText = c.why ? (c.why.length > 70 ? c.why.slice(0, 67) + "…" : c.why) : "";
+      ctx.fillText(whyText, 604, cy + 42);
+    }
+  }
+
+  // Item Counters Section (y: 395)
+  ctx.fillStyle = "#38bdf8";
+  ctx.font = "800 15px 'Outfit', sans-serif";
+  ctx.fillText("COUNTER ITEM", 544, 400);
+
+  const items = (hero.itemCounters || []).slice(0, 2);
+  if (!items.length) {
+    ctx.fillStyle = "#64748b";
+    ctx.font = "500 13px 'Inter', sans-serif";
+    ctx.fillText("Hero ini tidak membutuhkan paket item khusus.", 544, 430);
+  } else {
+    for (let i = 0; i < items.length; i++) {
+      const it = items[i];
+      const iy = 416 + i * 94;
+      drawRoundRect(ctx, 544, iy, 592, 84, 8, "#141c2f", "#1e293b");
+      ctx.fillStyle = "#f1f5f9";
+      ctx.font = "700 14px 'Inter', sans-serif";
+      ctx.fillText(it.items, 558, iy + 26);
+
+      ctx.fillStyle = "#f59e0b";
+      ctx.font = "600 12px 'Inter', sans-serif";
+      ctx.fillText(it.tag || "anti-burst", 558 + ctx.measureText(it.items).width + 10, iy + 26);
+
+      ctx.fillStyle = "#94a3b8";
+      ctx.font = "500 12px 'Inter', sans-serif";
+      drawWrappedText(ctx, it.why, 558, iy + 48, 564, 18, 2);
+    }
+  }
+
+  // Footer
+  ctx.fillStyle = "#64748b";
+  ctx.font = "500 11px 'Inter', sans-serif";
+  ctx.fillText("Dibuat otomatis di lawanku.vercel.app · Draft pick, counter hero, item & meta Honor of Kings", 40, 652);
+}
+
+let shareDlgEl = null;
+function openShareModal(title, renderFn) {
+  if (!shareDlgEl) {
+    shareDlgEl = document.createElement("dialog");
+    shareDlgEl.id = "sharecard-dlg";
+    const head = el("div", "dlg-head");
+    const h2 = el("h2", null, title);
+    h2.id = "sharecard-title";
+    head.appendChild(h2);
+    const x = el("button", "x", "×");
+    x.type = "button";
+    x.setAttribute("aria-label", "Tutup");
+    x.addEventListener("click", () => shareDlgEl.close());
+    head.appendChild(x);
+    shareDlgEl.appendChild(head);
+
+    const prevWrap = el("div", "share-preview-wrap");
+    prevWrap.id = "sharecard-preview";
+    shareDlgEl.appendChild(prevWrap);
+
+    const actRow = el("div", "share-actions");
+    const dlBtn = el("button", "btn-acc", "Unduh PNG");
+    dlBtn.id = "sharecard-dl"; dlBtn.type = "button";
+    const copyBtn = el("button", "all", "Salin Gambar");
+    copyBtn.id = "sharecard-copy"; copyBtn.type = "button";
+    actRow.appendChild(dlBtn);
+    actRow.appendChild(copyBtn);
+    shareDlgEl.appendChild(actRow);
+
+    const msg = el("p", "mut");
+    msg.id = "sharecard-msg";
+    shareDlgEl.appendChild(msg);
+
+    document.body.appendChild(shareDlgEl);
+  }
+
+  const h2 = $("#sharecard-title", shareDlgEl);
+  if (h2) h2.textContent = title;
+  const prevWrap = $("#sharecard-preview", shareDlgEl);
+  prevWrap.replaceChildren();
+  const loading = el("p", "mut", "Membuat kartu gambar…");
+  loading.id = "sharecard-loading";
+  prevWrap.appendChild(loading);
+
+  const msg = $("#sharecard-msg", shareDlgEl);
+  if (msg) msg.textContent = "";
+
+  shareDlgEl.showModal();
+
+  const canvas = document.createElement("canvas");
+  renderFn(canvas).then(() => {
+    prevWrap.replaceChildren(canvas);
+
+    const dlBtn = $("#sharecard-dl", shareDlgEl);
+    dlBtn.onclick = () => {
+      try {
+        const url = canvas.toDataURL("image/png");
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "lawanku-" + (title.toLowerCase().replace(/[^a-z0-9]+/g, "-")) + ".png";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        if (msg) {
+          msg.textContent = "Gambar berhasil diunduh! ✓";
+          setTimeout(() => { if (msg) msg.textContent = ""; }, 3000);
+        }
+      } catch (err) {
+        if (msg) msg.textContent = "Gagal mengunduh gambar: " + err.message;
+      }
+    };
+
+    const copyBtn = $("#sharecard-copy", shareDlgEl);
+    copyBtn.onclick = () => {
+      if (navigator.clipboard && window.ClipboardItem && canvas.toBlob) {
+        canvas.toBlob(async (blob) => {
+          if (!blob) {
+            if (msg) msg.textContent = "Gagal membuat blob gambar.";
+            return;
+          }
+          try {
+            await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+            if (msg) {
+              msg.textContent = "Gambar berhasil disalin ke clipboard! ✓";
+              setTimeout(() => { if (msg) msg.textContent = ""; }, 3000);
+            }
+          } catch (e) {
+            if (msg) msg.textContent = "Browser tidak mengizinkan salin langsung — silakan gunakan 'Unduh PNG'.";
+          }
+        }, "image/png");
+      } else {
+        if (msg) msg.textContent = "Fitur salin gambar tidak didukung di browser ini — silakan gunakan 'Unduh PNG'.";
+      }
+    };
+  }).catch(err => {
+    prevWrap.replaceChildren(el("p", "mut", "Gagal menggambar kartu: " + err.message));
+  });
+}
+
+function showDraftShareCard(draftState) {
+  openShareModal("Kartu Draft Pick", async (canvas) => {
+    const ids = new Set([
+      ...draftState.ally.filter(Boolean),
+      ...draftState.enemy.filter(Boolean),
+      ...draftState.ban.filter(Boolean),
+      ...draftSuggestions(null, 3).map(s => s.id)
+    ]);
+    const loaded = await Promise.all([...ids].map(loadAvatarImg));
+    const imgMap = new Map();
+    for (const item of loaded) {
+      if (item) imgMap.set(item.id, item.img);
+    }
+    drawDraftCard(canvas, draftState, imgMap);
+  });
+}
+
+function showHeroShareCard(hero) {
+  openShareModal("Kartu Counter " + hero.en, async (canvas) => {
+    const ids = new Set([
+      hero.id,
+      ...(hero.naturalCounters || []).map(c => c.hero)
+    ]);
+    const loaded = await Promise.all([...ids].map(loadAvatarImg));
+    const imgMap = new Map();
+    for (const item of loaded) {
+      if (item) imgMap.set(item.id, item.img);
+    }
+    drawHeroCounterCard(canvas, hero, imgMap);
+  });
+}
+
 function renderDraft() {
   document.title = "Draft — Lawanku";
   if (!draft) draft = loadDraft();
@@ -939,9 +1457,14 @@ function renderDraft() {
   const shareRow = el("div", "share-row");
   const copyBtn = el("button", "btn-acc", "Salin link draft");
   copyBtn.id = "copylink"; copyBtn.type = "button";
+  const shareImgBtn = el("button", "all", "Bagikan sebagai gambar");
+  shareImgBtn.id = "shareimgbtn"; shareImgBtn.type = "button";
+  shareImgBtn.addEventListener("click", () => showDraftShareCard(draft));
   const copyMsg = el("span", "mut", "");
   copyMsg.id = "copymsg";
-  shareRow.appendChild(copyBtn); shareRow.appendChild(copyMsg);
+  shareRow.appendChild(copyBtn);
+  shareRow.appendChild(shareImgBtn);
+  shareRow.appendChild(copyMsg);
   const saveRow = el("div", "share-row");
   const nameInput = el("input");
   nameInput.id = "savename"; nameInput.type = "text";

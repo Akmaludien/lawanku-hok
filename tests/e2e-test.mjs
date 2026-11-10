@@ -98,6 +98,18 @@ server.listen(0, async () => {
     const enemySlotsCount = await page.locator('.slot[data-team="enemy"]').count();
     assert('Arena draft memiliki 5 slot ally dan 5 slot enemy', allySlotsCount === 5 && enemySlotsCount === 5);
 
+    // Test Share Card
+    await page.click('#shareimgbtn');
+    await page.waitForSelector('#sharecard-dlg[open]', { timeout: 5000 });
+    await page.waitForSelector('#sharecard-preview canvas', { timeout: 10000 });
+    const canvasIs1200 = await page.evaluate(() => {
+      const c = document.querySelector('#sharecard-preview canvas');
+      return c && c.width === 1200 && c.height === 675;
+    });
+    assert('Share card draft merender canvas beresolusi 1200x675', canvasIs1200);
+    await page.click('#sharecard-dlg .x');
+    await page.waitForTimeout(200);
+
     // 3. Head-to-Head Page (#/h2h)
     console.log('\n[3] Menguji Head-to-Head (#/h2h)...');
     await page.goto(`${baseUrl}/#/h2h`, { waitUntil: 'domcontentloaded' });
