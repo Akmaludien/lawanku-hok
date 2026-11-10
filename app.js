@@ -1387,9 +1387,13 @@ function renderQuiz() {
   const main = $("#main");
   main.replaceChildren();
   main.appendChild(el("h1", null, "Kuis"));
-  main.appendChild(el("p", "mut", "Tebak counter, tebak hero, atau latihan skenario draft (5 skenario, 30 detik tiap skenario: hero +150, item +100). Skor terbaik tersimpan di perangkat ini."));
+  main.appendChild(el("p", "mut", "Tebak counter, tebak hero, tebak skill, atau latihan skenario draft (5 skenario, 30 detik tiap skenario: hero +150, item +100). Skor terbaik tersimpan di perangkat ini."));
   const BEST_KEY = "hok-quiz-best";
-  function roundLen() { return mode === "skenario" ? 5 : 20; }
+  function roundLen() {
+    if (mode === "skenario") return 5;
+    if (mode === "skill") return 10;
+    return 20;
+  }
   let mode = "counter";
   let questions = [], qi = 0, score = 0, answered = false, progEl = null;
   let aRight = 0, bRight = 0;
@@ -1407,7 +1411,7 @@ function renderQuiz() {
   seg.setAttribute("role", "group");
   seg.setAttribute("aria-label", "Mode quiz");
   const modeBtns = {};
-  for (const [m, labelTxt] of [["counter", "Tebak Counter"], ["tebak", "Tebak Hero"], ["skenario", "Skenario"]]) {
+  for (const [m, labelTxt] of [["counter", "Tebak Counter"], ["tebak", "Tebak Hero"], ["skill", "Tebak Skill"], ["skenario", "Skenario"]]) {
     const b = el("button", "m" + (m === mode ? " on" : ""), labelTxt);
     b.type = "button"; b.dataset.mode = m;
     b.setAttribute("aria-pressed", String(m === mode));
@@ -1489,6 +1493,17 @@ function renderQuiz() {
         return { enemy, correct, why: pick.why || null, options: sample([correct, ...distract], 4) };
       });
     }
+    if (mode === "skill") {
+      const pool = HEROES.filter(h => h.skillQuiz && h.skillQuiz.name && h.skillQuiz.desc);
+      return sample(pool, roundLen()).map(hero => {
+        const distract = sample(HEROES.filter(h => h.id !== hero.id), 3);
+        return {
+          hero,
+          skill: hero.skillQuiz,
+          options: sample([hero, ...distract], 4),
+        };
+      });
+    }
     return sample(HEROES, roundLen()).map(hero => ({
       hero,
       options: sample([hero, ...sample(HEROES.filter(h => h.id !== hero.id), 3)], 4),
@@ -1507,6 +1522,7 @@ function renderQuiz() {
     if (mode === "skenario") { paintScenario(); return; }
     const q = questions[qi];
     progEl = el("p", "mut", "Soal " + (qi + 1) + "/" + questions.length + " · Skor " + score);
+    progEl.id = "qprog";
     board.appendChild(progEl);
     const card = el("div", "card");
     if (mode === "counter") {
@@ -1517,6 +1533,17 @@ function renderQuiz() {
       t.appendChild(el("p", "mut", q.enemy.roles.map(roleName).join(" / ") + " · " + q.enemy.classes.join(", ")));
       row.appendChild(t);
       card.appendChild(row);
+    } else if (mode === "skill") {
+      const t = el("div");
+      t.style.display = "flex";
+      t.style.flexDirection = "column";
+      t.style.gap = "var(--s1)";
+      const tag = el("span", "tag", "Skill: " + q.skill.name);
+      tag.style.alignSelf = "flex-start";
+      t.appendChild(tag);
+      t.appendChild(el("b", null, "Hero manakah yang memiliki skill berikut?"));
+      t.appendChild(el("p", null, '"' + q.skill.desc + '"'));
+      card.appendChild(t);
     } else {
       const row = el("div", "row");
       const big = avatar(q.hero, 96);
@@ -1559,6 +1586,7 @@ function renderQuiz() {
     const aBtns = [], bBtns = [];
     const prow = el("div", "row");
     progEl = el("p", "mut", "Skenario " + (qi + 1) + "/" + questions.length + " · Skor " + score);
+    progEl.id = "qprog";
     prow.appendChild(progEl);
     const timerEl = el("span", "qtimer", "⏱ 30 dtk");
     prow.appendChild(timerEl);
@@ -1679,6 +1707,10 @@ function renderQuiz() {
       fb.textContent = ok
         ? "Benar! " + (q.why || "")
         : "Jawabannya " + correct.en + ". " + (q.why || "");
+    } else if (mode === "skill") {
+      fb.textContent = ok
+        ? "Benar! Skill " + q.skill.name + " adalah milik " + correct.en + " (" + info + ")."
+        : "Salah, skill " + q.skill.name + " adalah milik " + correct.en + " (" + info + ").";
     } else {
       fb.textContent = ok ? "Benar! " + correct.en + " — " + info : "Salah, ini " + correct.en + " — " + info;
     }

@@ -172,7 +172,11 @@
    ],
    "classes": [
     "Mage"
-   ]
+   ],
+   "skillQuiz": {
+    "name": "Blazing Brilliance",
+    "desc": "Mengeluarkan sinar laser api raksasa ke arah depan yang memberikan damage sihir terus-menerus, sambil memperoleh perisai penyerap damage yang kebal terhadap efek crowd control."
+   }
   },
   {
    "id": 640,
@@ -351,7 +355,11 @@
    ],
    "classes": [
     "Marksman"
-   ]
+   ],
+   "skillQuiz": {
+    "name": "Maple Dance",
+    "desc": "Memutar payung daun maple di sekelilingnya yang secara otomatis melenyapkan semua proyektil musuh yang mendekat dan memungkinkannya berpindah tempat ke posisi payung."
+   }
   },
   {
    "id": 166,
@@ -760,7 +768,11 @@
    ],
    "classes": [
     "Support"
-   ]
+   ],
+   "skillQuiz": {
+    "name": "Earworm",
+    "desc": "Memainkan gelombang nada musik yang memantul berulang kali di antara hero musuh atau minion, memberikan damage sihir dan efek stun pada tiap pantulan."
+   }
   },
   {
    "id": 177,
@@ -977,7 +989,11 @@
    ],
    "classes": [
     "Marksman"
-   ]
+   ],
+   "skillQuiz": {
+    "name": "Protecting Winds",
+    "desc": "Mengaktifkan hembusan angin pelindung yang memberinya tambahan kecepatan gerak dan kekebalan total terhadap seluruh serangan physical damage selama beberapa detik."
+   }
   },
   {
    "id": 191,
@@ -1068,7 +1084,11 @@
    ],
    "classes": [
     "Mage"
-   ]
+   ],
+   "skillQuiz": {
+    "name": "Mischief",
+    "desc": "Melemparkan proyektil hati ke arah musuh yang ditargetkan untuk memberikan efek stun langsung selama 1,5 detik serta mengurangi pertahanan sihir lawan."
+   }
   },
   {
    "id": 537,
@@ -1358,7 +1378,11 @@
    ],
    "classes": [
     "Support"
-   ]
+   ],
+   "skillQuiz": {
+    "name": "Celestial Melody",
+    "desc": "Menyanyikan nada surgawi yang secara instan mereset cooldown skill terpanjang milik hero rekan satu tim yang dipilih atau dirinya sendiri."
+   }
   },
   {
    "id": 187,
@@ -1407,7 +1431,11 @@
    ],
    "classes": [
     "Support"
-   ]
+   ],
+   "skillQuiz": {
+    "name": "Forsaken Contract",
+    "desc": "Mengikat jiwa hero musuh dengan efek supresi tak terpatahkan di mana setiap damage yang diterima akan dibagi langsung secara nyata ke musuh yang terikat."
+   }
   },
   {
    "id": 119,
@@ -2565,7 +2593,11 @@
    ],
    "classes": [
     "Marksman"
-   ]
+   ],
+   "skillQuiz": {
+    "name": "Burning Sun Arrow",
+    "desc": "Menembakkan panah api raksasa melintasi seluruh arena pertempuran yang memberikan stun kepada hero musuh pertama yang terkena dengan durasi sesuai jarak tempuh panah."
+   }
   },
   {
    "id": 192,
@@ -2759,7 +2791,11 @@
    ],
    "classes": [
     "Mage"
-   ]
+   ],
+   "skillQuiz": {
+    "name": "Winning Strategy",
+    "desc": "Mengunci target musuh dari kejauhan lalu meluncurkan bola energi pembunuh berdaya rusak tinggi yang cooldown-nya langsung terpotong 80% jika berhasil mengeliminasi musuh."
+   }
   }
  ]
 }

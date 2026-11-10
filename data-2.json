@@ -95,7 +95,11 @@
    ],
    "classes": [
     "Marksman"
-   ]
+   ],
+   "skillQuiz": {
+    "name": "Rolling Raid",
+    "desc": "Melakukan gerakan berguling ke arah depan untuk memperkuat tembakan berikutnya dengan jarak serang ekstra dan damage tembus yang dapat menghasilkan critical tinggi."
+   }
   },
   {
    "id": 127,
@@ -343,7 +347,11 @@
    ],
    "classes": [
     "Fighter"
-   ]
+   ],
+   "skillQuiz": {
+    "name": "Awakening",
+    "desc": "Mengubah wujud petarung antara mode Terang (penyerang jarak jauh kebal CC saat menebas) dan mode Gelap (petarung lincah jarak dekat dengan serangan ganda)."
+   }
   },
   {
    "id": 105,
@@ -687,7 +695,11 @@
    ],
    "classes": [
     "Fighter"
-   ]
+   ],
+   "skillQuiz": {
+    "name": "Tremble, Mortals",
+    "desc": "Melompat tinggi ke udara lalu menghantam tanah di area target untuk menerbangkan musuh dan menciptakan medan pertarungan mematikan dengan pertahanan ekstra serta tebasan true damage."
+   }
   },
   {
    "id": 547,
@@ -791,7 +803,11 @@
    ],
    "classes": [
     "Marksman"
-   ]
+   ],
+   "skillQuiz": {
+    "name": "Shark Cannon",
+    "desc": "Menembakkan rudal roket berjarak global yang meluncur melintasi seluruh peta sekaligus mendorong mundur musuh yang berada persis di dekatnya."
+   }
   },
   {
    "id": 146,
@@ -941,7 +957,11 @@
    ],
    "classes": [
     "Marksman"
-   ]
+   ],
+   "skillQuiz": {
+    "name": "Fevered Barrage",
+    "desc": "Berpindah tempat secara cepat ke lokasi target lalu berputar sambil menembakkan hujan peluru bertubi-tubi ke area sekelilingnya dengan kecepatan tembakan tinggi."
+   }
   },
   {
    "id": 564,
@@ -1158,7 +1178,11 @@
    ],
    "classes": [
     "Mage"
-   ]
+   ],
+   "skillQuiz": {
+    "name": "Forced Invasion",
+    "desc": "Menjatuhkan suar perintah untuk memanggil pasukan robot mekanik kecil yang langsung menyerang musuh dan bangunan pertahanan terdekat."
+   }
   },
   {
    "id": 501,
@@ -1261,7 +1285,11 @@
    ],
    "classes": [
     "Mage"
-   ]
+   ],
+   "skillQuiz": {
+    "name": "Cannon Blast",
+    "desc": "Menembakkan peluru meriam energi jarak jauh berdaya ledak tinggi yang memberikan stun kepada hero pertama yang terkena serta meninggalkan kawah energi yang menyengat."
+   }
   },
   {
    "id": 154,
@@ -1875,7 +1903,11 @@
    ],
    "classes": [
     "Fighter"
-   ]
+   ],
+   "skillQuiz": {
+    "name": "Set Sail!",
+    "desc": "Memanggil dan mengemudikan kapal perang berkecepatan tinggi melintasi arena sambil kebal crowd control, serta mampu membawa satu hero rekan bersamanya sebelum menabrak target."
+   }
   },
   {
    "id": 163,
@@ -2058,7 +2090,11 @@
    ],
    "classes": [
     "Mage"
-   ]
+   ],
+   "skillQuiz": {
+    "name": "Frigid Prison",
+    "desc": "Menciptakan lingkaran es di area target yang membekukan dan melumpuhkan semua musuh yang terperangkap di dalamnya selama beberapa detik."
+   }
   },
   {
    "id": 167,
@@ -2106,7 +2142,11 @@
    ],
    "classes": [
     "Assassin"
-   ]
+   ],
+   "skillQuiz": {
+    "name": "Protective Shroud",
+    "desc": "Menggunakan mantra pelindung yang dapat menangkis satu skill musuh sepenuhnya, lalu memberikan perisai tebal dan kekebalan sesaat jika tangkisan berhasil."
+   }
   },
   {
    "id": 117,
@@ -2258,7 +2298,11 @@
    ],
    "classes": [
     "Mage"
-   ]
+   ],
+   "skillQuiz": {
+    "name": "Honeysweet Breeze",
+    "desc": "Menerbangkan angin puyuh di lokasi sasaran yang menerbangkan (knock-up) seluruh lawan yang berada di atasnya ke udara."
+   }
   },
   {
    "id": 195,
