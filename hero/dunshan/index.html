@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Counter Dunshan — Lawanku</title>
+  <meta name="description" content="1) Ganggu dari banyak arah biar Dunshan kewalahan. Sabar mancing bisa nembus pertahanan timnya. 2) Pilih hero dengan dash jauh buat ngelompatin Dunshan dan...">
+  <link rel="canonical" href="https://lawanku.vercel.app/hero/dunshan/">
+  <link rel="icon" href="../../logo.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#0f131c">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Counter Dunshan — Lawanku">
+  <meta property="og:description" content="1) Ganggu dari banyak arah biar Dunshan kewalahan. Sabar mancing bisa nembus pertahanan timnya. 2) Pilih hero dengan dash jauh buat ngelompatin Dunshan dan...">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lawanku.vercel.app/hero/dunshan/">
+  <meta property="og:image" content="https://lawanku.vercel.app/icons/hero/509.webp">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://lawanku.vercel.app/hero/dunshan/#webpage",
+      "url": "https://lawanku.vercel.app/hero/dunshan/",
+      "name": "Counter Dunshan — Lawanku",
+      "description": "1) Ganggu dari banyak arah biar Dunshan kewalahan. Sabar mancing bisa nembus pertahanan timnya. 2) Pilih hero dengan dash jauh buat ngelompatin Dunshan dan...",
+      "inLanguage": "id"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://lawanku.vercel.app/hero/dunshan/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Beranda",
+          "item": "https://lawanku.vercel.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Counter Hero",
+          "item": "https://lawanku.vercel.app/#/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Dunshan",
+          "item": "https://lawanku.vercel.app/hero/dunshan/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="../../styles.css">
+  <style>
+    .prerender-wrap { max-width: 720px; margin: 0 auto; padding: var(--s3); box-sizing: border-box; }
+    .crumb-nav { font-size: 13px; margin-bottom: var(--s2); color: var(--mut); }
+    .crumb-nav a { color: var(--mut); text-decoration: none; }
+    .crumb-nav a:hover { color: var(--fg); text-decoration: underline; }
+    .crumb-nav span { color: var(--fg); font-weight: 600; }
+    .hero-head-prerender { display: flex; gap: var(--s3); align-items: center; margin-bottom: var(--s3); }
+    .hero-avatar-prerender { width: 72px; height: 72px; border-radius: 10px; background: var(--chip); object-fit: cover; flex-shrink: 0; border: 1px solid var(--line); }
+    .hero-title-group h1 { margin: 0 0 4px; font-size: 26px; color: var(--fg); font-family: var(--font-title); }
+    .hero-subtitle { margin: 0; color: var(--mut); font-size: 14px; }
+    .tier-chip { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-top: 6px; }
+    .btn-open-app { display: block; width: 100%; box-sizing: border-box; text-align: center; background: var(--acc); color: #0f131c; font-weight: 800; font-size: 16px; padding: 14px 20px; border-radius: 8px; text-decoration: none; margin: var(--s3) 0 var(--s4); box-shadow: 0 4px 14px rgba(245, 158, 11, .3); transition: opacity .15s ease; }
+    .btn-open-app:hover { opacity: 0.9; }
+    .prerender-card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: var(--s3); margin-bottom: var(--s3); }
+    .prerender-card h2 { font-size: 17px; margin: 0 0 var(--s2); color: var(--acc); border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+    .counter-row-prerender { display: flex; gap: var(--s2); align-items: flex-start; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .counter-row-prerender:last-child { border-bottom: none; }
+    .counter-avatar { width: 44px; height: 44px; border-radius: 6px; background: var(--chip); object-fit: cover; flex-shrink: 0; }
+    .counter-body { flex: 1; min-width: 0; }
+    .counter-head-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+    .counter-name-link { font-weight: 700; color: var(--fg); text-decoration: none; }
+    .counter-name-link:hover { color: var(--acc); text-decoration: underline; }
+    .counter-why-text { margin: 0; font-size: 14px; color: var(--mut); line-height: 1.4; }
+    .item-entry { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .item-entry:last-child { border-bottom: none; }
+    .item-title-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .item-name-str { font-weight: 700; color: var(--fg); }
+    .footer-prerender { text-align: center; margin-top: var(--s4); padding-top: var(--s3); border-top: 1px solid var(--line); font-size: 13px; color: var(--mut); }
+    .footer-prerender a { color: var(--acc); text-decoration: none; }
+    .footer-prerender a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <main class="prerender-wrap">
+    <nav aria-label="Breadcrumb" class="crumb-nav">
+      <a href="/">Beranda</a> &rsaquo;
+      <a href="/#/">Counter Hero</a> &rsaquo;
+      <span>Dunshan</span>
+    </nav>
+
+    <header class="hero-head-prerender">
+      <img src="../../icons/hero/509.webp" alt="Dunshan" class="hero-avatar-prerender" width="72" height="72">
+      <div class="hero-title-group">
+        <h1>Dunshan</h1>
+        <p class="hero-subtitle">Roam · Support</p>
+        <span class="tier-chip tierbadge ts">Tier S</span>
+      </div>
+    </header>
+
+    <a href="/#/hero/dunshan" class="btn-open-app">⚡ Buka di Lawanku</a>
+
+    
+    <section class="prerender-card">
+      <h2>Cara Melawan Dunshan</h2>
+      <p style="margin: 0; line-height: 1.5; color: var(--fg);">1) Ganggu dari banyak arah biar Dunshan kewalahan. Sabar mancing bisa nembus pertahanan timnya. 2) Pilih hero dengan dash jauh buat ngelompatin Dunshan dan nyerang backline.</p>
+    </section>
+
+    <section class="prerender-card">
+      <h2>Counter Alami Dunshan</h2>
+      
+      
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/105.webp" alt="Lian Po" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/lian-po/" class="counter-name-link">Lian Po</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Control area dan super armor Lian Po batalin skill 1 Dunshan dan bikin dia kebal skill 2 Dunshan.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/124.webp" alt="Zhou Yu" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/zhou-yu/" class="counter-name-link">Zhou Yu</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Api Zhou Yu nyerang dari tanah, jadi perisai depan Dunshan gak bisa nahan.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/152.webp" alt="Wang Zhaojun" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/wang-zhaojun/" class="counter-name-link">Wang Zhaojun</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Skill Wang Zhaojun jatuh dari atas dan gampang kena Dunshan yang geraknya lambat pas pegang perisai.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/112.webp" alt="Luban No.7" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/luban-no-7/" class="counter-name-link">Luban No.7</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Pasif dan ult Luban No.7 gak bisa ditahan perisai Dunshan.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/114.webp" alt="Liu Shan" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/liu-shan/" class="counter-name-link">Liu Shan</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Knock-up dan stun Liu Shan motong stance shield Dunshan. Dindingnya jatuh dan backline langsung kebuka.</p>
+        </div>
+      </div>
+    </section>
+
+    
+
+    <section class="prerender-card">
+      <h2>Jangan Pick Melawan Dunshan</h2>
+      
+      
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/545.webp" alt="Alessio" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/alessio/" class="counter-name-link">Alessio</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Control Dunshan motong skill 2 dan 3 Alessio, dan blok-nya ngurangin damage Alessio.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/537.webp" alt="Devara" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/devara/" class="counter-name-link">Devara</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Perisai Dunshan nahan serangan Devara yang bentuknya proyektil, jadi damage-nya di teamfight ilang.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/507.webp" alt="Li Xin" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/li-xin/" class="counter-name-link">Li Xin</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Perisai Dunshan nahan skill 2, ult, dan basic attack berenergi Li Xin wujud cahaya karena semuanya proyektil. Gak berlaku buat wujud gelap.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/108.webp" alt="Mozi" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/mozi/" class="counter-name-link">Mozi</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Shield skill 1 Dunshan ngeblok proyektil skill 2 Mozi, dan skill-nya bisa nge-control Mozi.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/196.webp" alt="Shouyue" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/shouyue/" class="counter-name-link">Shouyue</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Perisai Dunshan nahan semua skill dan basic attack Shouyue, jadi tembakan jarak jauhnya gak nyampe ke tim.</p>
+        </div>
+      </div>
+      <p class="mut" style="margin: 8px 0 0; font-size: 13px;">…dan 6 hero lagi.</p>
+    </section>
+
+    <footer class="footer-prerender">
+      <p style="margin: 0 0 8px;">Lawanku — data patch S16, snapshot 6 Nov 2026. Alat bantu draft pick &amp; counter hero Honor of Kings.</p>
+      <a href="/">← Kembali ke Beranda Lawanku</a>
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Counter Luna — Lawanku</title>
+  <meta name="description" content="1) Sebelum level 4 Luna hampir gak ada power. Gank dia di awal buat nahan farm-nya. 2) Simpen control sampai Luna masuk, baru bunuh.">
+  <link rel="canonical" href="https://lawanku.vercel.app/hero/luna/">
+  <link rel="icon" href="../../logo.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#0f131c">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Counter Luna — Lawanku">
+  <meta property="og:description" content="1) Sebelum level 4 Luna hampir gak ada power. Gank dia di awal buat nahan farm-nya. 2) Simpen control sampai Luna masuk, baru bunuh.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lawanku.vercel.app/hero/luna/">
+  <meta property="og:image" content="https://lawanku.vercel.app/icons/hero/146.webp">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://lawanku.vercel.app/hero/luna/#webpage",
+      "url": "https://lawanku.vercel.app/hero/luna/",
+      "name": "Counter Luna — Lawanku",
+      "description": "1) Sebelum level 4 Luna hampir gak ada power. Gank dia di awal buat nahan farm-nya. 2) Simpen control sampai Luna masuk, baru bunuh.",
+      "inLanguage": "id"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://lawanku.vercel.app/hero/luna/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Beranda",
+          "item": "https://lawanku.vercel.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Counter Hero",
+          "item": "https://lawanku.vercel.app/#/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Luna",
+          "item": "https://lawanku.vercel.app/hero/luna/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="../../styles.css">
+  <style>
+    .prerender-wrap { max-width: 720px; margin: 0 auto; padding: var(--s3); box-sizing: border-box; }
+    .crumb-nav { font-size: 13px; margin-bottom: var(--s2); color: var(--mut); }
+    .crumb-nav a { color: var(--mut); text-decoration: none; }
+    .crumb-nav a:hover { color: var(--fg); text-decoration: underline; }
+    .crumb-nav span { color: var(--fg); font-weight: 600; }
+    .hero-head-prerender { display: flex; gap: var(--s3); align-items: center; margin-bottom: var(--s3); }
+    .hero-avatar-prerender { width: 72px; height: 72px; border-radius: 10px; background: var(--chip); object-fit: cover; flex-shrink: 0; border: 1px solid var(--line); }
+    .hero-title-group h1 { margin: 0 0 4px; font-size: 26px; color: var(--fg); font-family: var(--font-title); }
+    .hero-subtitle { margin: 0; color: var(--mut); font-size: 14px; }
+    .tier-chip { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-top: 6px; }
+    .btn-open-app { display: block; width: 100%; box-sizing: border-box; text-align: center; background: var(--acc); color: #0f131c; font-weight: 800; font-size: 16px; padding: 14px 20px; border-radius: 8px; text-decoration: none; margin: var(--s3) 0 var(--s4); box-shadow: 0 4px 14px rgba(245, 158, 11, .3); transition: opacity .15s ease; }
+    .btn-open-app:hover { opacity: 0.9; }
+    .prerender-card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: var(--s3); margin-bottom: var(--s3); }
+    .prerender-card h2 { font-size: 17px; margin: 0 0 var(--s2); color: var(--acc); border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+    .counter-row-prerender { display: flex; gap: var(--s2); align-items: flex-start; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .counter-row-prerender:last-child { border-bottom: none; }
+    .counter-avatar { width: 44px; height: 44px; border-radius: 6px; background: var(--chip); object-fit: cover; flex-shrink: 0; }
+    .counter-body { flex: 1; min-width: 0; }
+    .counter-head-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+    .counter-name-link { font-weight: 700; color: var(--fg); text-decoration: none; }
+    .counter-name-link:hover { color: var(--acc); text-decoration: underline; }
+    .counter-why-text { margin: 0; font-size: 14px; color: var(--mut); line-height: 1.4; }
+    .item-entry { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .item-entry:last-child { border-bottom: none; }
+    .item-title-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .item-name-str { font-weight: 700; color: var(--fg); }
+    .footer-prerender { text-align: center; margin-top: var(--s4); padding-top: var(--s3); border-top: 1px solid var(--line); font-size: 13px; color: var(--mut); }
+    .footer-prerender a { color: var(--acc); text-decoration: none; }
+    .footer-prerender a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <main class="prerender-wrap">
+    <nav aria-label="Breadcrumb" class="crumb-nav">
+      <a href="/">Beranda</a> &rsaquo;
+      <a href="/#/">Counter Hero</a> &rsaquo;
+      <span>Luna</span>
+    </nav>
+
+    <header class="hero-head-prerender">
+      <img src="../../icons/hero/146.webp" alt="Luna" class="hero-avatar-prerender" width="72" height="72">
+      <div class="hero-title-group">
+        <h1>Luna</h1>
+        <p class="hero-subtitle">Jungle · Fighter</p>
+        <span class="tier-chip tierbadge tc">Tier C</span>
+      </div>
+    </header>
+
+    <a href="/#/hero/luna" class="btn-open-app">⚡ Buka di Lawanku</a>
+
+    
+    <section class="prerender-card">
+      <h2>Cara Melawan Luna</h2>
+      <p style="margin: 0; line-height: 1.5; color: var(--fg);">1) Sebelum level 4 Luna hampir gak ada power. Gank dia di awal buat nahan farm-nya. 2) Simpen control sampai Luna masuk, baru bunuh.</p>
+    </section>
+
+    <section class="prerender-card">
+      <h2>Counter Alami Luna</h2>
+      
+      
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/141.webp" alt="Diaochan" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/diaochan/" class="counter-name-link">Diaochan</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Pas ngilang Diaochan untargetable, jadi ult Luna meleset dan langsung cooldown.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/109.webp" alt="Daji" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/daji/" class="counter-name-link">Daji</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Luna kuat setelah level 4 dan susah dilawan kalau udah unggul. Control skill 2 Daji gak bisa dihindarin, jadi tiap lihat Luna tinggal poke pakai combo 2-3-1. Di bawah tower sendiri aman dari Luna, jangan push kejauhan, dan damage gede Daji di late tetep nyusahin Luna.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/133.webp" alt="Di Renjie" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/di-renjie/" class="counter-name-link">Di Renjie</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Begitu Di Renjie ngunci Luna, damage-nya bisa langsung bunuh atau minimal bikin Luna sekarat. Pas Luna udah masuk dan nandain Di Renjie pakai skill 1 atau 2, cleanse dari skill 2 Di Renjie bisa mutus rantai ult Luna.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/187.webp" alt="Donghuang" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/donghuang/" class="counter-name-link">Donghuang</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Di teamfight setelah level 4, pas Luna masuk tinggal ult dia terus tim fokus. Kalau ada Donghuang, Luna jarang bisa engage atau poke duluan. Donghuang juga bisa maksa engage ke Luna, mati pun untung kalau tukeran sama Luna.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/191.webp" alt="Da Qiao" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/da-qiao/" class="counter-name-link">Da Qiao</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Rangkaian skill Luna itu kunci. Silence Da Qiao pas Luna mau cast bakal mutus rantainya, dan kebanyakan Luna langsung ilang ritme terus mati difokus.</p>
+        </div>
+      </div>
+    </section>
+
+    
+    <section class="prerender-card">
+      <h2>Rekomendasi Item Lawan Luna</h2>
+      
+      <div class="item-entry">
+        <div class="item-title-row">
+          <span class="item-name-str">Succubus Cloak</span>
+          <span class="tag ok">terkurasi</span>
+        </div>
+        <p class="counter-why-text">Damage Luna itu magic dan dia dive dengan dash beruntun — Succubus Cloak + shield magic menahan burst-nya; sebelum level 4 dia hampir tidak punya power, jadi gank dia di awal.</p>
+      </div>
+    </section>
+
+    <section class="prerender-card">
+      <h2>Jangan Pick Melawan Luna</h2>
+      
+      
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/536.webp" alt="Charlotte" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/charlotte/" class="counter-name-link">Charlotte</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Luna yang lincah bisa masuk di sela skill Charlotte dan membunuhnya sebelum skill-nya ke-enhance.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/506.webp" alt="Cirrus" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/cirrus/" class="counter-name-link">Cirrus</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Mobilitas reset bisa ngejar dan burst abis dia mendarat.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/174.webp" alt="Consort Yu" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/consort-yu/" class="counter-name-link">Consort Yu</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Consort Yu itu marksman tipis, dan kebal fisik skill 2-nya gak berguna lawan Luna. Consort Yu susah kabur dari Luna yang lincah dan terus ngejar. Skill 2 Luna kasih shield gede buat nahan damage, dan ult-nya gampang ngindarin poke skill 1 Consort Yu.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/129.webp" alt="Dian Wei" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/dian-wei/" class="counter-name-link">Dian Wei</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Mobilitas Luna dengan dash beruntun dan reset bisa kite Dian Wei yang mengandalkan basic attack dan lifesteal — dia tidak pernah bisa menempel.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/193.webp" alt="Kaizer" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/kaizer/" class="counter-name-link">Kaizer</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Kiting. Mobilitas reset jaga dia tetep di luar jangkauan melee.</p>
+        </div>
+      </div>
+      <p class="mut" style="margin: 8px 0 0; font-size: 13px;">…dan 2 hero lagi.</p>
+    </section>
+
+    <footer class="footer-prerender">
+      <p style="margin: 0 0 8px;">Lawanku — data patch S16, snapshot 6 Nov 2026. Alat bantu draft pick &amp; counter hero Honor of Kings.</p>
+      <a href="/">← Kembali ke Beranda Lawanku</a>
+    </footer>
+  </main>
+</body>
+</html>

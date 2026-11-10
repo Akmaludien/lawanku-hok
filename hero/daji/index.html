@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Counter Daji — Lawanku</title>
+  <meta name="description" content="1) Assassin masuk abis Daji pakai control. 2) Hindarin skill poke-nya. 3) Di late hero tipis jangan deket pas skill Daji ready, gampang mati instan.">
+  <link rel="canonical" href="https://lawanku.vercel.app/hero/daji/">
+  <link rel="icon" href="../../logo.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#0f131c">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Counter Daji — Lawanku">
+  <meta property="og:description" content="1) Assassin masuk abis Daji pakai control. 2) Hindarin skill poke-nya. 3) Di late hero tipis jangan deket pas skill Daji ready, gampang mati instan.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lawanku.vercel.app/hero/daji/">
+  <meta property="og:image" content="https://lawanku.vercel.app/icons/hero/109.webp">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://lawanku.vercel.app/hero/daji/#webpage",
+      "url": "https://lawanku.vercel.app/hero/daji/",
+      "name": "Counter Daji — Lawanku",
+      "description": "1) Assassin masuk abis Daji pakai control. 2) Hindarin skill poke-nya. 3) Di late hero tipis jangan deket pas skill Daji ready, gampang mati instan.",
+      "inLanguage": "id"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://lawanku.vercel.app/hero/daji/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Beranda",
+          "item": "https://lawanku.vercel.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Counter Hero",
+          "item": "https://lawanku.vercel.app/#/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Daji",
+          "item": "https://lawanku.vercel.app/hero/daji/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="../../styles.css">
+  <style>
+    .prerender-wrap { max-width: 720px; margin: 0 auto; padding: var(--s3); box-sizing: border-box; }
+    .crumb-nav { font-size: 13px; margin-bottom: var(--s2); color: var(--mut); }
+    .crumb-nav a { color: var(--mut); text-decoration: none; }
+    .crumb-nav a:hover { color: var(--fg); text-decoration: underline; }
+    .crumb-nav span { color: var(--fg); font-weight: 600; }
+    .hero-head-prerender { display: flex; gap: var(--s3); align-items: center; margin-bottom: var(--s3); }
+    .hero-avatar-prerender { width: 72px; height: 72px; border-radius: 10px; background: var(--chip); object-fit: cover; flex-shrink: 0; border: 1px solid var(--line); }
+    .hero-title-group h1 { margin: 0 0 4px; font-size: 26px; color: var(--fg); font-family: var(--font-title); }
+    .hero-subtitle { margin: 0; color: var(--mut); font-size: 14px; }
+    .tier-chip { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-top: 6px; }
+    .btn-open-app { display: block; width: 100%; box-sizing: border-box; text-align: center; background: var(--acc); color: #0f131c; font-weight: 800; font-size: 16px; padding: 14px 20px; border-radius: 8px; text-decoration: none; margin: var(--s3) 0 var(--s4); box-shadow: 0 4px 14px rgba(245, 158, 11, .3); transition: opacity .15s ease; }
+    .btn-open-app:hover { opacity: 0.9; }
+    .prerender-card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: var(--s3); margin-bottom: var(--s3); }
+    .prerender-card h2 { font-size: 17px; margin: 0 0 var(--s2); color: var(--acc); border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+    .counter-row-prerender { display: flex; gap: var(--s2); align-items: flex-start; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .counter-row-prerender:last-child { border-bottom: none; }
+    .counter-avatar { width: 44px; height: 44px; border-radius: 6px; background: var(--chip); object-fit: cover; flex-shrink: 0; }
+    .counter-body { flex: 1; min-width: 0; }
+    .counter-head-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+    .counter-name-link { font-weight: 700; color: var(--fg); text-decoration: none; }
+    .counter-name-link:hover { color: var(--acc); text-decoration: underline; }
+    .counter-why-text { margin: 0; font-size: 14px; color: var(--mut); line-height: 1.4; }
+    .item-entry { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .item-entry:last-child { border-bottom: none; }
+    .item-title-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .item-name-str { font-weight: 700; color: var(--fg); }
+    .footer-prerender { text-align: center; margin-top: var(--s4); padding-top: var(--s3); border-top: 1px solid var(--line); font-size: 13px; color: var(--mut); }
+    .footer-prerender a { color: var(--acc); text-decoration: none; }
+    .footer-prerender a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <main class="prerender-wrap">
+    <nav aria-label="Breadcrumb" class="crumb-nav">
+      <a href="/">Beranda</a> &rsaquo;
+      <a href="/#/">Counter Hero</a> &rsaquo;
+      <span>Daji</span>
+    </nav>
+
+    <header class="hero-head-prerender">
+      <img src="../../icons/hero/109.webp" alt="Daji" class="hero-avatar-prerender" width="72" height="72">
+      <div class="hero-title-group">
+        <h1>Daji</h1>
+        <p class="hero-subtitle">Mid · Mage</p>
+        <span class="tier-chip tierbadge ts">Tier S</span>
+      </div>
+    </header>
+
+    <a href="/#/hero/daji" class="btn-open-app">⚡ Buka di Lawanku</a>
+
+    
+    <section class="prerender-card">
+      <h2>Cara Melawan Daji</h2>
+      <p style="margin: 0; line-height: 1.5; color: var(--fg);">1) Assassin masuk abis Daji pakai control. 2) Hindarin skill poke-nya. 3) Di late hero tipis jangan deket pas skill Daji ready, gampang mati instan.</p>
+    </section>
+
+    <section class="prerender-card">
+      <h2>Counter Alami Daji</h2>
+      
+      
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/130.webp" alt="Musashi" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/musashi/" class="counter-name-link">Musashi</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Skill 1 Musashi nahan semua skill Daji dan dia kebal control pas masuk. Dua tebasan crit cukup buat bunuh dia.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/167.webp" alt="Wukong" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/wukong/" class="counter-name-link">Wukong</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Skill 1 Wukong nahan satu skill musuh dan kasih kebal sesaat, kuat banget lawan Daji yang cuma ngandelin satu combo burst. Begitu combo Daji ketahan, Wukong tinggal pakai kebal + shield 4 detik buat bunuh dia.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/184.webp" alt="Cai Yan" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/cai-yan/" class="counter-name-link">Cai Yan</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Sustain dan control mantul batalin combo one-shot. Daji gak bisa nyelesaiin karena ada heal.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/119.webp" alt="Dr Bian" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/dr-bian/" class="counter-name-link">Dr Bian</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Wave clear Daji di awal lemah, AoE Dr Bian lebih cepet, jadi Dr Bian unggul gold dan level. Di early-mid Daji belum bisa one-combo Dr Bian, dan pas skill-nya cooldown Daji gak bisa ngapa-ngapain. Dr Bian yang punya heal dan awet di lane bisa neken Daji.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/131.webp" alt="Li Bai" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/li-bai/" class="counter-name-link">Li Bai</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Daji simpel: lempar combo 2-3-1. Li Bai punya dash lincah dan skill kebal damage: poke pakai skill 2 + ult, engage pakai skill 1, terus ngindarin combo Daji pakai skill 2 atau ult pas Daji mau cast.</p>
+        </div>
+      </div>
+    </section>
+
+    
+    <section class="prerender-card">
+      <h2>Rekomendasi Item Lawan Daji</h2>
+      
+      <div class="item-entry">
+        <div class="item-title-row">
+          <span class="item-name-str">Boots of Resistance + Purify (spell)</span>
+          <span class="tag ok">terkurasi</span>
+        </div>
+        <p class="counter-why-text">Control skill 2 Daji mengunci satu target — Purify melepasnya; masuklah setelah Daji memakai control-nya.</p>
+      </div>
+      <div class="item-entry">
+        <div class="item-title-row">
+          <span class="item-name-str">Succubus Cloak / Destiny</span>
+          <span class="tag ok">terkurasi</span>
+        </div>
+        <p class="counter-why-text">Daji one-combo hero tipis di late — Succubus Cloak menahan burst magic-nya; jangan jalan sendirian saat skill-nya ready.</p>
+      </div>
+    </section>
+
+    <section class="prerender-card">
+      <h2>Jangan Pick Melawan Daji</h2>
+      
+      
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/150.webp" alt="Han Xin" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/han-xin/" class="counter-name-link">Han Xin</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Skill 2 Daji stun 1,5 detik, lanjut burst dari ult. Han Xin yang dive langsung mati kalau stun-nya kena.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/507.webp" alt="Li Xin" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/li-xin/" class="counter-name-link">Li Xin</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Daji nunggu di semak terus pakai control dan burst. Li Xin yang kemajuan bisa mati sekali combo.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/547.webp" alt="Luara" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/luara/" class="counter-name-link">Luara</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Skill Daji ngunci target, jadi gak meleset walaupun kena blind Luara. Luara gak punya skill gerak, gampang di-control.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/157.webp" alt="Mai Shiranui" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/mai-shiranui/" class="counter-name-link">Mai Shiranui</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Skill Daji itu single target dengan hard CC, jadi Mai bisa dibunuh satu combo.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/141.webp" alt="Diaochan" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/diaochan/" class="counter-name-link">Diaochan</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Diaochan takut hard CC dan burst fokus. Burst single target Daji tinggi, bisa bunuh Diaochan pakai combo 2-3-1 sebelum dia sempet gerak. Tunggu Diaochan pakai skill 2 (ngilang), baru stun dan combo. Di mid-late kalau Daji unggul gold, Diaochan full HP pun bisa mati.</p>
+        </div>
+      </div>
+      <p class="mut" style="margin: 8px 0 0; font-size: 13px;">…dan 3 hero lagi.</p>
+    </section>
+
+    <footer class="footer-prerender">
+      <p style="margin: 0 0 8px;">Lawanku — data patch S16, snapshot 6 Nov 2026. Alat bantu draft pick &amp; counter hero Honor of Kings.</p>
+      <a href="/">← Kembali ke Beranda Lawanku</a>
+    </footer>
+  </main>
+</body>
+</html>

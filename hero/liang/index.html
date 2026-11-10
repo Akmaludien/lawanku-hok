@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Counter Liang — Lawanku</title>
+  <meta name="description" content="1) Kalau kena damage berkelanjutan Liang, mundur dikit buat mutus biar pasifnya gagal. 2) Jaga HP tetep tinggi sebelum Liang pakai ult.">
+  <link rel="canonical" href="https://lawanku.vercel.app/hero/liang/">
+  <link rel="icon" href="../../logo.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#0f131c">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Counter Liang — Lawanku">
+  <meta property="og:description" content="1) Kalau kena damage berkelanjutan Liang, mundur dikit buat mutus biar pasifnya gagal. 2) Jaga HP tetep tinggi sebelum Liang pakai ult.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lawanku.vercel.app/hero/liang/">
+  <meta property="og:image" content="https://lawanku.vercel.app/icons/hero/156.webp">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://lawanku.vercel.app/hero/liang/#webpage",
+      "url": "https://lawanku.vercel.app/hero/liang/",
+      "name": "Counter Liang — Lawanku",
+      "description": "1) Kalau kena damage berkelanjutan Liang, mundur dikit buat mutus biar pasifnya gagal. 2) Jaga HP tetep tinggi sebelum Liang pakai ult.",
+      "inLanguage": "id"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://lawanku.vercel.app/hero/liang/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Beranda",
+          "item": "https://lawanku.vercel.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Counter Hero",
+          "item": "https://lawanku.vercel.app/#/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Liang",
+          "item": "https://lawanku.vercel.app/hero/liang/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="../../styles.css">
+  <style>
+    .prerender-wrap { max-width: 720px; margin: 0 auto; padding: var(--s3); box-sizing: border-box; }
+    .crumb-nav { font-size: 13px; margin-bottom: var(--s2); color: var(--mut); }
+    .crumb-nav a { color: var(--mut); text-decoration: none; }
+    .crumb-nav a:hover { color: var(--fg); text-decoration: underline; }
+    .crumb-nav span { color: var(--fg); font-weight: 600; }
+    .hero-head-prerender { display: flex; gap: var(--s3); align-items: center; margin-bottom: var(--s3); }
+    .hero-avatar-prerender { width: 72px; height: 72px; border-radius: 10px; background: var(--chip); object-fit: cover; flex-shrink: 0; border: 1px solid var(--line); }
+    .hero-title-group h1 { margin: 0 0 4px; font-size: 26px; color: var(--fg); font-family: var(--font-title); }
+    .hero-subtitle { margin: 0; color: var(--mut); font-size: 14px; }
+    .tier-chip { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-top: 6px; }
+    .btn-open-app { display: block; width: 100%; box-sizing: border-box; text-align: center; background: var(--acc); color: #0f131c; font-weight: 800; font-size: 16px; padding: 14px 20px; border-radius: 8px; text-decoration: none; margin: var(--s3) 0 var(--s4); box-shadow: 0 4px 14px rgba(245, 158, 11, .3); transition: opacity .15s ease; }
+    .btn-open-app:hover { opacity: 0.9; }
+    .prerender-card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: var(--s3); margin-bottom: var(--s3); }
+    .prerender-card h2 { font-size: 17px; margin: 0 0 var(--s2); color: var(--acc); border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+    .counter-row-prerender { display: flex; gap: var(--s2); align-items: flex-start; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .counter-row-prerender:last-child { border-bottom: none; }
+    .counter-avatar { width: 44px; height: 44px; border-radius: 6px; background: var(--chip); object-fit: cover; flex-shrink: 0; }
+    .counter-body { flex: 1; min-width: 0; }
+    .counter-head-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+    .counter-name-link { font-weight: 700; color: var(--fg); text-decoration: none; }
+    .counter-name-link:hover { color: var(--acc); text-decoration: underline; }
+    .counter-why-text { margin: 0; font-size: 14px; color: var(--mut); line-height: 1.4; }
+    .item-entry { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .item-entry:last-child { border-bottom: none; }
+    .item-title-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .item-name-str { font-weight: 700; color: var(--fg); }
+    .footer-prerender { text-align: center; margin-top: var(--s4); padding-top: var(--s3); border-top: 1px solid var(--line); font-size: 13px; color: var(--mut); }
+    .footer-prerender a { color: var(--acc); text-decoration: none; }
+    .footer-prerender a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <main class="prerender-wrap">
+    <nav aria-label="Breadcrumb" class="crumb-nav">
+      <a href="/">Beranda</a> &rsaquo;
+      <a href="/#/">Counter Hero</a> &rsaquo;
+      <span>Liang</span>
+    </nav>
+
+    <header class="hero-head-prerender">
+      <img src="../../icons/hero/156.webp" alt="Liang" class="hero-avatar-prerender" width="72" height="72">
+      <div class="hero-title-group">
+        <h1>Liang</h1>
+        <p class="hero-subtitle">Mid / Roam · Mage</p>
+        <span class="tier-chip tierbadge ts">Tier S</span>
+      </div>
+    </header>
+
+    <a href="/#/hero/liang" class="btn-open-app">⚡ Buka di Lawanku</a>
+
+    
+    <section class="prerender-card">
+      <h2>Cara Melawan Liang</h2>
+      <p style="margin: 0; line-height: 1.5; color: var(--fg);">1) Kalau kena damage berkelanjutan Liang, mundur dikit buat mutus biar pasifnya gagal. 2) Jaga HP tetep tinggi sebelum Liang pakai ult.</p>
+    </section>
+
+    <section class="prerender-card">
+      <h2>Counter Alami Liang</h2>
+      
+      
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/182.webp" alt="Gan &amp; Mo" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/gan-mo/" class="counter-name-link">Gan &amp; Mo</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Jangkauan Gan &amp; Mo lebih jauh dari Liang, dan pas Liang diem pakai ult dia gampang dibunuh.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/127.webp" alt="Lady Zhen" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/lady-zhen/" class="counter-name-link">Lady Zhen</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Lady Zhen neken Liang dari jauh, dan control-nya bisa motong ult Liang.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/175.webp" alt="Kui" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/kui/" class="counter-name-link">Kui</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Hook Kui narik Liang yang diem pas ult, sekalian motong ult-nya.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/168.webp" alt="Lapulapu" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/lapulapu/" class="counter-name-link">Lapulapu</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Skill 2 Lapulapu nerbangin Liang dan motong ult-nya.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/196.webp" alt="Shouyue" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/shouyue/" class="counter-name-link">Shouyue</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Shouyue susah dijangkau ult Liang, dan jangkauannya cukup buat bunuh Liang duluan.</p>
+        </div>
+      </div>
+    </section>
+
+    
+    <section class="prerender-card">
+      <h2>Rekomendasi Item Lawan Liang</h2>
+      
+      <div class="item-entry">
+        <div class="item-title-row">
+          <span class="item-name-str">Succubus Cloak</span>
+          <span class="tag ok">terkurasi</span>
+        </div>
+        <p class="counter-why-text">Damage Liang itu magic berkelanjutan dan ult-nya mengeksekusi HP rendah — Succubus Cloak + shield magic menahan burst-nya; jaga HP tetap tinggi sebelum dia ult, dan mundur sedikit saat kena damage-nya agar pasifnya gagal.</p>
+      </div>
+    </section>
+
+    <section class="prerender-card">
+      <h2>Jangan Pick Melawan Liang</h2>
+      
+      
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/116.webp" alt="Arke" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/arke/" class="counter-name-link">Arke</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Ult Liang yang pasti kena di areanya ngunci Arke, lanjut skill 1 buat bunuh dia.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/517.webp" alt="Augran" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/augran/" class="counter-name-link">Augran</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Ult Liang gak bisa di-purify dan jangkauannya jauh, jadi bisa ngunci Augran pas masuk.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/141.webp" alt="Diaochan" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/diaochan/" class="counter-name-link">Diaochan</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Skill 1 dan ult Liang ngunci Diaochan. Ult-nya susah lepas, bahkan pakai Purify.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/631.webp" alt="Florentino" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/florentino/" class="counter-name-link">Florentino</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Sama kayak Donghuang: ult Liang itu suppress jarak jauh yang nembus kebal CC, jadi Florentino yang lagi asyik mungutin bunga dan nge-reset skill 2 tiba-tiba kekunci diam di tempat. Catatan: ini counter konteks teamfight, bukan lane — Liang itu mid/roam, jadi butuh tim yang follow-up burst selagi dia kekunci.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/140.webp" alt="Guan Yu" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/guan-yu/" class="counter-name-link">Guan Yu</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Skill 1 dan ult Liang kasih hard CC pas Guan Yu nyerbu.</p>
+        </div>
+      </div>
+      <p class="mut" style="margin: 8px 0 0; font-size: 13px;">…dan 10 hero lagi.</p>
+    </section>
+
+    <footer class="footer-prerender">
+      <p style="margin: 0 0 8px;">Lawanku — data patch S16, snapshot 6 Nov 2026. Alat bantu draft pick &amp; counter hero Honor of Kings.</p>
+      <a href="/">← Kembali ke Beranda Lawanku</a>
+    </footer>
+  </main>
+</body>
+</html>

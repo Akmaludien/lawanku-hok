@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Counter Cai Yan — Lawanku</title>
+  <meta name="description" content="1) Assassin pick-off Cai Yan, dia lemah kalau sendirian. 2) Control skill 2-nya bisa dihindarin. 3) Pas dia ult, cari cara motong secepet mungkin.">
+  <link rel="canonical" href="https://lawanku.vercel.app/hero/cai-yan/">
+  <link rel="icon" href="../../logo.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#0f131c">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Counter Cai Yan — Lawanku">
+  <meta property="og:description" content="1) Assassin pick-off Cai Yan, dia lemah kalau sendirian. 2) Control skill 2-nya bisa dihindarin. 3) Pas dia ult, cari cara motong secepet mungkin.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lawanku.vercel.app/hero/cai-yan/">
+  <meta property="og:image" content="https://lawanku.vercel.app/icons/hero/184.webp">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://lawanku.vercel.app/hero/cai-yan/#webpage",
+      "url": "https://lawanku.vercel.app/hero/cai-yan/",
+      "name": "Counter Cai Yan — Lawanku",
+      "description": "1) Assassin pick-off Cai Yan, dia lemah kalau sendirian. 2) Control skill 2-nya bisa dihindarin. 3) Pas dia ult, cari cara motong secepet mungkin.",
+      "inLanguage": "id"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://lawanku.vercel.app/hero/cai-yan/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Beranda",
+          "item": "https://lawanku.vercel.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Counter Hero",
+          "item": "https://lawanku.vercel.app/#/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Cai Yan",
+          "item": "https://lawanku.vercel.app/hero/cai-yan/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="../../styles.css">
+  <style>
+    .prerender-wrap { max-width: 720px; margin: 0 auto; padding: var(--s3); box-sizing: border-box; }
+    .crumb-nav { font-size: 13px; margin-bottom: var(--s2); color: var(--mut); }
+    .crumb-nav a { color: var(--mut); text-decoration: none; }
+    .crumb-nav a:hover { color: var(--fg); text-decoration: underline; }
+    .crumb-nav span { color: var(--fg); font-weight: 600; }
+    .hero-head-prerender { display: flex; gap: var(--s3); align-items: center; margin-bottom: var(--s3); }
+    .hero-avatar-prerender { width: 72px; height: 72px; border-radius: 10px; background: var(--chip); object-fit: cover; flex-shrink: 0; border: 1px solid var(--line); }
+    .hero-title-group h1 { margin: 0 0 4px; font-size: 26px; color: var(--fg); font-family: var(--font-title); }
+    .hero-subtitle { margin: 0; color: var(--mut); font-size: 14px; }
+    .tier-chip { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-top: 6px; }
+    .btn-open-app { display: block; width: 100%; box-sizing: border-box; text-align: center; background: var(--acc); color: #0f131c; font-weight: 800; font-size: 16px; padding: 14px 20px; border-radius: 8px; text-decoration: none; margin: var(--s3) 0 var(--s4); box-shadow: 0 4px 14px rgba(245, 158, 11, .3); transition: opacity .15s ease; }
+    .btn-open-app:hover { opacity: 0.9; }
+    .prerender-card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: var(--s3); margin-bottom: var(--s3); }
+    .prerender-card h2 { font-size: 17px; margin: 0 0 var(--s2); color: var(--acc); border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+    .counter-row-prerender { display: flex; gap: var(--s2); align-items: flex-start; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .counter-row-prerender:last-child { border-bottom: none; }
+    .counter-avatar { width: 44px; height: 44px; border-radius: 6px; background: var(--chip); object-fit: cover; flex-shrink: 0; }
+    .counter-body { flex: 1; min-width: 0; }
+    .counter-head-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+    .counter-name-link { font-weight: 700; color: var(--fg); text-decoration: none; }
+    .counter-name-link:hover { color: var(--acc); text-decoration: underline; }
+    .counter-why-text { margin: 0; font-size: 14px; color: var(--mut); line-height: 1.4; }
+    .item-entry { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .item-entry:last-child { border-bottom: none; }
+    .item-title-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .item-name-str { font-weight: 700; color: var(--fg); }
+    .footer-prerender { text-align: center; margin-top: var(--s4); padding-top: var(--s3); border-top: 1px solid var(--line); font-size: 13px; color: var(--mut); }
+    .footer-prerender a { color: var(--acc); text-decoration: none; }
+    .footer-prerender a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <main class="prerender-wrap">
+    <nav aria-label="Breadcrumb" class="crumb-nav">
+      <a href="/">Beranda</a> &rsaquo;
+      <a href="/#/">Counter Hero</a> &rsaquo;
+      <span>Cai Yan</span>
+    </nav>
+
+    <header class="hero-head-prerender">
+      <img src="../../icons/hero/184.webp" alt="Cai Yan" class="hero-avatar-prerender" width="72" height="72">
+      <div class="hero-title-group">
+        <h1>Cai Yan</h1>
+        <p class="hero-subtitle">Roam · Support</p>
+        <span class="tier-chip tierbadge ta">Tier A</span>
+      </div>
+    </header>
+
+    <a href="/#/hero/cai-yan" class="btn-open-app">⚡ Buka di Lawanku</a>
+
+    
+    <section class="prerender-card">
+      <h2>Cara Melawan Cai Yan</h2>
+      <p style="margin: 0; line-height: 1.5; color: var(--fg);">1) Assassin pick-off Cai Yan, dia lemah kalau sendirian. 2) Control skill 2-nya bisa dihindarin. 3) Pas dia ult, cari cara motong secepet mungkin.</p>
+    </section>
+
+    <section class="prerender-card">
+      <h2>Counter Alami Cai Yan</h2>
+      
+      
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/127.webp" alt="Lady Zhen" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/lady-zhen/" class="counter-name-link">Lady Zhen</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Skill area Lady Zhen plus item anti-heal motong heal Cai Yan, dan control area-nya neken tim yang ngumpul.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/175.webp" alt="Kui" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/kui/" class="counter-name-link">Kui</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Hook skill 2 Kui narik dan silence Cai Yan yang berdiri deket temen, mutus heal-nya, terus skill 1 dan ult ngabisin dia.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/152.webp" alt="Wang Zhaojun" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/wang-zhaojun/" class="counter-name-link">Wang Zhaojun</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Skill 2 Wang Zhaojun nge-freeze Cai Yan, terus ult bisa langsung bunuh dia. Slow skill 1 bikin Cai Yan telat heal temen.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/182.webp" alt="Gan &amp; Mo" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/gan-mo/" class="counter-name-link">Gan &amp; Mo</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Jangkauan super jauh Gan &amp; Mo jaga dia di luar jangkauan skill 2 Cai Yan, dan burst late-nya hampir bunuh Cai Yan sekali combo.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/191.webp" alt="Da Qiao" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/da-qiao/" class="counter-name-link">Da Qiao</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Cai Yan lemah kalau sendirian — Da Qiao bisa mengumpulkan tim dengan cepat untuk mengeroyok dan membunuhnya sebelum heal-nya jalan.</p>
+        </div>
+      </div>
+    </section>
+
+    
+    <section class="prerender-card">
+      <h2>Rekomendasi Item Lawan Cai Yan</h2>
+      
+      <div class="item-entry">
+        <div class="item-title-row">
+          <span class="item-name-str">Mortal Punisher (fisik) / Venomous Staff (magic)</span>
+          <span class="tag ok">terkurasi</span>
+        </div>
+        <p class="counter-why-text">Cai Yan heal timnya terus-menerus — anti-heal memotong heal-nya, lalu pick-off dia saat sendirian karena dia lemah tanpa tim.</p>
+      </div>
+      <div class="item-entry">
+        <div class="item-title-row">
+          <span class="item-name-str">Boots of Resistance + Purify (spell)</span>
+          <span class="tag ok">terkurasi</span>
+        </div>
+        <p class="counter-why-text">Control skill 2 Cai Yan bisa dihindari — Boots of Resistance memperpendek durasinya; Purify melepas control saat dia mengunci.</p>
+      </div>
+    </section>
+
+    <section class="prerender-card">
+      <h2>Jangan Pick Melawan Cai Yan</h2>
+      
+      
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/187.webp" alt="Donghuang" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/donghuang/" class="counter-name-link">Donghuang</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Heal cepet Cai Yan bikin target ult Donghuang tetep hidup, jadi ult itu malah ngerugiin Donghuang.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/196.webp" alt="Shouyue" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/shouyue/" class="counter-name-link">Shouyue</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Heal Cai Yan balikin HP yang dikikis tembakan Shouyue, dan skill 2-nya bisa nge-control Shouyue.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/109.webp" alt="Daji" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/daji/" class="counter-name-link">Daji</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Sustain dan control mantul batalin combo one-shot. Daji gak bisa nyelesaiin karena ada heal.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/577.webp" alt="Dyadia" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/dyadia/" class="counter-name-link">Dyadia</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Sustain dan control mantul Cai Yan lebih awet dari buff support Dyadia di fight panjang.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/179.webp" alt="Nuwa" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/nuwa/" class="counter-name-link">Nuwa</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Cai Yan bisa heal tim dari poke Nuwa dan menguncinya dengan control skill 2 saat dia mencoba rotasi.</p>
+        </div>
+      </div>
+      
+    </section>
+
+    <footer class="footer-prerender">
+      <p style="margin: 0 0 8px;">Lawanku — data patch S16, snapshot 6 Nov 2026. Alat bantu draft pick &amp; counter hero Honor of Kings.</p>
+      <a href="/">← Kembali ke Beranda Lawanku</a>
+    </footer>
+  </main>
+</body>
+</html>

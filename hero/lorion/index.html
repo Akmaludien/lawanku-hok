@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Counter Lorion — Lawanku</title>
+  <meta name="description" content="Jauhin orb-nya dan jangan berdiri di tempat orb ditaruh — semua damage dan ult Lorion berpusat di situ. Serang pas orb masih nempel di badannya atau setelah...">
+  <link rel="canonical" href="https://lawanku.vercel.app/hero/lorion/">
+  <link rel="icon" href="../../logo.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#0f131c">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Counter Lorion — Lawanku">
+  <meta property="og:description" content="Jauhin orb-nya dan jangan berdiri di tempat orb ditaruh — semua damage dan ult Lorion berpusat di situ. Serang pas orb masih nempel di badannya atau setelah...">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lawanku.vercel.app/hero/lorion/">
+  <meta property="og:image" content="https://lawanku.vercel.app/icons/hero/635.webp">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://lawanku.vercel.app/hero/lorion/#webpage",
+      "url": "https://lawanku.vercel.app/hero/lorion/",
+      "name": "Counter Lorion — Lawanku",
+      "description": "Jauhin orb-nya dan jangan berdiri di tempat orb ditaruh — semua damage dan ult Lorion berpusat di situ. Serang pas orb masih nempel di badannya atau setelah...",
+      "inLanguage": "id"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://lawanku.vercel.app/hero/lorion/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Beranda",
+          "item": "https://lawanku.vercel.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Counter Hero",
+          "item": "https://lawanku.vercel.app/#/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Lorion",
+          "item": "https://lawanku.vercel.app/hero/lorion/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="../../styles.css">
+  <style>
+    .prerender-wrap { max-width: 720px; margin: 0 auto; padding: var(--s3); box-sizing: border-box; }
+    .crumb-nav { font-size: 13px; margin-bottom: var(--s2); color: var(--mut); }
+    .crumb-nav a { color: var(--mut); text-decoration: none; }
+    .crumb-nav a:hover { color: var(--fg); text-decoration: underline; }
+    .crumb-nav span { color: var(--fg); font-weight: 600; }
+    .hero-head-prerender { display: flex; gap: var(--s3); align-items: center; margin-bottom: var(--s3); }
+    .hero-avatar-prerender { width: 72px; height: 72px; border-radius: 10px; background: var(--chip); object-fit: cover; flex-shrink: 0; border: 1px solid var(--line); }
+    .hero-title-group h1 { margin: 0 0 4px; font-size: 26px; color: var(--fg); font-family: var(--font-title); }
+    .hero-subtitle { margin: 0; color: var(--mut); font-size: 14px; }
+    .tier-chip { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-top: 6px; }
+    .btn-open-app { display: block; width: 100%; box-sizing: border-box; text-align: center; background: var(--acc); color: #0f131c; font-weight: 800; font-size: 16px; padding: 14px 20px; border-radius: 8px; text-decoration: none; margin: var(--s3) 0 var(--s4); box-shadow: 0 4px 14px rgba(245, 158, 11, .3); transition: opacity .15s ease; }
+    .btn-open-app:hover { opacity: 0.9; }
+    .prerender-card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: var(--s3); margin-bottom: var(--s3); }
+    .prerender-card h2 { font-size: 17px; margin: 0 0 var(--s2); color: var(--acc); border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+    .counter-row-prerender { display: flex; gap: var(--s2); align-items: flex-start; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .counter-row-prerender:last-child { border-bottom: none; }
+    .counter-avatar { width: 44px; height: 44px; border-radius: 6px; background: var(--chip); object-fit: cover; flex-shrink: 0; }
+    .counter-body { flex: 1; min-width: 0; }
+    .counter-head-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+    .counter-name-link { font-weight: 700; color: var(--fg); text-decoration: none; }
+    .counter-name-link:hover { color: var(--acc); text-decoration: underline; }
+    .counter-why-text { margin: 0; font-size: 14px; color: var(--mut); line-height: 1.4; }
+    .item-entry { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .item-entry:last-child { border-bottom: none; }
+    .item-title-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .item-name-str { font-weight: 700; color: var(--fg); }
+    .footer-prerender { text-align: center; margin-top: var(--s4); padding-top: var(--s3); border-top: 1px solid var(--line); font-size: 13px; color: var(--mut); }
+    .footer-prerender a { color: var(--acc); text-decoration: none; }
+    .footer-prerender a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <main class="prerender-wrap">
+    <nav aria-label="Breadcrumb" class="crumb-nav">
+      <a href="/">Beranda</a> &rsaquo;
+      <a href="/#/">Counter Hero</a> &rsaquo;
+      <span>Lorion</span>
+    </nav>
+
+    <header class="hero-head-prerender">
+      <img src="../../icons/hero/635.webp" alt="Lorion" class="hero-avatar-prerender" width="72" height="72">
+      <div class="hero-title-group">
+        <h1>Lorion</h1>
+        <p class="hero-subtitle">Mid · Mage</p>
+        <span class="tier-chip tierbadge tc">Tier C</span>
+      </div>
+    </header>
+
+    <a href="/#/hero/lorion" class="btn-open-app">⚡ Buka di Lawanku</a>
+
+    
+    <section class="prerender-card">
+      <h2>Cara Melawan Lorion</h2>
+      <p style="margin: 0; line-height: 1.5; color: var(--fg);">Jauhin orb-nya dan jangan berdiri di tempat orb ditaruh — semua damage dan ult Lorion berpusat di situ. Serang pas orb masih nempel di badannya atau setelah dia terbang (escape-nya habis), dan keluar dari area ult-nya selama delay 2 detik sebelum meledak.</p>
+    </section>
+
+    <section class="prerender-card">
+      <h2>Counter Alami Lorion</h2>
+      
+      
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/153.webp" alt="Gao Changgong" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/gao-changgong/" class="counter-name-link">Gao Changgong</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Gao Changgong masuk pakai stealth, jadi zoning orb Lorion nggak guna — dia baru kelihatan pas udah nempel, terus burst ke Lorion yang tipis dan sendirian sebelum Lorion sempat terbang ke orb atau cast ult.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/116.webp" alt="Arke" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/arke/" class="counter-name-link">Arke</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Sama kayak Gao: Arke nyergap dari stealth dari belakang, one-combo sebelum Lorion sempat bereaksi. Lorion nggak punya reveal dan nggak punya hard CC instan — satu-satunya CC-nya ult yang delay 2 detik, gampang dihindari atau keburu mati duluan.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/190.webp" alt="Kongming" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/kongming/" class="counter-name-link">Kongming</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Kongming bisa dash berkali-kali, jadi gampang ngehindarin jalur orb dan ledakan ult Lorion yang delay, terus burst balik ke Lorion yang tipis. Di lane mid langsung, ini matchup yang memang nggak enak buat Lorion.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/137.webp" alt="Sima Yi" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/sima-yi/" class="counter-name-link">Sima Yi</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Silence Sima Yi motong rantai skill Lorion — Lorion butuh cast skill beruntun buat meledakin orb, dan kalau kena silence dia nggak bisa cast Darkness Falls buat kabur. Dive-nya juga nempel terus ke mage tipis.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/156.webp" alt="Liang" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/liang/" class="counter-name-link">Liang</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Ult Liang itu suppress yang nggak bisa dilepas Purify, jadi kalau kena sebelum Lorion terbang, Lorion kekunci dan nggak bisa kabur pakai Darkness Falls. Tapi syaratnya ketat: harus nangkep dia sebelum terbang — kalau Lorion udah mendarat dan kebal CC, atau dia poke dari luar jangkauan Liang, Liang nggak bisa apa-apa.</p>
+        </div>
+      </div>
+    </section>
+
+    
+    <section class="prerender-card">
+      <h2>Rekomendasi Item Lawan Lorion</h2>
+      
+      <div class="item-entry">
+        <div class="item-title-row">
+          <span class="item-name-str">Succubus Cloak</span>
+          <span class="tag ok">terkurasi</span>
+        </div>
+        <p class="counter-why-text">Semua damage Lorion itu magic burst satu kombo + ult, jadi shield magic Succubus Cloak menahan kombo-nya.</p>
+      </div>
+    </section>
+
+    <section class="prerender-card">
+      <h2>Jangan Pick Melawan Lorion</h2>
+      <p class="mut">Belum ada data counter lawan.</p>
+      
+      
+    </section>
+
+    <footer class="footer-prerender">
+      <p style="margin: 0 0 8px;">Lawanku — data patch S16, snapshot 6 Nov 2026. Alat bantu draft pick &amp; counter hero Honor of Kings.</p>
+      <a href="/">← Kembali ke Beranda Lawanku</a>
+    </footer>
+  </main>
+</body>
+</html>

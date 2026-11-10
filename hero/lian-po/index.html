@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Counter Lian Po — Lawanku</title>
+  <meta name="description" content="Jadi gini, skill Lian Po cooldown-nya lama. Pas lagi cooldown, poke aja biar pasifnya gak nyerap banyak damage. Tapi ingat, jaga posisi dan simpen dash buat...">
+  <link rel="canonical" href="https://lawanku.vercel.app/hero/lian-po/">
+  <link rel="icon" href="../../logo.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#0f131c">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Counter Lian Po — Lawanku">
+  <meta property="og:description" content="Jadi gini, skill Lian Po cooldown-nya lama. Pas lagi cooldown, poke aja biar pasifnya gak nyerap banyak damage. Tapi ingat, jaga posisi dan simpen dash buat...">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lawanku.vercel.app/hero/lian-po/">
+  <meta property="og:image" content="https://lawanku.vercel.app/icons/hero/105.webp">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://lawanku.vercel.app/hero/lian-po/#webpage",
+      "url": "https://lawanku.vercel.app/hero/lian-po/",
+      "name": "Counter Lian Po — Lawanku",
+      "description": "Jadi gini, skill Lian Po cooldown-nya lama. Pas lagi cooldown, poke aja biar pasifnya gak nyerap banyak damage. Tapi ingat, jaga posisi dan simpen dash buat...",
+      "inLanguage": "id"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://lawanku.vercel.app/hero/lian-po/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Beranda",
+          "item": "https://lawanku.vercel.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Counter Hero",
+          "item": "https://lawanku.vercel.app/#/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Lian Po",
+          "item": "https://lawanku.vercel.app/hero/lian-po/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="../../styles.css">
+  <style>
+    .prerender-wrap { max-width: 720px; margin: 0 auto; padding: var(--s3); box-sizing: border-box; }
+    .crumb-nav { font-size: 13px; margin-bottom: var(--s2); color: var(--mut); }
+    .crumb-nav a { color: var(--mut); text-decoration: none; }
+    .crumb-nav a:hover { color: var(--fg); text-decoration: underline; }
+    .crumb-nav span { color: var(--fg); font-weight: 600; }
+    .hero-head-prerender { display: flex; gap: var(--s3); align-items: center; margin-bottom: var(--s3); }
+    .hero-avatar-prerender { width: 72px; height: 72px; border-radius: 10px; background: var(--chip); object-fit: cover; flex-shrink: 0; border: 1px solid var(--line); }
+    .hero-title-group h1 { margin: 0 0 4px; font-size: 26px; color: var(--fg); font-family: var(--font-title); }
+    .hero-subtitle { margin: 0; color: var(--mut); font-size: 14px; }
+    .tier-chip { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-top: 6px; }
+    .btn-open-app { display: block; width: 100%; box-sizing: border-box; text-align: center; background: var(--acc); color: #0f131c; font-weight: 800; font-size: 16px; padding: 14px 20px; border-radius: 8px; text-decoration: none; margin: var(--s3) 0 var(--s4); box-shadow: 0 4px 14px rgba(245, 158, 11, .3); transition: opacity .15s ease; }
+    .btn-open-app:hover { opacity: 0.9; }
+    .prerender-card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: var(--s3); margin-bottom: var(--s3); }
+    .prerender-card h2 { font-size: 17px; margin: 0 0 var(--s2); color: var(--acc); border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+    .counter-row-prerender { display: flex; gap: var(--s2); align-items: flex-start; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .counter-row-prerender:last-child { border-bottom: none; }
+    .counter-avatar { width: 44px; height: 44px; border-radius: 6px; background: var(--chip); object-fit: cover; flex-shrink: 0; }
+    .counter-body { flex: 1; min-width: 0; }
+    .counter-head-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+    .counter-name-link { font-weight: 700; color: var(--fg); text-decoration: none; }
+    .counter-name-link:hover { color: var(--acc); text-decoration: underline; }
+    .counter-why-text { margin: 0; font-size: 14px; color: var(--mut); line-height: 1.4; }
+    .item-entry { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .item-entry:last-child { border-bottom: none; }
+    .item-title-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .item-name-str { font-weight: 700; color: var(--fg); }
+    .footer-prerender { text-align: center; margin-top: var(--s4); padding-top: var(--s3); border-top: 1px solid var(--line); font-size: 13px; color: var(--mut); }
+    .footer-prerender a { color: var(--acc); text-decoration: none; }
+    .footer-prerender a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <main class="prerender-wrap">
+    <nav aria-label="Breadcrumb" class="crumb-nav">
+      <a href="/">Beranda</a> &rsaquo;
+      <a href="/#/">Counter Hero</a> &rsaquo;
+      <span>Lian Po</span>
+    </nav>
+
+    <header class="hero-head-prerender">
+      <img src="../../icons/hero/105.webp" alt="Lian Po" class="hero-avatar-prerender" width="72" height="72">
+      <div class="hero-title-group">
+        <h1>Lian Po</h1>
+        <p class="hero-subtitle">Clash / Roam · Tank</p>
+        <span class="tier-chip tierbadge tb">Tier B</span>
+      </div>
+    </header>
+
+    <a href="/#/hero/lian-po" class="btn-open-app">⚡ Buka di Lawanku</a>
+
+    
+    <section class="prerender-card">
+      <h2>Cara Melawan Lian Po</h2>
+      <p style="margin: 0; line-height: 1.5; color: var(--fg);">Jadi gini, skill Lian Po cooldown-nya lama. Pas lagi cooldown, poke aja biar pasifnya gak nyerap banyak damage. Tapi ingat, jaga posisi dan simpen dash buat cepet keluar dari jangkauan skill-nya biar gak di-control terus.</p>
+    </section>
+
+    <section class="prerender-card">
+      <h2>Counter Alami Lian Po</h2>
+      
+      
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/121.webp" alt="Mi Yue" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/mi-yue/" class="counter-name-link">Mi Yue</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Mi Yue enak banget neken Lian Po di lane, susah ditangkep, terus ult-nya bisa ngindarin banyak skill dia.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/123.webp" alt="Lu Bu" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/lu-bu/" class="counter-name-link">Lu Bu</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Lu Bu punya shield buat nahan damage Lian Po pas adu deket, plus damage-nya true damage. Ujung-ujungnya Lian Po kalah trade.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/119.webp" alt="Dr Bian" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/dr-bian/" class="counter-name-link">Dr Bian</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Lian Po mengandalkan pasif menyerap damage saat cooldown — Dr Bian yang bisa heal dan memberi damage berkelanjutan bisa menggerogoti HP-nya sambil menunggu cooldown Lian Po habis.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/503.webp" alt="Biron" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/biron/" class="counter-name-link">Biron</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Lian Po cooldown skill-nya lama — Biron yang kuat di lane dengan lifesteal bisa menekannya di jeda cooldown dan menang trade.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/199.webp" alt="Arli" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/arli/" class="counter-name-link">Arli</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Lian Po mengandalkan control yang bisa dihindari — Arli yang lincah bisa menghindari skill-nya dan menyerang dari luar jangkauan.</p>
+        </div>
+      </div>
+    </section>
+
+    
+    <section class="prerender-card">
+      <h2>Rekomendasi Item Lawan Lian Po</h2>
+      
+      <div class="item-entry">
+        <div class="item-title-row">
+          <span class="item-name-str">Overlord&#39;s Might / Starbreaker (armor pen)</span>
+          <span class="tag ok">terkurasi</span>
+        </div>
+        <p class="counter-why-text">Pasif Lian Po menyerap banyak damage — penetrasi armor dan true damage menembus ketahanannya; poke dia saat skill-nya cooldown agar pasifnya tidak menyerap banyak damage.</p>
+      </div>
+    </section>
+
+    <section class="prerender-card">
+      <h2>Jangan Pick Melawan Lian Po</h2>
+      
+      
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/509.webp" alt="Dunshan" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/dunshan/" class="counter-name-link">Dunshan</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Control area dan super armor Lian Po batalin skill 1 Dunshan dan bikin dia kebal skill 2 Dunshan.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/189.webp" alt="Guiguzi" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/guiguzi/" class="counter-name-link">Guiguzi</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Lian Po kebal control dan damage balasannya kuat, jadi Guiguzi susah masuk buat narik dia.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/175.webp" alt="Kui" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/kui/" class="counter-name-link">Kui</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Lian Po tebel dan kebal control pas skill aktif, jadi hook Kui gak bahaya buat dia.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/108.webp" alt="Mozi" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/mozi/" class="counter-name-link">Mozi</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Shield dan kebal control pas Lian Po pakai skill bikin skill 2 Mozi gak bisa nahan dia.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/523.webp" alt="Shi" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/shi/" class="counter-name-link">Shi</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Lian Po kebal control selama pakai skill, jadi control Shi gak ngaruh, dan dia bisa langsung nerjang Shi.</p>
+        </div>
+      </div>
+      <p class="mut" style="margin: 8px 0 0; font-size: 13px;">…dan 2 hero lagi.</p>
+    </section>
+
+    <footer class="footer-prerender">
+      <p style="margin: 0 0 8px;">Lawanku — data patch S16, snapshot 6 Nov 2026. Alat bantu draft pick &amp; counter hero Honor of Kings.</p>
+      <a href="/">← Kembali ke Beranda Lawanku</a>
+    </footer>
+  </main>
+</body>
+</html>

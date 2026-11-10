@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Counter Mozi — Lawanku</title>
+  <meta name="description" content="1) Hindarin control jarak jauh skill 2 Mozi. 2) Jangan berdiri kedeketan sama temen biar ult Mozi gak kena banyak orang.">
+  <link rel="canonical" href="https://lawanku.vercel.app/hero/mozi/">
+  <link rel="icon" href="../../logo.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#0f131c">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Counter Mozi — Lawanku">
+  <meta property="og:description" content="1) Hindarin control jarak jauh skill 2 Mozi. 2) Jangan berdiri kedeketan sama temen biar ult Mozi gak kena banyak orang.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lawanku.vercel.app/hero/mozi/">
+  <meta property="og:image" content="https://lawanku.vercel.app/icons/hero/108.webp">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://lawanku.vercel.app/hero/mozi/#webpage",
+      "url": "https://lawanku.vercel.app/hero/mozi/",
+      "name": "Counter Mozi — Lawanku",
+      "description": "1) Hindarin control jarak jauh skill 2 Mozi. 2) Jangan berdiri kedeketan sama temen biar ult Mozi gak kena banyak orang.",
+      "inLanguage": "id"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://lawanku.vercel.app/hero/mozi/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Beranda",
+          "item": "https://lawanku.vercel.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Counter Hero",
+          "item": "https://lawanku.vercel.app/#/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Mozi",
+          "item": "https://lawanku.vercel.app/hero/mozi/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <link rel="stylesheet" href="../../styles.css">
+  <style>
+    .prerender-wrap { max-width: 720px; margin: 0 auto; padding: var(--s3); box-sizing: border-box; }
+    .crumb-nav { font-size: 13px; margin-bottom: var(--s2); color: var(--mut); }
+    .crumb-nav a { color: var(--mut); text-decoration: none; }
+    .crumb-nav a:hover { color: var(--fg); text-decoration: underline; }
+    .crumb-nav span { color: var(--fg); font-weight: 600; }
+    .hero-head-prerender { display: flex; gap: var(--s3); align-items: center; margin-bottom: var(--s3); }
+    .hero-avatar-prerender { width: 72px; height: 72px; border-radius: 10px; background: var(--chip); object-fit: cover; flex-shrink: 0; border: 1px solid var(--line); }
+    .hero-title-group h1 { margin: 0 0 4px; font-size: 26px; color: var(--fg); font-family: var(--font-title); }
+    .hero-subtitle { margin: 0; color: var(--mut); font-size: 14px; }
+    .tier-chip { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-top: 6px; }
+    .btn-open-app { display: block; width: 100%; box-sizing: border-box; text-align: center; background: var(--acc); color: #0f131c; font-weight: 800; font-size: 16px; padding: 14px 20px; border-radius: 8px; text-decoration: none; margin: var(--s3) 0 var(--s4); box-shadow: 0 4px 14px rgba(245, 158, 11, .3); transition: opacity .15s ease; }
+    .btn-open-app:hover { opacity: 0.9; }
+    .prerender-card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: var(--s3); margin-bottom: var(--s3); }
+    .prerender-card h2 { font-size: 17px; margin: 0 0 var(--s2); color: var(--acc); border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+    .counter-row-prerender { display: flex; gap: var(--s2); align-items: flex-start; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .counter-row-prerender:last-child { border-bottom: none; }
+    .counter-avatar { width: 44px; height: 44px; border-radius: 6px; background: var(--chip); object-fit: cover; flex-shrink: 0; }
+    .counter-body { flex: 1; min-width: 0; }
+    .counter-head-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+    .counter-name-link { font-weight: 700; color: var(--fg); text-decoration: none; }
+    .counter-name-link:hover { color: var(--acc); text-decoration: underline; }
+    .counter-why-text { margin: 0; font-size: 14px; color: var(--mut); line-height: 1.4; }
+    .item-entry { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .item-entry:last-child { border-bottom: none; }
+    .item-title-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .item-name-str { font-weight: 700; color: var(--fg); }
+    .footer-prerender { text-align: center; margin-top: var(--s4); padding-top: var(--s3); border-top: 1px solid var(--line); font-size: 13px; color: var(--mut); }
+    .footer-prerender a { color: var(--acc); text-decoration: none; }
+    .footer-prerender a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <main class="prerender-wrap">
+    <nav aria-label="Breadcrumb" class="crumb-nav">
+      <a href="/">Beranda</a> &rsaquo;
+      <a href="/#/">Counter Hero</a> &rsaquo;
+      <span>Mozi</span>
+    </nav>
+
+    <header class="hero-head-prerender">
+      <img src="../../icons/hero/108.webp" alt="Mozi" class="hero-avatar-prerender" width="72" height="72">
+      <div class="hero-title-group">
+        <h1>Mozi</h1>
+        <p class="hero-subtitle">Mid / Roam · Mage</p>
+        <span class="tier-chip tierbadge ta">Tier A</span>
+      </div>
+    </header>
+
+    <a href="/#/hero/mozi" class="btn-open-app">⚡ Buka di Lawanku</a>
+
+    
+    <section class="prerender-card">
+      <h2>Cara Melawan Mozi</h2>
+      <p style="margin: 0; line-height: 1.5; color: var(--fg);">1) Hindarin control jarak jauh skill 2 Mozi. 2) Jangan berdiri kedeketan sama temen biar ult Mozi gak kena banyak orang.</p>
+    </section>
+
+    <section class="prerender-card">
+      <h2>Counter Alami Mozi</h2>
+      
+      
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/504.webp" alt="Milady" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/milady/" class="counter-name-link">Milady</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Minion Milady nahan skill 2 Mozi, jadi Mozi susah kena musuh di lane.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/509.webp" alt="Dunshan" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/dunshan/" class="counter-name-link">Dunshan</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Shield skill 1 Dunshan ngeblok proyektil skill 2 Mozi, dan skill-nya bisa nge-control Mozi.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/105.webp" alt="Lian Po" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/lian-po/" class="counter-name-link">Lian Po</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Shield dan kebal control pas Lian Po pakai skill bikin skill 2 Mozi gak bisa nahan dia.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/118.webp" alt="Sun Bin" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/sun-bin/" class="counter-name-link">Sun Bin</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Silence dari ult Sun Bin bisa motong skill Mozi, dan skill 2-nya bantu ngindarin damage.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/154.webp" alt="Mulan" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/mulan/" class="counter-name-link">Mulan</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Kekuatan Mozi ada di control dan poke. Skill 2 Mulan + basic attack bisa silence Mozi, mode pedang berat kebal control, dan damage reduction-nya bikin Mulan gak gampang di-burst. Menang 1v1 maupun teamfight.</p>
+        </div>
+      </div>
+    </section>
+
+    
+    <section class="prerender-card">
+      <h2>Rekomendasi Item Lawan Mozi</h2>
+      
+      <div class="item-entry">
+        <div class="item-title-row">
+          <span class="item-name-str">Boots of Resistance + Purify (spell)</span>
+          <span class="tag ok">terkurasi</span>
+        </div>
+        <p class="counter-why-text">Control jarak jauh skill 2 Mozi mengunci dari jauh — Purify melepasnya; jangan berdiri berdekatan dengan teman agar ult-nya tidak kena banyak orang.</p>
+      </div>
+      <div class="item-entry">
+        <div class="item-title-row">
+          <span class="item-name-str">Succubus Cloak</span>
+          <span class="tag ok">terkurasi</span>
+        </div>
+        <p class="counter-why-text">Damage Mozi itu magic — Succubus Cloak + shield magic menahan burst-nya; hindari control jarak jauh skill 2-nya dengan bergerak.</p>
+      </div>
+    </section>
+
+    <section class="prerender-card">
+      <h2>Jangan Pick Melawan Mozi</h2>
+      
+      
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/646.webp" alt="Butterfly" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/butterfly/" class="counter-name-link">Butterfly</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Skill 2 Mozi itu stun jarak jauh — Butterfly bisa distop sebelum sempat nempel ke carry, dan kalau dia nekat dive, ult Mozi ngunci dia di zona stun beruntun. Dia nggak punya cleanse buat lepas dari rantai CC itu.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/192.webp" alt="Huang Zhong" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/huang-zhong/" class="counter-name-link">Huang Zhong</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Skill 1 Mozi buat deketin, skill 2-nya damage-nya tinggi, dan pakai ult dia bisa ngunci Huang Zhong.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/196.webp" alt="Shouyue" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/shouyue/" class="counter-name-link">Shouyue</a>
+            <span class="badge hard">hard</span>
+          </div>
+          <p class="counter-why-text">Skill 2 Mozi jangkauannya jauh dan kasih control, jadi motong bidikan Shouyue sekalian ngikis HP-nya.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/582.webp" alt="Flowborn (Mage)" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/flowborn-mage/" class="counter-name-link">Flowborn (Mage)</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Poke dan stun jarak jauh Mozi. Mage kepaksa jalan masuk ke control buat trade.</p>
+        </div>
+      </div>
+      <div class="counter-row-prerender">
+        <img src="../../icons/hero/114.webp" alt="Liu Shan" class="counter-avatar" width="44" height="44" loading="lazy">
+        <div class="counter-body">
+          <div class="counter-head-line">
+            <a href="/hero/liu-shan/" class="counter-name-link">Liu Shan</a>
+            <span class="badge soft">soft</span>
+          </div>
+          <p class="counter-why-text">Skill 1 dan 2 Liu Shan animasinya lama dan jangkauannya pendek. Mozi tinggal stun dan poke pakai skill 2, terus neken bareng tim.</p>
+        </div>
+      </div>
+      
+    </section>
+
+    <footer class="footer-prerender">
+      <p style="margin: 0 0 8px;">Lawanku — data patch S16, snapshot 6 Nov 2026. Alat bantu draft pick &amp; counter hero Honor of Kings.</p>
+      <a href="/">← Kembali ke Beranda Lawanku</a>
+    </footer>
+  </main>
+</body>
+</html>

@@ -41,3 +41,9 @@ jobs:
           cd tests
           node e2e-test.mjs
           node sync-test.mjs
+          node prerender-test.mjs
+
+      - name: Verify Prerender & Sitemap Up-to-Date
+        run: |
+          node scripts/prerender.mjs
+          git diff --exit-code hero/ sitemap.xml
