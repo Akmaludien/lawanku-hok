@@ -179,6 +179,27 @@ function roleButtons(active, onPick) {
   }
   return wrap;
 }
+function counterFilterChips(activeRole, onSelect) {
+  const wrap = el("div", "fchips compact");
+  wrap.setAttribute("role", "group");
+  wrap.setAttribute("aria-label", "Filter role counter");
+  for (const r of ROLES) {
+    const b = el("button", "fchip" + (r === activeRole ? " on" : ""), ROLE_LABEL[r]);
+    b.type = "button";
+    b.dataset.role = r;
+    b.setAttribute("aria-pressed", String(r === activeRole));
+    b.addEventListener("click", () => {
+      $$(".fchip", wrap).forEach(btn => {
+        const isMatch = btn.dataset.role === r;
+        btn.classList.toggle("on", isMatch);
+        btn.setAttribute("aria-pressed", String(isMatch));
+      });
+      onSelect(r);
+    });
+    wrap.appendChild(b);
+  }
+  return wrap;
+}
 function searchBox(id, placeholder) {
   const label = el("label", "srch");
   label.appendChild(icon("i-search"));
@@ -290,14 +311,45 @@ function renderHome() {
     const grid2 = el("div", "bedah-grid");
     const colA = el("div");
     colA.appendChild(el("h2", "lbl", "Counter alami"));
-    if (!ctrs.length) colA.appendChild(el("p", "mut", "Belum ada data counter alami."));
-    else {
-      const top = [...ctrs].sort((a, b) => (a.strength === "hard" ? 0 : 1) - (b.strength === "hard" ? 0 : 1)).slice(0, 5);
-      for (const c of top) {
+    let bedahRole = "all";
+    const bedahCountEl = el("p", "mut");
+    const bedahListEl = el("div", "clist");
+    function paintBedahCounters() {
+      bedahListEl.replaceChildren();
+      if (!ctrs.length) {
+        bedahCountEl.textContent = "0 counter alami";
+        bedahListEl.appendChild(el("p", "mut", "Belum ada data counter alami."));
+        return;
+      }
+      const filtered = ctrs.filter(c => {
+        if (bedahRole === "all") return true;
         const ch = byId.get(c.hero);
-        if (ch) colA.appendChild(bedahRow(ch, c));
+        return ch && ch.roles.includes(bedahRole);
+      }).sort((a, b) => (a.strength === "hard" ? 0 : 1) - (b.strength === "hard" ? 0 : 1)).slice(0, 5);
+
+      if (bedahRole === "all") {
+        bedahCountEl.textContent = filtered.length + " counter alami";
+      } else {
+        bedahCountEl.textContent = filtered.length + " counter · role " + ROLE_LABEL[bedahRole];
+      }
+
+      if (!filtered.length) {
+        bedahListEl.appendChild(el("p", "mut", "Tidak ada counter alami untuk role " + ROLE_LABEL[bedahRole] + "."));
+        return;
+      }
+
+      for (const c of filtered) {
+        const ch = byId.get(c.hero);
+        if (ch) bedahListEl.appendChild(bedahRow(ch, c));
       }
     }
+    colA.appendChild(counterFilterChips(bedahRole, (r) => {
+      bedahRole = r;
+      paintBedahCounters();
+    }));
+    colA.appendChild(bedahCountEl);
+    colA.appendChild(bedahListEl);
+    paintBedahCounters();
     grid2.appendChild(colA);
     const colB = el("div");
     colB.appendChild(el("h2", "lbl", "Counter item"));
@@ -440,22 +492,56 @@ function renderHero(slugName) {
   cols.appendChild(colB);
   main.appendChild(cols);
   colA.appendChild(el("h2", null, "Counter alami"));
-  if (!h.naturalCounters || !h.naturalCounters.length) {
-    colA.appendChild(el("p", "mut", "Belum ada data"));
-  } else for (const c of h.naturalCounters) {
-    const ch = byId.get(c.hero);
-    if (!ch) continue;
-    const card = el("div", "card");
-    const row = el("div", "row");
-    row.appendChild(avatar(ch, 40));
-    const a = el("a", "link", ch.en);
-    a.href = "#/hero/" + slug(ch.en);
-    row.appendChild(a);
-    row.appendChild(el("span", "badge " + c.strength, c.strength));
-    card.appendChild(row);
-    if (c.why) card.appendChild(el("p", null, c.why));
-    colA.appendChild(card);
+  const ctrs = h.naturalCounters || [];
+  let currentRole = "all";
+  const countEl = el("p", "mut");
+  const listEl = el("div", "clist");
+  function paintCounters() {
+    listEl.replaceChildren();
+    if (!ctrs.length) {
+      countEl.textContent = "0 counter alami";
+      listEl.appendChild(el("p", "mut", "Belum ada data"));
+      return;
+    }
+    const filtered = ctrs.filter(c => {
+      if (currentRole === "all") return true;
+      const ch = byId.get(c.hero);
+      return ch && ch.roles.includes(currentRole);
+    }).sort((a, b) => (a.strength === "hard" ? 0 : 1) - (b.strength === "hard" ? 0 : 1)).slice(0, 5);
+
+    if (currentRole === "all") {
+      countEl.textContent = filtered.length + " counter alami";
+    } else {
+      countEl.textContent = filtered.length + " counter · role " + ROLE_LABEL[currentRole];
+    }
+
+    if (!filtered.length) {
+      listEl.appendChild(el("p", "mut", "Tidak ada counter alami untuk role " + ROLE_LABEL[currentRole] + "."));
+      return;
+    }
+
+    for (const c of filtered) {
+      const ch = byId.get(c.hero);
+      if (!ch) continue;
+      const card = el("div", "card");
+      const row = el("div", "row");
+      row.appendChild(avatar(ch, 40));
+      const a = el("a", "link", ch.en);
+      a.href = "#/hero/" + slug(ch.en);
+      row.appendChild(a);
+      row.appendChild(el("span", "badge " + c.strength, c.strength));
+      card.appendChild(row);
+      if (c.why) card.appendChild(el("p", null, c.why));
+      listEl.appendChild(card);
+    }
   }
+  colA.appendChild(counterFilterChips(currentRole, (r) => {
+    currentRole = r;
+    paintCounters();
+  }));
+  colA.appendChild(countEl);
+  colA.appendChild(listEl);
+  paintCounters();
 
   colB.appendChild(el("h2", null, "Counter item"));
   if (!h.itemCounters || !h.itemCounters.length) {

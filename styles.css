@@ -516,6 +516,8 @@ main:has(.qgrid) { max-width: 640px; }
 
 /* wiki item */
 .fchips { display: flex; flex-wrap: wrap; gap: var(--s2); margin: var(--s3) 0; }
+.fchips.compact { margin: var(--s2) 0; gap: 6px; }
+.fchips.compact .fchip { padding: 4px 10px; font-size: 12px; border-radius: 8px; }
 .fchip { padding: 6px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); color: var(--fg); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
 .fchip.on { background: var(--acc); border-color: var(--acc); color: var(--onacc); }
 .wikigrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--s3); }
