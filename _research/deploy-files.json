@@ -1,0 +1,732 @@
+[
+ {
+  "file": "index.html",
+  "sha": "1e94d1395aa4be78773d538440f84dff56d751ae",
+  "size": 7352
+ },
+ {
+  "file": "app.js",
+  "sha": "9aed368e940515a7735fcf9965678123c90cc25b",
+  "size": 83275
+ },
+ {
+  "file": "styles.css",
+  "sha": "570442aa314bf092f11c17c03ccc9e39337aa91d",
+  "size": 27160
+ },
+ {
+  "file": "data-1.json",
+  "sha": "b2437f354dd67e8ff2e9dbb00d8a55cfd8af6e97",
+  "size": 95144
+ },
+ {
+  "file": "data-2.json",
+  "sha": "c39885b48f69cc52ee738671264f4500e56a4d4e",
+  "size": 93637
+ },
+ {
+  "file": "slugs.json",
+  "sha": "8d153e36acad53d6049a94b4b0cd3e3ae43d7a27",
+  "size": 2591
+ },
+ {
+  "file": "sw.js",
+  "sha": "e64d30b5ea9eecfe5ed3e5ea132d9bbccdc18046",
+  "size": 1266
+ },
+ {
+  "file": "sitemap.xml",
+  "sha": "b1f4afb5bc2d54bd0c49e34a232b5378a9a668f6",
+  "size": 1110
+ },
+ {
+  "file": "robots.txt",
+  "sha": "56e4fb68bef711c690e3d09c4e46f4f218343765",
+  "size": 71
+ },
+ {
+  "file": "manifest.webmanifest",
+  "sha": "830746ab20017e37ea3f260777d40cdee3d19778",
+  "size": 515
+ },
+ {
+  "file": "logo.svg",
+  "sha": "5e6a40571914f6cbe4b464615092a9961dfb77b4",
+  "size": 504
+ },
+ {
+  "file": "app-192.png",
+  "sha": "25801d04ab201d66c3c664969179b278f65b85da",
+  "size": 4704
+ },
+ {
+  "file": "app-512.png",
+  "sha": "29963985ab1869e4b99d7b9d073ac28ec4240b26",
+  "size": 13836
+ },
+ {
+  "file": "og.png",
+  "sha": "8fecfaf84432eea8d1d80c14e279a29f646ef3bd",
+  "size": 48453
+ },
+ {
+  "file": "icons/hero/105.webp",
+  "sha": "89c2dd36dc63231898e8ca3abb366da92a2a98bf",
+  "size": 3522
+ },
+ {
+  "file": "icons/hero/106.webp",
+  "sha": "b0f59e0eddb9acedca14ed0cf47f3003e62f817d",
+  "size": 2492
+ },
+ {
+  "file": "icons/hero/107.webp",
+  "sha": "9c8eaf008e1f85c1e238df74e7c5545f5e23dc77",
+  "size": 3230
+ },
+ {
+  "file": "icons/hero/108.webp",
+  "sha": "cd6f8e78bca832f7147daebb3d90716e917a6fb1",
+  "size": 2756
+ },
+ {
+  "file": "icons/hero/109.webp",
+  "sha": "9c49e9e3fce6e84db0355277a36f1d8199c03e5c",
+  "size": 3692
+ },
+ {
+  "file": "icons/hero/110.webp",
+  "sha": "8aaa7e07e41caab99999112a34dbcf45fbdb15e2",
+  "size": 2834
+ },
+ {
+  "file": "icons/hero/111.webp",
+  "sha": "5e34d1202305dd4b165bbd4ce1b40ddde53e01b3",
+  "size": 3260
+ },
+ {
+  "file": "icons/hero/112.webp",
+  "sha": "bad41b91baef386311807782aa6f6612397ae058",
+  "size": 3860
+ },
+ {
+  "file": "icons/hero/113.webp",
+  "sha": "98552f68db9df56493858ce32deb09de833f40b3",
+  "size": 3586
+ },
+ {
+  "file": "icons/hero/114.webp",
+  "sha": "e4d6210ec12cbff9143cf1e9d79387979eeff421",
+  "size": 3000
+ },
+ {
+  "file": "icons/hero/115.webp",
+  "sha": "866d2766fd8130703e776b59f58c01388ee318bb",
+  "size": 4250
+ },
+ {
+  "file": "icons/hero/116.webp",
+  "sha": "691d6064f21b4259574624a01c1576f7f1529468",
+  "size": 3642
+ },
+ {
+  "file": "icons/hero/117.webp",
+  "sha": "659c089e9d29e74522999e2da1a80fc2c2d62b63",
+  "size": 3884
+ },
+ {
+  "file": "icons/hero/118.webp",
+  "sha": "22151a336be448338e254ca838a0cf1be60fce73",
+  "size": 4266
+ },
+ {
+  "file": "icons/hero/119.webp",
+  "sha": "8e1c226fdffb59bd0a36c35a3246acba51075b43",
+  "size": 2996
+ },
+ {
+  "file": "icons/hero/120.webp",
+  "sha": "bbbf1f963f17879b0efc34d49dcf54511746dee4",
+  "size": 3178
+ },
+ {
+  "file": "icons/hero/121.webp",
+  "sha": "494845ed993607c3889ee4dac3c728f6ad164229",
+  "size": 3420
+ },
+ {
+  "file": "icons/hero/123.webp",
+  "sha": "4f018fa4433252a469fd3533339617d093901a08",
+  "size": 2934
+ },
+ {
+  "file": "icons/hero/124.webp",
+  "sha": "a076f81d0e0355cc6e8830f09b78d4a5c26644c8",
+  "size": 2422
+ },
+ {
+  "file": "icons/hero/125.webp",
+  "sha": "ed1937d5a268461a8674865c6abef4884a031906",
+  "size": 2956
+ },
+ {
+  "file": "icons/hero/126.webp",
+  "sha": "6f8a25f03c0225c5d5bb9f16003eeaddccacdd40",
+  "size": 2830
+ },
+ {
+  "file": "icons/hero/127.webp",
+  "sha": "a4f776e67c349b8ab81ee58ec84330dcfd50c23b",
+  "size": 2706
+ },
+ {
+  "file": "icons/hero/128.webp",
+  "sha": "393e6803ee788f95b7ac23a6bca59284957361c3",
+  "size": 2394
+ },
+ {
+  "file": "icons/hero/129.webp",
+  "sha": "1412577a805af93b69ab4cd9e6f882f0f3e61388",
+  "size": 2978
+ },
+ {
+  "file": "icons/hero/130.webp",
+  "sha": "a5602cbde5f15c75a5070c12837119f06fa94059",
+  "size": 2128
+ },
+ {
+  "file": "icons/hero/131.webp",
+  "sha": "d6b63f5630c2b975b95c60360ed41dd327690ddc",
+  "size": 2950
+ },
+ {
+  "file": "icons/hero/132.webp",
+  "sha": "d88772480eadffd8989ab933150132da0f40c103",
+  "size": 3638
+ },
+ {
+  "file": "icons/hero/133.webp",
+  "sha": "6128959a73078767cb6e555af80e9710830e6de7",
+  "size": 2696
+ },
+ {
+  "file": "icons/hero/134.webp",
+  "sha": "61e43035ac0bdc195b5af7c0b327c66d2e2cf96d",
+  "size": 2484
+ },
+ {
+  "file": "icons/hero/135.webp",
+  "sha": "4bd78b8d091b99b0147f70157ab0b16352843f3b",
+  "size": 3664
+ },
+ {
+  "file": "icons/hero/137.webp",
+  "sha": "8c9197768385dc7ecf401d8394bd1be95e40b048",
+  "size": 2602
+ },
+ {
+  "file": "icons/hero/138.webp",
+  "sha": "4ddf6e85946d8286211ff815c3c5a5689fd24b69",
+  "size": 2806
+ },
+ {
+  "file": "icons/hero/139.webp",
+  "sha": "e5efbee21d5b96907a25fa4fe2c67e35ab9ede6e",
+  "size": 3200
+ },
+ {
+  "file": "icons/hero/140.webp",
+  "sha": "4dfc9fc2b72aaa83926b66c70dcd567a10a296ab",
+  "size": 3602
+ },
+ {
+  "file": "icons/hero/141.webp",
+  "sha": "a98258e02cb7885458340be351be21e812a8540f",
+  "size": 3172
+ },
+ {
+  "file": "icons/hero/142.webp",
+  "sha": "bfbb81293392990c27ba794bdd2ec7f14c529c17",
+  "size": 2782
+ },
+ {
+  "file": "icons/hero/146.webp",
+  "sha": "67f4b949fd3a9407dccb653ec2ea5329c0eec1a7",
+  "size": 3532
+ },
+ {
+  "file": "icons/hero/148.webp",
+  "sha": "391485375d6228e0d510c6bfff4c1d8c71edd8a2",
+  "size": 3040
+ },
+ {
+  "file": "icons/hero/149.webp",
+  "sha": "87ea159eee37abb05c14f801ce4668ff3298cc4e",
+  "size": 3226
+ },
+ {
+  "file": "icons/hero/150.webp",
+  "sha": "33ed12cf5713012170b729bfad10e931a3e627e0",
+  "size": 2804
+ },
+ {
+  "file": "icons/hero/152.webp",
+  "sha": "012989440cabf16a326bb2cbf0b13ee28c23de3b",
+  "size": 3410
+ },
+ {
+  "file": "icons/hero/153.webp",
+  "sha": "02fa53ddedcc2f54427c6508d43562086dd043df",
+  "size": 2628
+ },
+ {
+  "file": "icons/hero/154.webp",
+  "sha": "9314be361b1f6decb0f99901a6165f9c9088bb9f",
+  "size": 2922
+ },
+ {
+  "file": "icons/hero/155.webp",
+  "sha": "32bc74d0c612063cc65160f7678f043bb81de88d",
+  "size": 2730
+ },
+ {
+  "file": "icons/hero/156.webp",
+  "sha": "81c3da287c0426ab4edab7227d7e83311e12a19c",
+  "size": 3346
+ },
+ {
+  "file": "icons/hero/157.webp",
+  "sha": "bf350030bf85fc5a1f5f477385e3d1b3942e63aa",
+  "size": 2686
+ },
+ {
+  "file": "icons/hero/159.webp",
+  "sha": "401abbdde9e9692ec14eef7a85773c38192721a5",
+  "size": 2992
+ },
+ {
+  "file": "icons/hero/162.webp",
+  "sha": "263706e935d7378157c78d26424a8bdabc32bf55",
+  "size": 3658
+ },
+ {
+  "file": "icons/hero/163.webp",
+  "sha": "380bacda0882ac010b0485fa914c757b28e4b006",
+  "size": 2978
+ },
+ {
+  "file": "icons/hero/166.webp",
+  "sha": "19bb2700dc9fd3688ad61acd2d6789c43c0550e2",
+  "size": 3202
+ },
+ {
+  "file": "icons/hero/167.webp",
+  "sha": "36befe2edc86069ec618cb0dce809fa3bbff2702",
+  "size": 4524
+ },
+ {
+  "file": "icons/hero/168.webp",
+  "sha": "3a2ad04d9bac52bde8236f5a4533b13491fbfc9e",
+  "size": 2700
+ },
+ {
+  "file": "icons/hero/169.webp",
+  "sha": "3c36b941939e7a15000660464b1b14c6706d6754",
+  "size": 2920
+ },
+ {
+  "file": "icons/hero/170.webp",
+  "sha": "3725abefb730aab2906d3e6ccadf7df02b3b88e1",
+  "size": 3414
+ },
+ {
+  "file": "icons/hero/171.webp",
+  "sha": "827598054f431140cf1402ab3b91c88ba4bae34e",
+  "size": 3850
+ },
+ {
+  "file": "icons/hero/172.webp",
+  "sha": "e59b42d0ce476db4dbf68454b22e6d2ab8a79e25",
+  "size": 3140
+ },
+ {
+  "file": "icons/hero/173.webp",
+  "sha": "275ac99e0a4405bd2c27b20c6e56312f2a343a4f",
+  "size": 3302
+ },
+ {
+  "file": "icons/hero/174.webp",
+  "sha": "0140266f625e0e19b98a17e65e95038bdd0f48f8",
+  "size": 3266
+ },
+ {
+  "file": "icons/hero/175.webp",
+  "sha": "ac175b8b2c0adf2b64696c87a9e841696f71576a",
+  "size": 3146
+ },
+ {
+  "file": "icons/hero/176.webp",
+  "sha": "39177d3298f76934c29c36fcaccd728272f5b881",
+  "size": 3528
+ },
+ {
+  "file": "icons/hero/177.webp",
+  "sha": "f1cf4169f059eafd65dd8c73f5d288e67005aa73",
+  "size": 2778
+ },
+ {
+  "file": "icons/hero/178.webp",
+  "sha": "89605ec25fe0c7c63e5314fb84cf209bf5524d00",
+  "size": 4220
+ },
+ {
+  "file": "icons/hero/179.webp",
+  "sha": "7fda25ed19aa5935398b8fcbe0b0fcbe7b413551",
+  "size": 3194
+ },
+ {
+  "file": "icons/hero/180.webp",
+  "sha": "c5e397c1132a82fd58165d320e8f793840cd45e4",
+  "size": 3274
+ },
+ {
+  "file": "icons/hero/182.webp",
+  "sha": "159d0d9945e9013c2a90d3f87870fc09dfdd701f",
+  "size": 3144
+ },
+ {
+  "file": "icons/hero/183.webp",
+  "sha": "bba117215fadd4833426618e99ef12ba29169a22",
+  "size": 3532
+ },
+ {
+  "file": "icons/hero/184.webp",
+  "sha": "f3800232262b6bd2e29ab7532cba117d4e8ea27f",
+  "size": 4098
+ },
+ {
+  "file": "icons/hero/187.webp",
+  "sha": "31d4ad38163578128ab0d762b39f677edfbab5c5",
+  "size": 3434
+ },
+ {
+  "file": "icons/hero/189.webp",
+  "sha": "1726323611dd9cb72fa818f14ebb2305257c3e68",
+  "size": 3514
+ },
+ {
+  "file": "icons/hero/190.webp",
+  "sha": "79d1484d304a385a0e6f52dd20a99ee4505c27ac",
+  "size": 3444
+ },
+ {
+  "file": "icons/hero/191.webp",
+  "sha": "d045f4346778e0f1c9651b7f5dde87ee44e33b83",
+  "size": 3602
+ },
+ {
+  "file": "icons/hero/192.webp",
+  "sha": "28ca3282fe571897f275c38b34cadfee52e279f3",
+  "size": 3594
+ },
+ {
+  "file": "icons/hero/193.webp",
+  "sha": "26f8b9c919f381786941eff959b78a54d70dc67e",
+  "size": 3166
+ },
+ {
+  "file": "icons/hero/195.webp",
+  "sha": "9baa9193707c31bb0a5bbca0450cd5a7adc27721",
+  "size": 4164
+ },
+ {
+  "file": "icons/hero/196.webp",
+  "sha": "f97c8da45c0ff9b6bcd27c6fcf2d6faefdf1a160",
+  "size": 3068
+ },
+ {
+  "file": "icons/hero/197.webp",
+  "sha": "cd0649dadf718749dde5ca67df7b7ba0408b97bb",
+  "size": 2108
+ },
+ {
+  "file": "icons/hero/198.webp",
+  "sha": "e182907d479d9939986bb6d99d33a9d8373a0d9d",
+  "size": 3136
+ },
+ {
+  "file": "icons/hero/199.webp",
+  "sha": "e075a2640d09e53979b7bc4835481e6b9e941fd9",
+  "size": 3186
+ },
+ {
+  "file": "icons/hero/501.webp",
+  "sha": "b063e6a606386c2773be62f3fb2d4a557a2103c8",
+  "size": 2970
+ },
+ {
+  "file": "icons/hero/502.webp",
+  "sha": "8b5f7ac91e30971133a82c7267abe76811134c42",
+  "size": 3132
+ },
+ {
+  "file": "icons/hero/503.webp",
+  "sha": "f1f824be9e4a7c2df3b7fc1af1b6ca5a2bca173a",
+  "size": 2686
+ },
+ {
+  "file": "icons/hero/504.webp",
+  "sha": "875681d839c424894f0333a1dfca9223cdd0ea5d",
+  "size": 3458
+ },
+ {
+  "file": "icons/hero/505.webp",
+  "sha": "5073bdf711d3f07c8f7af1efe366757b0b8b6c86",
+  "size": 3768
+ },
+ {
+  "file": "icons/hero/506.webp",
+  "sha": "3a4664317f232d7683c456b3f3499407b264170e",
+  "size": 3568
+ },
+ {
+  "file": "icons/hero/507.webp",
+  "sha": "c40db1dc57f02ae2fbb3036260c70031eb8638a8",
+  "size": 3270
+ },
+ {
+  "file": "icons/hero/508.webp",
+  "sha": "324bfe9d83957555335b73e82586d83dac5b3e19",
+  "size": 2948
+ },
+ {
+  "file": "icons/hero/509.webp",
+  "sha": "6b6b19f58751e84a59883829d880d14c8c9a77b6",
+  "size": 3000
+ },
+ {
+  "file": "icons/hero/510.webp",
+  "sha": "393fb07c7247c722743f7f058372f67dbc60076c",
+  "size": 2866
+ },
+ {
+  "file": "icons/hero/513.webp",
+  "sha": "6251db44d1f6cb789d80cc541374caf3901336dd",
+  "size": 2616
+ },
+ {
+  "file": "icons/hero/514.webp",
+  "sha": "86117d0a51d2ca987e762f3f68d09fb8d0889a18",
+  "size": 2232
+ },
+ {
+  "file": "icons/hero/517.webp",
+  "sha": "4a554052eaa5b899906da4d5a79d2ba80b4aee30",
+  "size": 2874
+ },
+ {
+  "file": "icons/hero/519.webp",
+  "sha": "b679894acacb53605de28105c8e45ccd568f0b05",
+  "size": 3006
+ },
+ {
+  "file": "icons/hero/521.webp",
+  "sha": "3eeaa994c475655ef0feb66544f2955804cf80a7",
+  "size": 2990
+ },
+ {
+  "file": "icons/hero/522.webp",
+  "sha": "f1fc2e97d9da830d910d210c2a6dd88edfcd70b9",
+  "size": 2726
+ },
+ {
+  "file": "icons/hero/523.webp",
+  "sha": "df0f53b1c597954c307b8e2e495471041f91d74a",
+  "size": 2576
+ },
+ {
+  "file": "icons/hero/524.webp",
+  "sha": "925ff8a2e1b674e1b5e9aa321ed4b7c37c20a160",
+  "size": 3414
+ },
+ {
+  "file": "icons/hero/528.webp",
+  "sha": "73a3a90f830a36883a7a3ff3ba390e5d7f1d8bcf",
+  "size": 2040
+ },
+ {
+  "file": "icons/hero/531.webp",
+  "sha": "afbd1de057fe0e43fb875c4760c1beefb21d01b4",
+  "size": 2636
+ },
+ {
+  "file": "icons/hero/533.webp",
+  "sha": "31bbb9e43051a68ecc66949c7adf813c50e74d1d",
+  "size": 3378
+ },
+ {
+  "file": "icons/hero/534.webp",
+  "sha": "0096ca9331db3106144b30e0f16b74071dfb58f2",
+  "size": 2158
+ },
+ {
+  "file": "icons/hero/536.webp",
+  "sha": "12767102056b33fc83c21ddf5060d075b204f6dd",
+  "size": 3178
+ },
+ {
+  "file": "icons/hero/537.webp",
+  "sha": "99fee7456a08234efa44d995754fa9497177ca36",
+  "size": 2990
+ },
+ {
+  "file": "icons/hero/538.webp",
+  "sha": "05a03e698ae8b605f93643196fcd7b56efb04679",
+  "size": 2458
+ },
+ {
+  "file": "icons/hero/542.webp",
+  "sha": "944bf5f63e2c6f73026110f78d241d12b1956ccf",
+  "size": 2316
+ },
+ {
+  "file": "icons/hero/545.webp",
+  "sha": "4c5922c828722fbfa7c9a3b1ca73055efee61195",
+  "size": 3126
+ },
+ {
+  "file": "icons/hero/547.webp",
+  "sha": "ae87fcea2f74d2c5d1e433693a5c9577fe9aa650",
+  "size": 2700
+ },
+ {
+  "file": "icons/hero/556.webp",
+  "sha": "05eba081394de524a829619220b2f6b57a006688",
+  "size": 3512
+ },
+ {
+  "file": "icons/hero/558.webp",
+  "sha": "98644955b22b81fc1933b303063f7dfe1179c92c",
+  "size": 2724
+ },
+ {
+  "file": "icons/hero/563.webp",
+  "sha": "77881bb831da7803280a7caf3a04079a4e88ece8",
+  "size": 3112
+ },
+ {
+  "file": "icons/hero/564.webp",
+  "sha": "557514e6e9aa6d008cdf37c0803095f313cd9836",
+  "size": 3316
+ },
+ {
+  "file": "icons/hero/577.webp",
+  "sha": "de665c79b8f058cf8d5ba582a6fc1231c571616a",
+  "size": 2986
+ },
+ {
+  "file": "icons/hero/581.webp",
+  "sha": "639c95137828003c48ef672f64578d860bb6d0fa",
+  "size": 2498
+ },
+ {
+  "file": "icons/hero/582.webp",
+  "sha": "dae1a064b0d65fb4a9a74a7aed4bf4ace7644acd",
+  "size": 2496
+ },
+ {
+  "file": "icons/hero/583.webp",
+  "sha": "7551fb56d4dbc3253e1cf1fd9273b86263d813ee",
+  "size": 3134
+ },
+ {
+  "file": "icons/hero/584.webp",
+  "sha": "b89b24024c8bffaa0c4216413cb256d73aa25365",
+  "size": 2552
+ },
+ {
+  "file": "icons/hero/585.webp",
+  "sha": "9414d1a47ff815221ae572520069a7148427aaeb",
+  "size": 2968
+ },
+ {
+  "file": "icons/hero/631.webp",
+  "sha": "12799b05b4fc0483ea0e5028071d772c331dc683",
+  "size": 2782
+ },
+ {
+  "file": "icons/hero/635.webp",
+  "sha": "43c83d20b6e6460b6c203c71b2d8ae3254ac40f3",
+  "size": 1956
+ },
+ {
+  "file": "icons/hero/640.webp",
+  "sha": "34e52f54e4ee86eee634f0f749b73b478580a07a",
+  "size": 3318
+ },
+ {
+  "file": "icons/hero/646.webp",
+  "sha": "939ef911731182c75cc6e35c6cb9940b2fa96363",
+  "size": 2962
+ },
+ {
+  "file": "icons/role/clash.png",
+  "sha": "9390869e37e8058b8c90a61f89899cc712184041",
+  "size": 587
+ },
+ {
+  "file": "icons/role/farm.png",
+  "sha": "7b7f06f2383e98f827425602373afd5496f6015c",
+  "size": 712
+ },
+ {
+  "file": "icons/role/jungle.png",
+  "sha": "518e904dc56485e36a5d6c0dfe9d22bf329d92a3",
+  "size": 724
+ },
+ {
+  "file": "icons/role/mid.png",
+  "sha": "4c7dee76eba600c17ee8490f2ec16979c49e6f48",
+  "size": 592
+ },
+ {
+  "file": "icons/role/roam.png",
+  "sha": "b3dc5ddc3c3a1e40aab2a4a0c72fcc9a1faa5cce",
+  "size": 775
+ },
+ {
+  "file": "fonts/inter-400.woff2",
+  "sha": "68f645c6b6ff12e25c54b13d4ed119e631dcbb26",
+  "size": 23664
+ },
+ {
+  "file": "fonts/inter-600.woff2",
+  "sha": "e0d61f6dc511d64a072b2f4dc94e155ecf1bb6f6",
+  "size": 24452
+ },
+ {
+  "file": "fonts/inter-700.woff2",
+  "sha": "5197a7aeb22454110aa1f3ef3ed4c98ca7ef1ba1",
+  "size": 24356
+ },
+ {
+  "file": "fonts/outfit-700.woff2",
+  "sha": "9130a9f8f9649bf305e2c1febbe17872a7dee197",
+  "size": 14060
+ },
+ {
+  "file": "fonts/outfit-800.woff2",
+  "sha": "0f56987316b615f37ee15b5295d183fcf3a65b3c",
+  "size": 14048
+ },
+ {
+  "file": "items.json",
+  "sha": "09c4aefdfda5c34afaa1f28857436e9d3a318e89",
+  "size": 3355
+ },
+ {
+  "file": "tiers.json",
+  "sha": "6f5042dd999407a05df0e36627cb6b9fdd8eb775",
+  "size": 5108
+ }
+]

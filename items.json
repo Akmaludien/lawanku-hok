@@ -1,0 +1,106 @@
+{
+ "version": "lawanku-2026-11-09",
+ "itemDetails": {
+  "Destiny (anti-mati)": [
+   {
+    "name": "Destiny",
+    "price": 2060,
+    "stats": "PA +75 · AS +15% · HP +500",
+    "passive": "Dark Curtain: saat kena damage fatal, jadi kebal + 15% AS/MS selama 1 dtk (0,75 dtk buat ranged). CD 120 dtk."
+   }
+  ],
+  "Destiny (anti-mati) / Ominous Premonition": [
+   {
+    "name": "Destiny",
+    "price": 2060,
+    "stats": "PA +75 · AS +15% · HP +500",
+    "passive": "Dark Curtain: saat kena damage fatal, jadi kebal + 15% AS/MS selama 1 dtk (0,75 dtk buat ranged). CD 120 dtk."
+   },
+   {
+    "name": "Ominous Premonition",
+    "price": 2020,
+    "stats": "PD +300 · HP +1200",
+    "passive": "Cold Steel: saat menerima damage, kurangi AS penyerang 20–40% dan MS 7,5–15% selama 2,5 dtk. CD 3 dtk per target."
+   }
+  ],
+  "Succubus Cloak": [
+   {
+    "name": "Succubus Cloak",
+    "price": 2020,
+    "stats": "MD +300 · HP +1100",
+    "passive": "Mist Veil: perisai sihir 400–800 (+7% extra HP) tiap 15 dtk."
+   }
+  ],
+  "Succubus Cloak / Destiny": [
+   {
+    "name": "Succubus Cloak",
+    "price": 2020,
+    "stats": "MD +300 · HP +1100",
+    "passive": "Mist Veil: perisai sihir 400–800 (+7% extra HP) tiap 15 dtk."
+   },
+   {
+    "name": "Destiny",
+    "price": 2060,
+    "stats": "PA +75 · AS +15% · HP +500",
+    "passive": "Dark Curtain: saat kena damage fatal, jadi kebal + 15% AS/MS selama 1 dtk (0,75 dtk buat ranged). CD 120 dtk."
+   }
+  ],
+  "Boots of Resistance + Purify (spell)": [
+   {
+    "name": "Boots of Resistance",
+    "price": 700,
+    "stats": "PD +50 · MD +100 · MS +50",
+    "passive": "Tough: Resistance +25% (durasi CC lebih pendek). Bisa ganti gratis ke sepatu lain, CD 5 mnt."
+   },
+   {
+    "name": "Purify",
+    "price": null,
+    "note": "spell · CD 120 dtk",
+    "stats": "",
+    "passive": "Hapus semua debuff dan CC kecuali suppress, lalu imun CC 1,5 dtk. CD 120 dtk."
+   }
+  ],
+  "Spikemail (aktifkan manual) / Ominous Premonition": [
+   {
+    "name": "Spikemail",
+    "price": 2020,
+    "stats": "PA +45 · PD +300 · HP +700",
+    "passive": "Countersiege (aktif): pantulkan 35% damage sebagai true damage selama 3 dtk. CD 75 dtk."
+   },
+   {
+    "name": "Ominous Premonition",
+    "price": 2020,
+    "stats": "PD +300 · HP +1200",
+    "passive": "Cold Steel: saat menerima damage, kurangi AS penyerang 20–40% dan MS 7,5–15% selama 2,5 dtk. CD 3 dtk per target."
+   }
+  ],
+  "Mortal Punisher (fisik) / Venomous Staff (magic)": [
+   {
+    "name": "Mortal Punisher",
+    "price": 2080,
+    "stats": "PA +100 · AS +20% · Lifesteal fisik +20%",
+    "passive": "Revive: pulih 375–750 HP selama 5 dtk saat HP di bawah 30% (CD 20 dtk). Imperil: serangan kurangi heal/lifesteal musuh 35% selama 2,5 dtk."
+   },
+   {
+    "name": "Venomous Staff",
+    "price": 2040,
+    "stats": "MA +230 · CDR +7,5% · MS +7,5%",
+    "passive": "Imperil: serangan kurangi pemulihan HP dan Lifesteal musuh 35% selama 2,5 dtk."
+   }
+  ],
+  "Overlord's Might / Starbreaker (armor pen)": [
+   {
+    "name": "Overlord's Might",
+    "price": 2540,
+    "stats": "PA +150 · CDR +5%",
+    "passive": "Siege Breaker: +30% damage ke musuh dengan HP di bawah 50%."
+   },
+   {
+    "name": "Starbreaker",
+    "price": 2080,
+    "stats": "PA +90 · HP +700 · MS +7,5%",
+    "passive": "Sunder: +30% Physical Pierce."
+   }
+  ]
+ }
+}

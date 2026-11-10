@@ -1,0 +1,1 @@
+import{n as e}from"./fav.DpEf8Jlp.js";e(),`serviceWorker`in navigator&&navigator.serviceWorker.register(`/sw.js`).catch(()=>{});var t=document.querySelector(`.dock`);new ResizeObserver(()=>document.documentElement.style.setProperty(`--dock-h`,t.offsetHeight+`px`)).observe(t);

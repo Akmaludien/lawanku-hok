@@ -1,0 +1,1513 @@
+/* Lawanku — counter hero Honor of Kings.
+   Home (cari + filter role), halaman hero, draft (skor hard +2 / soft +1),
+   favorit (localStorage), more. Data: data.json (120 hero). */
+"use strict";
+
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => [...(r || document).querySelectorAll(s)];
+const ROLES = ["all", "clash", "jungle", "mid", "farm", "roam"];
+const ROLE_LABEL = { all: "Semua", clash: "Clash", jungle: "Jungle", mid: "Mid", farm: "Farm", roam: "Roam" };
+
+let HEROES = [];
+const byId = new Map();
+const bySlug = new Map();
+
+/* ---------- util ---------- */
+function slug(name) {
+  return name
+    .normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase().replace(/'/g, "-").replace(/&/g, " ")
+    .replace(/[()]/g, " ").replace(/\./g, "-")
+    .replace(/[^a-z0-9]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+}
+function el(tag, cls, text) {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+}
+function icon(id) {
+  const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  s.setAttribute("aria-hidden", "true");
+  const u = document.createElementNS("http://www.w3.org/2000/svg", "use");
+  u.setAttribute("href", "#" + id);
+  s.appendChild(u);
+  return s;
+}
+function avatar(hero, size) {
+  const img = el("img", "av r-" + hero.roles[0]);
+  img.src = "icons/hero/" + hero.id + ".webp";
+  img.alt = ""; img.width = img.height = size || 40;
+  img.loading = "lazy"; img.decoding = "async";
+  return img;
+}
+function roleName(r) { return r.charAt(0).toUpperCase() + r.slice(1); }
+/* Kartu hero vertikal: gambar di atas, nama di bawah, badge role di pojok. */
+function heroCard(tag, h, cls) {
+  const c = el(tag, "hcard" + (cls ? " " + cls : ""));
+  c.dataset.hero = String(h.id);
+  const wrap = el("span", "himg");
+  wrap.appendChild(avatar(h, 96));
+  const badge = el("span", "rolebadge");
+  const lane = el("i", "lane");
+  lane.style.setProperty("--m", "url(icons/role/" + h.roles[0] + ".png)");
+  badge.appendChild(lane);
+  wrap.appendChild(badge);
+  c.appendChild(wrap);
+  c.appendChild(el("span", "nm", h.en));
+  return c;
+}
+function esc(s) { return s; } // teks selalu via textContent, bukan innerHTML
+
+/* ---------- pencarian fuzzy (skor sama seperti aslinya) ---------- */
+function norm(s) {
+  return (s || "").normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
+}
+function damerau(a, b) {
+  const n = [];
+  for (let r = 0; r <= a.length; r++) {
+    n[r] = [r];
+    for (let c = 1; c <= b.length; c++) n[r][c] = r ? 0 : c;
+  }
+  for (let r = 1; r <= a.length; r++)
+    for (let c = 1; c <= b.length; c++) {
+      const cost = a[r - 1] === b[c - 1] ? 0 : 1;
+      n[r][c] = Math.min(n[r - 1][c] + 1, n[r][c - 1] + 1, n[r - 1][c - 1] + cost);
+      if (r > 1 && c > 1 && a[r - 1] === b[c - 2] && a[r - 2] === b[c - 1])
+        n[r][c] = Math.min(n[r][c], n[r - 2][c - 2] + 1);
+    }
+  return n[a.length][b.length];
+}
+function isSubseq(q, s) {
+  let i = 0;
+  for (const ch of s) if (ch === q[i]) i++;
+  return i === q.length;
+}
+function keyScore(q, key) {
+  if (!q) return 0;
+  if (q === key) return 100;
+  if (key.startsWith(q)) return 80;
+  if (key.includes(q)) return 60;
+  const lim = q.length <= 5 ? 1 : 2;
+  const d = Math.min(damerau(q, key), damerau(q, key.slice(0, q.length)));
+  if (d <= lim) return 50 - d + (isSubseq(q, key) ? 0.5 : 0);
+  if (q.length >= 2 && isSubseq(q, key)) return 40;
+  return 0;
+}
+function withKeys(list) {
+  return list.map(h => ({ ...h, keys: [h.en, h.cn, ...(h.aliases || [])].map(norm).filter(Boolean) }));
+}
+function searchHeroes(indexed, query) {
+  const q = norm(query);
+  if (!q) return [];
+  return indexed
+    .map(h => ({ h, s: Math.max(...h.keys.map(k => keyScore(q, k))) }))
+    .filter(x => x.s > 0)
+    .sort((a, b) => b.s - a.s || a.h.en.localeCompare(b.h.en))
+    .map(x => x.h);
+}
+
+/* ---------- favorit (localStorage) ---------- */
+const FAV_KEY = "hok-fav";
+function getFavs() {
+  try {
+    const v = JSON.parse(localStorage.getItem(FAV_KEY) || "[]");
+    return Array.isArray(v) ? v.filter(Number.isInteger) : [];
+  } catch { return []; }
+}
+function toggleFav(id) {
+  const favs = getFavs();
+  const has = favs.includes(id);
+  try {
+    localStorage.setItem(FAV_KEY, JSON.stringify(has ? favs.filter(x => x !== id) : [...favs, id]));
+  } catch {}
+  applyFavStars();
+  return !has;
+}
+function applyFavStars() {
+  const favs = new Set(getFavs());
+  for (const n of $$("[data-hero]"))
+    n.classList.toggle("fav", favs.has(Number(n.dataset.hero)));
+}
+
+/* ---------- dock & tab ---------- */
+function tabEl(href, ic, label, active, extra) {
+  const a = el("a", "tab" + (active ? " on" : ""));
+  a.href = href;
+  if (active) a.setAttribute("aria-current", "page");
+  a.appendChild(icon(ic));
+  a.appendChild(document.createTextNode(label));
+  if (extra) a.appendChild(extra);
+  return a;
+}
+function renderDock(route, controls) {
+  const dock = $("#dock-in");
+  dock.replaceChildren();
+  if (controls) dock.appendChild(controls);
+  const nav = el("nav", "tabs");
+  nav.setAttribute("aria-label", "Menu utama");
+  nav.appendChild(tabEl("#/", "i-swords", "Counter", route === "home"));
+  nav.appendChild(tabEl("#/draft", "i-draft", "Draft", route === "draft"));
+  nav.appendChild(tabEl("#/favorit", "i-star", "Favorit", route === "favorit"));
+  nav.appendChild(tabEl("#/quiz", "i-quiz", "Quiz", route === "quiz"));
+  nav.appendChild(tabEl("#/items", "i-item", "Item", route === "items"));
+  nav.appendChild(tabEl("#/more", "i-more", "More", route === "more"));
+  dock.appendChild(nav);
+  const top = route === "home" ? "#/" : "#/" + route;
+  for (const a of $$(".topnav a")) a.classList.toggle("on", a.getAttribute("href") === top);
+}
+function roleButtons(active, onPick) {
+  const wrap = el("div", "roles");
+  wrap.setAttribute("role", "group");
+  wrap.setAttribute("aria-label", "Filter role");
+  for (const r of ROLES) {
+    const b = el("button", "role" + (r === active ? " on" : ""), ROLE_LABEL[r]);
+    b.type = "button";
+    b.dataset.role = r;
+    b.setAttribute("aria-pressed", String(r === active));
+    if (r === "all") b.prepend(icon("i-all"));
+    else {
+      const i = el("i", "lane");
+      i.style.setProperty("--m", "url(icons/role/" + r + ".png)");
+      b.prepend(i);
+    }
+    b.addEventListener("click", () => onPick(r, b));
+    wrap.appendChild(b);
+  }
+  return wrap;
+}
+function searchBox(id, placeholder) {
+  const label = el("label", "srch");
+  label.appendChild(icon("i-search"));
+  const input = el("input");
+  input.id = id; input.name = "q"; input.type = "search";
+  input.placeholder = placeholder; input.autocomplete = "off";
+  input.setAttribute("aria-label", "Cari hero");
+  label.appendChild(input);
+  return { label, input };
+}
+function heroButton(h) {
+  const b = el("button", "hero");
+  b.type = "button";
+  b.dataset.id = String(h.id);
+  b.dataset.hero = String(h.id);
+  b.dataset.roles = h.roles.join(" ");
+  b.appendChild(avatar(h, 40));
+  b.appendChild(el("span", null, h.en));
+  return b;
+}
+
+/* ---------- HOME ---------- */
+function renderHome() {
+  document.title = "Lawanku — counter hero Honor of Kings";
+  const main = $("#main");
+  main.replaceChildren();
+  main.appendChild(el("h1", null, "Lawan siapa?"));
+  const sub = el("p", "mut");
+  const n = el("span"); n.id = "n"; n.textContent = String(HEROES.length);
+  sub.appendChild(n);
+  sub.appendChild(document.createTextNode(" hero, A–Z."));
+  main.appendChild(sub);
+  const stats = el("div", "stats");
+  const totalCtr = HEROES.reduce((n, h) => n + (h.naturalCounters || []).length, 0);
+  const totalItems = HEROES.reduce((n, h) => n + (h.itemCounters || []).length, 0);
+  for (const [v, l] of [[HEROES.length, "hero"], [totalCtr, "counter alami"], [totalItems, "rekomendasi item"]]) {
+    const s = el("span", "stat");
+    s.appendChild(el("b", null, String(v)));
+    s.appendChild(document.createTextNode(" " + l));
+    stats.appendChild(s);
+  }
+  main.appendChild(stats);
+  const indexed = withKeys(HEROES);
+  let role = "all";
+  const tools = el("div", "ctl");
+  const { label, input } = searchBox("q", "Cari hero musuh…");
+  input.setAttribute("enterkeyhint", "go");
+  tools.appendChild(label);
+  const roles = roleButtons(role, (r) => {
+    role = r;
+    $$(".role", roles).forEach(b => {
+      b.classList.toggle("on", b.dataset.role === r);
+      b.setAttribute("aria-pressed", String(b.dataset.role === r));
+    });
+    applyFilter(); scrollTo(0, 0);
+  });
+  tools.appendChild(roles);
+  main.appendChild(tools);
+  renderDock("home", null);
+  const grid = el("ul", "grid"); grid.id = "grid";
+  for (const h of HEROES) {
+    const li = el("li");
+    li.dataset.id = String(h.id);
+    li.dataset.roles = h.roles.join(" ");
+    const a = heroCard("a", h);
+    a.href = "#/hero/" + slug(h.en);
+    li.appendChild(a);
+    grid.appendChild(li);
+  }
+  main.appendChild(grid);
+  const empty = el("p", "mut", "Hero tidak ketemu.");
+  empty.id = "empty"; empty.hidden = true;
+  main.appendChild(empty);
+
+
+  function applyFilter() {
+    const q = input.value.trim();
+    const order = q ? new Map(searchHeroes(indexed, q).map((h, i) => [h.id, i])) : null;
+    let first = null, best = Infinity, count = 0;
+    for (const li of $$("#grid li")) {
+      const id = Number(li.dataset.id);
+      const rank = order ? order.get(id) : 0;
+      const show = (role === "all" || li.dataset.roles.split(" ").includes(role)) && (!order || order.has(id));
+      li.hidden = !show;
+      li.style.order = order ? String(rank) : "";
+      if (show) {
+        count++;
+        if (order ? rank < best : !first) { first = li; best = rank; }
+      }
+    }
+    empty.hidden = !!first;
+    n.textContent = String(count);
+    return first;
+  }
+  input.addEventListener("input", () => { applyFilter(); scrollTo(0, 0); });
+  ctl.addEventListener("submit", e => e.preventDefault());
+  label.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const first = applyFilter();
+      const a = first && first.querySelector("a");
+      if (a) location.hash = a.getAttribute("href");
+    }
+  });
+  applyFilter();
+  applyFavStars();
+}
+
+/* ---------- HALAMAN HERO ---------- */
+function renderHero(slugName) {
+  const h = bySlug.get(slugName);
+  const main = $("#main");
+  if (!h) {
+    document.title = "Hero tidak ketemu — Lawanku";
+    main.replaceChildren();
+    main.appendChild(el("h1", null, "Hero tidak ketemu."));
+    const p = el("p", "mut");
+    const a = el("a", "link", "Balik ke daftar hero");
+    a.href = "#/";
+    p.appendChild(a);
+    main.appendChild(p);
+    renderDock("hero", null);
+    return;
+  }
+  document.title = h.en + " — Lawanku";
+  main.replaceChildren();
+  const heroHead = el("div", "herohead");
+  const head = el("div", "tgt");
+  head.appendChild(avatar(h, 96));
+  const tt = el("div");
+  tt.appendChild(el("h1", null, h.en));
+  tt.appendChild(el("p", "mut", h.roles.map(roleName).join(" / ") + " · " + h.classes.join(", ")));
+  head.appendChild(tt);
+  heroHead.appendChild(head);
+
+  const favBtn = el("button", "favbtn");
+  favBtn.id = "favbtn";
+  favBtn.type = "button";
+  favBtn.dataset.id = String(h.id);
+  favBtn.appendChild(icon("i-star"));
+  const favSpan = el("span");
+  favBtn.appendChild(favSpan);
+  const paintFav = () => {
+    const on = getFavs().includes(h.id);
+    favBtn.setAttribute("aria-pressed", String(on));
+    favSpan.textContent = on ? "Di Favorit" : "Tambah ke Favorit";
+  };
+  paintFav();
+  favBtn.addEventListener("click", () => { toggleFav(h.id); paintFav(); });
+  heroHead.appendChild(favBtn);
+  main.appendChild(heroHead);
+
+  const cols = el("div", "hero2col");
+  const colA = el("div");
+  const colB = el("div");
+  cols.appendChild(colA);
+  cols.appendChild(colB);
+  main.appendChild(cols);
+  colA.appendChild(el("h2", null, "Counter alami"));
+  if (!h.naturalCounters || !h.naturalCounters.length) {
+    colA.appendChild(el("p", "mut", "Belum ada data"));
+  } else for (const c of h.naturalCounters) {
+    const ch = byId.get(c.hero);
+    if (!ch) continue;
+    const card = el("div", "card");
+    const row = el("div", "row");
+    row.appendChild(avatar(ch, 40));
+    const a = el("a", "link", ch.en);
+    a.href = "#/hero/" + slug(ch.en);
+    row.appendChild(a);
+    row.appendChild(el("span", "badge " + c.strength, c.strength));
+    card.appendChild(row);
+    if (c.why) card.appendChild(el("p", null, c.why));
+    colA.appendChild(card);
+  }
+
+  colB.appendChild(el("h2", null, "Counter item"));
+  if (!h.itemCounters || !h.itemCounters.length) {
+    colB.appendChild(el("p", "mut", "Belum ada data"));
+  } else for (const c of h.itemCounters) {
+    const card = el("div", "card");
+    const row = el("div", "row");
+    row.appendChild(el("b", null, c.items));
+    if (c.needsReview) row.appendChild(el("span", "tag", "belum dikurasi"));
+    else row.appendChild(el("span", "tag ok", "terkurasi"));
+    card.appendChild(row);
+    if (c.why) card.appendChild(el("p", "mut", c.why));
+    colB.appendChild(card);
+  }
+
+  if (h.howToPlayAgainst) {
+    colB.appendChild(el("h2", null, "Cara melawan"));
+    colB.appendChild(el("p", null, h.howToPlayAgainst));
+  }
+
+  const usulBtn = el("button", "favbtn", "Usulkan / laporkan");
+  usulBtn.id = "usulbtn";
+  usulBtn.type = "button";
+  colB.appendChild(usulBtn);
+
+  const dlg = document.createElement("dialog");
+  dlg.id = "usul";
+  const form = el("form");
+  form.id = "usulF";
+  form.method = "dialog";
+  form.appendChild(el("h2", null, "Usulan untuk " + h.en));
+  const fs = document.createElement("fieldset");
+  fs.className = "kind";
+  fs.appendChild(el("legend", "mut", "Jenis"));
+  for (const [v, label] of [["hero", "Counter hero"], ["item", "Counter item"], ["error", "Data salah"]]) {
+    const lab = el("label");
+    const radio = document.createElement("input");
+    radio.type = "radio"; radio.name = "kind"; radio.value = v;
+    if (v === "hero") radio.checked = true;
+    lab.appendChild(radio);
+    lab.appendChild(document.createTextNode(" " + label));
+    fs.appendChild(lab);
+  }
+  form.appendChild(fs);
+  const fHero = el("label", "f", "Hero counter");
+  fHero.dataset.for = "hero";
+  const sel = document.createElement("select");
+  sel.name = "counter";
+  sel.appendChild(el("option", null, "Pilih hero…")).value = "";
+  for (const x of HEROES) {
+    if (x.id === h.id) continue;
+    const o = el("option", null, x.en);
+    o.value = String(x.id);
+    sel.appendChild(o);
+  }
+  fHero.appendChild(sel);
+  form.appendChild(fHero);
+  const fItem = el("label", "f", "Item");
+  fItem.dataset.for = "item"; fItem.hidden = true;
+  const itemInput = document.createElement("input");
+  itemInput.type = "text"; itemInput.name = "items";
+  itemInput.placeholder = "Contoh: Overlord's Might";
+  fItem.appendChild(itemInput);
+  form.appendChild(fItem);
+  const fNote = el("label", "f", "Catatan");
+  const note = document.createElement("textarea");
+  note.name = "note"; note.rows = 3;
+  fNote.appendChild(note);
+  form.appendChild(fNote);
+  const msg = el("p", "mut");
+  msg.id = "usulMsg";
+  form.appendChild(msg);
+  const rowBtn = el("div", "row");
+  const closeBtn = el("button", "x", "Tutup");
+  closeBtn.id = "usulX"; closeBtn.type = "button";
+  const sendBtn = el("button", "send", "Kirim");
+  sendBtn.type = "submit";
+  rowBtn.appendChild(closeBtn);
+  rowBtn.appendChild(sendBtn);
+  form.appendChild(rowBtn);
+  dlg.appendChild(form);
+  main.appendChild(dlg);
+
+  const syncKind = () => {
+    const kind = form.elements.namedItem("kind").value;
+    $$("[data-for]", form).forEach(n => { n.hidden = n.dataset.for !== kind; });
+  };
+  form.addEventListener("change", syncKind);
+  usulBtn.addEventListener("click", () => { msg.textContent = ""; dlg.showModal(); });
+  closeBtn.addEventListener("click", () => dlg.close());
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const kind = form.elements.namedItem("kind").value;
+    const data = {
+      kind, target: h.id,
+      counter: kind === "hero" ? Number(sel.value) || null : null,
+      items: kind === "item" ? itemInput.value : null,
+      note: note.value, at: new Date().toISOString(),
+    };
+    try {
+      const all = JSON.parse(localStorage.getItem("hok-usulan") || "[]");
+      all.push(data);
+      localStorage.setItem("hok-usulan", JSON.stringify(all));
+    } catch {}
+    form.reset(); syncKind();
+    msg.textContent = "Terkirim. Makasih! Usulan tersimpan lokal di Lawanku (belum ada server).";
+  });
+  syncKind();
+  renderDock("hero", null);
+  applyFavStars();
+}
+
+/* ---------- DRAFT ---------- */
+const DRAFT_KEY = "hok-draft";
+const RECENT_KEY = "hok-recent";
+let draftKeyHandler = null;
+let draft = null;
+function loadDraft() {
+  const fresh = { ally: [null, null, null, null, null], enemy: [null, null, null, null, null], ban: [null, null, null, null, null, null] };
+  const history = [];
+  try {
+    const saved = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null");
+    if (saved) {
+      const seen = new Set();
+      for (const team of ["ally", "enemy", "ban"])
+        fresh[team].forEach((_, i) => {
+          const id = saved[team] && saved[team][i];
+          if (byId.has(id) && !seen.has(id)) { fresh[team][i] = id; seen.add(id); }
+        });
+      if (Array.isArray(saved.history))
+        for (const e of saved.history)
+          if (Array.isArray(e) && ["ally", "enemy", "ban"].includes(e[0]) && Number.isInteger(e[1]) && fresh[e[0]][e[1]] != null)
+            history.push(e);
+    }
+  } catch {}
+  return { ...fresh, history };
+}
+function saveDraft() {
+  try { localStorage.setItem(DRAFT_KEY, JSON.stringify(draft)); } catch {}
+}
+function draftSuggestions() {
+  const used = new Set([...draft.ban, ...draft.ally, ...draft.enemy].filter(Boolean));
+  const score = new Map(), why = new Map();
+  for (const id of draft.enemy.filter(Boolean)) {
+    const enemy = byId.get(id);
+    if (!enemy) continue;
+    for (const c of enemy.naturalCounters || []) {
+      if (used.has(c.hero)) continue;
+      const pts = c.strength === "hard" ? 2 : 1;
+      score.set(c.hero, (score.get(c.hero) || 0) + pts);
+      if (!why.has(c.hero) || pts > (why.get(c.hero)[0] || 0))
+        why.set(c.hero, [pts, (c.strength === "hard" ? "Hard" : "Soft") + " counter " + enemy.en]);
+    }
+  }
+  return [...score.entries()]
+    .sort((a, b) => b[1] - a[1] || byId.get(a[0]).en.localeCompare(byId.get(b[0]).en))
+    .slice(0, 5)
+    .map(([id, s]) => ({ id, s, why: why.get(id)[1] }));
+}
+function banSuggestions() {
+  // Ancaman buat tim kamu: hero yang counter pick tim kamu (hard +2, soft +1).
+  const used = new Set([...draft.ban, ...draft.ally, ...draft.enemy].filter(Boolean));
+  const score = new Map(), why = new Map();
+  for (const id of draft.ally.filter(Boolean)) {
+    const ally = byId.get(id);
+    if (!ally) continue;
+    for (const c of ally.naturalCounters || []) {
+      if (used.has(c.hero)) continue;
+      const pts = c.strength === "hard" ? 2 : 1;
+      score.set(c.hero, (score.get(c.hero) || 0) + pts);
+      if (!why.has(c.hero) || pts > (why.get(c.hero)[0] || 0))
+        why.set(c.hero, [pts, (c.strength === "hard" ? "Hard" : "Soft") + " counter " + ally.en]);
+    }
+  }
+  return [...score.entries()]
+    .sort((a, b) => b[1] - a[1] || byId.get(a[0]).en.localeCompare(byId.get(b[0]).en))
+    .slice(0, 5)
+    .map(([id, s]) => ({ id, s, why: why.get(id)[1] }));
+}
+const COMP_ROLES = [["farm", "Farm"], ["mid", "Mid"], ["jungle", "Jungle"], ["roam", "Roam"], ["clash", "Clash"]];
+function teamComposition() {
+  const picks = draft.ally.filter(Boolean).map(id => byId.get(id)).filter(Boolean);
+  return COMP_ROLES.map(([role, label]) => ({
+    role, label,
+    n: picks.filter(h => h.roles.includes(role)).length,
+  }));
+}
+
+/* ---------- draft tersimpan & link berbagi ---------- */
+const SAVED_KEY = "hok-drafts";
+function loadSavedDrafts() {
+  try { const v = JSON.parse(localStorage.getItem(SAVED_KEY) || "[]"); return Array.isArray(v) ? v : []; } catch { return []; }
+}
+function storeSavedDrafts(list) {
+  try { localStorage.setItem(SAVED_KEY, JSON.stringify(list)); } catch {}
+}
+function draftToParam(d) {
+  const p = new URLSearchParams();
+  for (const [k, team] of [["a", "ally"], ["e", "enemy"], ["b", "ban"]]) {
+    const ids = d[team].filter(Boolean);
+    if (ids.length) p.set(k, ids.join(","));
+  }
+  return p.toString();
+}
+function draftFromParam(qs) {
+  const p = new URLSearchParams(qs);
+  const fresh = { ally: [null, null, null, null, null], enemy: [null, null, null, null, null], ban: [null, null, null, null, null, null] };
+  const seen = new Set();
+  let any = false;
+  for (const [k, team] of [["a", "ally"], ["e", "enemy"], ["b", "ban"]]) {
+    const raw = p.get(k);
+    if (!raw) continue;
+    raw.split(",").map(Number).filter(Number.isInteger).forEach((id, i) => {
+      if (i < fresh[team].length && byId.has(id) && !seen.has(id)) { fresh[team][i] = id; seen.add(id); any = true; }
+    });
+  }
+  return any ? fresh : null;
+}
+function renderDraft() {
+  document.title = "Draft — Lawanku";
+  if (!draft) draft = loadDraft();
+  // Terapkan draft dari link berbagi (?a=..&e=..&b=..), lalu bersihkan URL.
+  const qPos = location.hash.indexOf("?");
+  if (qPos >= 0) {
+    const shared = draftFromParam(location.hash.slice(qPos + 1));
+    if (shared) { draft = { ...shared, history: [] }; saveDraft(); }
+    try { history.replaceState(null, "", "#/draft"); } catch {}
+  }
+  const main = $("#main");
+  main.replaceChildren();
+  main.appendChild(el("h1", null, "Draft"));
+  let mode = "ally", popupRole = "all";
+  let activeSlot = null; // {team, idx} | null — slot yang dipilih user jadi target isi
+  const indexed = withKeys(HEROES);
+
+  const teams = el("div", "teams");
+  const teamSections = {};
+  for (const [team, label] of [["ally", "Tim kamu"], ["enemy", "Musuh"]]) {
+    const sec = el("section");
+    sec.dataset.team = team;
+    sec.appendChild(el("h2", "lbl", label));
+    for (let i = 0; i < 5; i++) {
+      const s = el("div", "slot empty", "+ pick");
+      s.dataset.team = team; s.dataset.idx = String(i);
+      s.tabIndex = 0; s.setAttribute("role", "button");
+      s.setAttribute("aria-label", label + " slot " + (i + 1));
+      sec.appendChild(s);
+    }
+    teams.appendChild(sec);
+    teamSections[team] = sec;
+  }
+  main.appendChild(teams);
+  const banH = el("h2", "lbl");
+  banH.appendChild(document.createTextNode("Ban · "));
+  const banN = el("span"); banN.id = "banN"; banN.textContent = "0";
+  banH.appendChild(banN);
+  banH.appendChild(document.createTextNode("/6"));
+  main.appendChild(banH);
+  const bans = el("div", "bans");
+  bans.dataset.team = "ban";
+  for (let i = 0; i < 6; i++) {
+    const s = el("div", "slot ban empty");
+    s.dataset.team = "ban"; s.dataset.idx = String(i);
+    s.tabIndex = 0; s.setAttribute("role", "button");
+    s.setAttribute("aria-label", "Ban slot " + (i + 1));
+    bans.appendChild(s);
+  }
+  main.appendChild(bans);
+  // ---- kontrol picker di halaman: mode + tombol buka picker mengambang ----
+  const pickctl = el("div", "pickctl");
+  const seg = el("div", "seg");
+  seg.setAttribute("role", "group");
+  seg.setAttribute("aria-label", "Mode");
+  for (const [m, labelTxt] of [["ally", "Pick kamu"], ["enemy", "Pick musuh"], ["ban", "Ban"]]) {
+    const b = el("button", "m" + (m === mode ? " on" : ""), labelTxt);
+    b.type = "button"; b.dataset.mode = m;
+    b.setAttribute("aria-pressed", String(m === mode));
+    b.addEventListener("click", () => setMode(m, true));
+    seg.appendChild(b);
+  }
+  const undoBtn = el("button", "ic1");
+  undoBtn.id = "undo"; undoBtn.type = "button"; undoBtn.setAttribute("aria-label", "Undo");
+  undoBtn.appendChild(icon("i-undo"));
+  const resetBtn = el("button", "ic1");
+  resetBtn.id = "reset"; resetBtn.type = "button"; resetBtn.setAttribute("aria-label", "Reset");
+  resetBtn.appendChild(icon("i-reset"));
+  seg.appendChild(undoBtn);
+  seg.appendChild(resetBtn);
+  pickctl.appendChild(seg);
+  const openBtn = el("button", "btn-acc", "Pilih hero");
+  openBtn.type = "button";
+  openBtn.prepend(icon("i-all"));
+  openBtn.addEventListener("click", () => openPicker(true));
+  pickctl.appendChild(openBtn);
+  main.appendChild(pickctl);
+
+  main.appendChild(el("h2", "lbl", "Saran pick"));
+  const sug = el("div");
+  sug.id = "sug";
+  sug.setAttribute("aria-live", "polite");
+  main.appendChild(sug);
+  main.appendChild(el("p", "note mut", "Tap slot buat pilih target, tap hero buat isi. Skor: hard +2, soft +1 per musuh."));
+
+  main.appendChild(el("h2", "lbl", "Saran ban"));
+  const banSug = el("div");
+  banSug.id = "bansug";
+  banSug.setAttribute("aria-live", "polite");
+  main.appendChild(banSug);
+  main.appendChild(el("h2", "lbl", "Komposisi tim"));
+  const comp = el("div", "comp");
+  comp.id = "comp";
+  main.appendChild(comp);
+  main.appendChild(el("h2", "lbl", "Bagikan & simpan"));
+  const shareRow = el("div", "share-row");
+  const copyBtn = el("button", "btn-acc", "Salin link draft");
+  copyBtn.id = "copylink"; copyBtn.type = "button";
+  const copyMsg = el("span", "mut", "");
+  copyMsg.id = "copymsg";
+  shareRow.appendChild(copyBtn); shareRow.appendChild(copyMsg);
+  main.appendChild(shareRow);
+  const saveRow = el("div", "share-row");
+  const nameInput = el("input");
+  nameInput.id = "savename"; nameInput.type = "text";
+  nameInput.placeholder = "Nama draft (mis. Ranked malam)";
+  nameInput.setAttribute("aria-label", "Nama draft");
+  const saveBtn = el("button", "btn-acc", "Simpan draft");
+  saveBtn.id = "savedraft"; saveBtn.type = "button";
+  saveRow.appendChild(nameInput); saveRow.appendChild(saveBtn);
+  main.appendChild(saveRow);
+  const savedList = el("div");
+  savedList.id = "savedlist";
+  main.appendChild(savedList);
+
+
+  // ---- popup pilih hero (bottom sheet) ----
+  const dlg = document.createElement("dialog");
+  dlg.id = "pickdlg";
+  const dlgHead = el("div", "dlg-head");
+  const dlgTitle = el("h2", null, "Pilih hero");
+  dlgHead.appendChild(dlgTitle);
+  const dlgX = el("button", "x", "×");
+  dlgX.type = "button"; dlgX.setAttribute("aria-label", "Tutup");
+  dlgX.addEventListener("click", () => dlg.close());
+  dlgHead.appendChild(dlgX);
+  dlg.appendChild(dlgHead);
+  const pqWrap = searchBox("pq", "Cari hero…");
+  const pq = pqWrap.input;
+  pq.setAttribute("enterkeyhint", "go");
+  dlg.appendChild(pqWrap.label);
+  const pRoles = roleButtons(popupRole, (r) => {
+    popupRole = r;
+    $$(".role", pRoles).forEach(b => {
+      b.classList.toggle("on", b.dataset.role === r);
+      b.setAttribute("aria-pressed", String(b.dataset.role === r));
+    });
+    applyPickerFilter();
+  });
+  dlg.appendChild(pRoles);
+  const recentLbl = el("p", "lbl", "Terakhir dipakai");
+  recentLbl.hidden = true;
+  dlg.appendChild(recentLbl);
+  const recentStrip = el("div", "strip");
+  recentStrip.id = "recentStrip";
+  recentStrip.hidden = true;
+  dlg.appendChild(recentStrip);
+  const pGrid = el("div", "pgrid");
+  dlg.appendChild(pGrid);
+  for (const h of HEROES) {
+    const b = heroCard("button", h, "pickhero");
+    b.type = "button";
+    b.dataset.id = String(h.id);
+    b.dataset.roles = h.roles.join(" ");
+    pGrid.appendChild(b);
+  }
+  const pEmpty = el("p", "mut", "Hero tidak ketemu.");
+  pEmpty.hidden = true;
+  dlg.appendChild(pEmpty);
+  main.appendChild(dlg);
+
+  renderDock("draft", null);
+
+  function getRecent() {
+    try {
+      const v = JSON.parse(localStorage.getItem(RECENT_KEY) || "[]");
+      return Array.isArray(v) ? v.filter(Number.isInteger) : [];
+    } catch { return []; }
+  }
+  function pushRecent(id) {
+    try {
+      const r = [id, ...getRecent().filter(x => x !== id)].slice(0, 8);
+      localStorage.setItem(RECENT_KEY, JSON.stringify(r));
+    } catch {}
+  }
+  function paintSlots() {
+    const nextIdx = activeSlot ? -1 : draft[mode].indexOf(null);
+    for (const team of ["ally", "enemy", "ban"]) {
+      const container = team === "ban" ? bans : teamSections[team];
+      $$(".slot", container).forEach((slotEl, i) => {
+        const id = draft[team][i];
+        const hero = id ? byId.get(id) : null;
+        const isActive = !!activeSlot && activeSlot.team === team && activeSlot.idx === i;
+        const isNext = !activeSlot && team === mode && i === nextIdx;
+        slotEl.className = "slot" + (team === "ban" ? " ban" : "") + (hero ? "" : " empty") + (isActive ? " active" : isNext ? " next" : "");
+        slotEl.replaceChildren();
+        if (hero) {
+          slotEl.appendChild(avatar(hero, team === "ban" ? 40 : 32));
+          if (team !== "ban") {
+            const tx = el("span", "tx");
+            tx.appendChild(el("span", "nm", hero.en));
+            tx.appendChild(el("span", "sub", hero.roles.map(roleName).join(" / ") + " · " + hero.classes.join(", ")));
+            slotEl.appendChild(tx);
+          }
+          const x = el("button", "x", "×");
+          x.type = "button";
+          x.setAttribute("aria-label", "Hapus " + hero.en);
+          slotEl.appendChild(x);
+          slotEl.title = hero.en;
+        } else {
+          if (team !== "ban") slotEl.appendChild(document.createTextNode("+ pick"));
+          slotEl.removeAttribute("title");
+        }
+      });
+    }
+    banN.textContent = String(draft.ban.filter(Boolean).length);
+  }
+  function paintSug() {
+    sug.replaceChildren();
+    if (!draft.enemy.some(Boolean)) {
+      sug.appendChild(el("p", "mut", "Isi pick musuh dulu, saran muncul di sini."));
+      return;
+    }
+    const list = draftSuggestions();
+    if (!list.length) {
+      sug.appendChild(el("p", "mut", "Belum ada counter yang cocok di data."));
+      return;
+    }
+    for (const s of list) {
+      const h = byId.get(s.id);
+      const b = el("button", "sug");
+      b.type = "button"; b.dataset.id = String(s.id);
+      b.appendChild(avatar(h, 48));
+      const box = el("div", "b");
+      const nm = el("div", "nm");
+      nm.appendChild(document.createTextNode(h.en));
+      nm.appendChild(el("b", "sc", "+" + s.s));
+      box.appendChild(nm);
+      box.appendChild(el("p", null, s.why));
+      b.appendChild(box);
+      sug.appendChild(b);
+    }
+  }
+  function paintBanSug() {
+    banSug.replaceChildren();
+    if (!draft.ally.some(Boolean)) {
+      banSug.appendChild(el("p", "mut", "Isi tim kamu dulu, saran ban muncul di sini."));
+      return;
+    }
+    const list = banSuggestions();
+    if (!list.length) {
+      banSug.appendChild(el("p", "mut", "Tidak ada ancaman counter yang tercatat buat tim ini."));
+      return;
+    }
+    for (const s of list) {
+      const h = byId.get(s.id);
+      const b = el("button", "sug bansug-btn");
+      b.type = "button"; b.dataset.id = String(s.id);
+      b.appendChild(avatar(h, 48));
+      const box = el("div", "b");
+      const nm = el("div", "nm");
+      nm.appendChild(document.createTextNode(h.en));
+      nm.appendChild(el("b", "sc", "+" + s.s));
+      box.appendChild(nm);
+      box.appendChild(el("p", null, s.why + " — tap buat ban."));
+      b.appendChild(box);
+      banSug.appendChild(b);
+    }
+  }
+  function paintComp() {
+    comp.replaceChildren();
+    for (const r of teamComposition()) {
+      comp.appendChild(el("span", "chip" + (r.n ? " ok" : " no"),
+        (r.n ? "✓ " : "✗ ") + r.label + (r.n > 1 ? " ×" + r.n : "")));
+    }
+    const picks = draft.ally.filter(Boolean).map(id => byId.get(id)).filter(Boolean);
+    const hasFront = picks.some(h => h.classes.includes("Tank") || h.classes.includes("Fighter"));
+    if (picks.length && !hasFront)
+      comp.appendChild(el("p", "mut", "Belum ada frontline (Tank/Fighter) — tim gampang ditembus."));
+  }
+  function paintSaved() {
+    savedList.replaceChildren();
+    const list = loadSavedDrafts();
+    if (!list.length) {
+      savedList.appendChild(el("p", "mut", "Belum ada draft tersimpan."));
+      return;
+    }
+    for (const [i, s] of list.entries()) {
+      const row = el("div", "saved-row");
+      row.appendChild(el("b", null, s.name));
+      row.appendChild(el("span", "mut", " " + new Date(s.savedAt).toLocaleString("id-ID", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) + " · " + [...s.ally, ...s.enemy, ...s.ban].filter(Boolean).length + " hero"));
+      const load = el("button", "mini", "Muat");
+      load.type = "button"; load.dataset.i = String(i);
+      const del = el("button", "mini", "Hapus");
+      del.type = "button"; del.dataset.i = String(i);
+      row.appendChild(load); row.appendChild(del);
+      savedList.appendChild(row);
+    }
+  }
+  function applyPickerFilter() {
+    const q = pq.value.trim();
+    const order = q ? new Map(searchHeroes(indexed, q).map((h, i) => [h.id, i])) : null;
+    const used = new Set([...draft.ally, ...draft.enemy, ...draft.ban]);
+    let count = 0, first = null, firstRank = Infinity;
+    for (const b of $$(".pickhero", pGrid)) {
+      const id = Number(b.dataset.id);
+      const show = (popupRole === "all" || b.dataset.roles.split(" ").includes(popupRole)) && (!order || order.has(id));
+      b.hidden = !show;
+      const rank = order ? order.get(id) : 0;
+      b.style.order = order ? String(rank) : "";
+      b.classList.toggle("used", used.has(id));
+      if (show) {
+        count++;
+        if (rank < firstRank) { first = b; firstRank = rank; }
+      }
+    }
+    pEmpty.hidden = count > 0;
+    const recents = q ? [] : getRecent().filter(id => byId.has(id));
+    recentLbl.hidden = !recents.length;
+    recentStrip.hidden = !recents.length;
+    recentStrip.replaceChildren();
+    for (const id of recents) {
+      const b = heroButton(byId.get(id));
+      b.classList.toggle("used", used.has(id));
+      recentStrip.appendChild(b);
+    }
+    return first;
+  }
+  let pickerSticky = false; // true: panel tetap buka setelah pick (rapid pick)
+  function paintPickerTitle() {
+    const target = activeSlot || { team: mode, idx: draft[mode].indexOf(null) };
+    const teamLabel = target.team === "ally" ? "Tim kamu" : target.team === "enemy" ? "Musuh" : "Ban";
+    dlgTitle.textContent = target.idx >= 0 ? "Pilih hero · " + teamLabel + " " + (target.idx + 1) : "Pilih hero · " + teamLabel;
+  }
+  function openPicker(sticky) {
+    pickerSticky = !!sticky;
+    pq.value = "";
+    popupRole = "all";
+    $$(".role", pRoles).forEach(b => {
+      b.classList.toggle("on", b.dataset.role === "all");
+      b.setAttribute("aria-pressed", String(b.dataset.role === "all"));
+    });
+    paintPickerTitle();
+    applyPickerFilter();
+    if (!dlg.open) dlg.showModal();
+    pq.focus();
+  }
+  function setMode(m, clearActive) {
+    mode = m;
+    if (clearActive) activeSlot = null;
+    $$(".m", seg).forEach(x => {
+      x.classList.toggle("on", x.dataset.mode === m);
+      x.setAttribute("aria-pressed", String(x.dataset.mode === m));
+    });
+    paintSlots();
+  }
+  function selectSlot(team, idx) {
+    activeSlot = { team, idx };
+    setMode(team, false);
+    openPicker(false);
+  }
+  function removeSlot(team, idx) {
+    if (draft[team][idx] == null) return;
+    draft[team][idx] = null;
+    draft.history = draft.history.filter(([t, i]) => !(t === team && i === idx));
+    sync();
+  }
+  function sync() { saveDraft(); paintSlots(); paintSug(); paintBanSug(); paintComp(); }
+  function pickHero(id, team) {
+    team = team || mode;
+    for (const t of ["ally", "enemy", "ban"]) {
+      const i = draft[t].indexOf(id);
+      if (i >= 0) {
+        draft[t][i] = null;
+        draft.history = draft.history.filter(([tt, ii]) => !(tt === t && ii === i));
+        sync();
+        return;
+      }
+    }
+    let target = null;
+    if (activeSlot && activeSlot.team === team) target = { ...activeSlot };
+    if (!target) {
+      const i = draft[team].indexOf(null);
+      if (i < 0) return;
+      target = { team, idx: i };
+    }
+    if (draft[target.team][target.idx] != null) {
+      draft.history = draft.history.filter(([tt, ii]) => !(tt === target.team && ii === target.idx));
+    }
+    draft[target.team][target.idx] = id;
+    draft.history.push([target.team, target.idx]);
+    pushRecent(id);
+    if (activeSlot && activeSlot.team === target.team && activeSlot.idx === target.idx) {
+      const next = draft[target.team].indexOf(null);
+      activeSlot = next >= 0 ? { team: target.team, idx: next } : null;
+    }
+    sync();
+  }
+  function onSlotAreaClick(e) {
+    const x = e.target.closest(".x");
+    if (x) {
+      const slotEl = x.closest(".slot");
+      removeSlot(slotEl.dataset.team, Number(slotEl.dataset.idx));
+      return;
+    }
+    const slotEl = e.target.closest(".slot");
+    if (slotEl) selectSlot(slotEl.dataset.team, Number(slotEl.dataset.idx));
+  }
+  function onSlotKey(e) {
+    if ((e.key === "Enter" || e.key === " ") && e.target.classList.contains("slot")) {
+      e.preventDefault();
+      selectSlot(e.target.dataset.team, Number(e.target.dataset.idx));
+    }
+  }
+  teams.addEventListener("click", onSlotAreaClick);
+  bans.addEventListener("click", onSlotAreaClick);
+  teams.addEventListener("keydown", onSlotKey);
+  bans.addEventListener("keydown", onSlotKey);
+  dlg.addEventListener("click", e => {
+    const b = e.target.closest(".pickhero, #recentStrip .hero");
+    if (!b) return;
+    pickHero(Number(b.dataset.id));
+    if (pickerSticky) { paintPickerTitle(); applyPickerFilter(); }
+    else dlg.close();
+  });
+  pq.addEventListener("input", applyPickerFilter);
+  pq.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const first = applyPickerFilter();
+      if (first) {
+        pickHero(Number(first.dataset.id));
+        if (pickerSticky) { paintPickerTitle(); applyPickerFilter(); }
+        else dlg.close();
+      }
+    }
+  });
+  dlg.addEventListener("keydown", e => {
+    if (e.key.length === 1 && e.target !== pq && !e.metaKey && !e.ctrlKey) pq.focus();
+  });
+  dlg.addEventListener("close", () => { pq.value = ""; });
+  sug.addEventListener("click", e => {
+    const b = e.target.closest(".sug");
+    if (b) pickHero(Number(b.dataset.id), "ally");
+  });
+  banSug.addEventListener("click", e => {
+    const b = e.target.closest(".bansug-btn");
+    if (b) pickHero(Number(b.dataset.id), "ban");
+  });
+  copyBtn.addEventListener("click", async () => {
+    const url = location.origin + location.pathname + "#/draft?" + draftToParam(draft);
+    let ok = false;
+    try { await navigator.clipboard.writeText(url); ok = true; }
+    catch {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = url; document.body.appendChild(ta); ta.select();
+        ok = document.execCommand("copy"); ta.remove();
+      } catch {}
+    }
+    copyMsg.textContent = ok ? "Link disalin ✓" : "Gagal menyalin — salin manual dari address bar.";
+    setTimeout(() => { copyMsg.textContent = ""; }, 3000);
+  });
+  saveBtn.addEventListener("click", () => {
+    const list = loadSavedDrafts();
+    const name = nameInput.value.trim() || ("Draft " + (list.length + 1));
+    list.unshift({ name, savedAt: Date.now(), ally: [...draft.ally], enemy: [...draft.enemy], ban: [...draft.ban] });
+    storeSavedDrafts(list.slice(0, 12));
+    nameInput.value = "";
+    paintSaved();
+  });
+  savedList.addEventListener("click", e => {
+    const b = e.target.closest("button.mini");
+    if (!b) return;
+    const i = Number(b.dataset.i);
+    const list = loadSavedDrafts();
+    if (b.textContent === "Muat") {
+      const s = list[i];
+      if (!s) return;
+      draft = { ally: [...s.ally], enemy: [...s.enemy], ban: [...s.ban], history: [] };
+      activeSlot = null;
+      sync();
+    } else {
+      list.splice(i, 1);
+      storeSavedDrafts(list);
+      paintSaved();
+    }
+  });
+  undoBtn.addEventListener("click", () => {
+    const last = draft.history.pop();
+    if (last) { draft[last[0]][last[1]] = null; sync(); }
+  });
+  resetBtn.addEventListener("click", () => {
+    for (const t of ["ally", "enemy", "ban"]) draft[t].fill(null);
+    draft.history.length = 0;
+    activeSlot = null;
+    sync();
+  });
+  if (draftKeyHandler) document.removeEventListener("keydown", draftKeyHandler);
+  draftKeyHandler = (e) => {
+    if (dlg.open) return;
+    if (!location.hash.startsWith("#/draft")) return;
+    if (e.key === "/" && !e.target.matches("input, textarea, select")) {
+      e.preventDefault();
+      openPicker(true);
+    }
+  };
+  document.addEventListener("keydown", draftKeyHandler);
+  paintSaved();
+  sync();
+  applyFavStars();
+}
+
+/* ---------- QUIZ ---------- */
+function renderQuiz() {
+  document.title = "Quiz — Lawanku";
+  const main = $("#main");
+  main.replaceChildren();
+  main.appendChild(el("h1", null, "Quiz"));
+  main.appendChild(el("p", "mut", "Tebak counter terkuat atau tebak hero dari ikonnya. 20 soal per ronde, skor terbaik tersimpan di perangkat ini."));
+  const BEST_KEY = "hok-quiz-best";
+  const ROUND = 20;
+  let mode = "counter";
+  let questions = [], qi = 0, score = 0, answered = false, progEl = null;
+
+  function getBest(m) {
+    try { return JSON.parse(localStorage.getItem(BEST_KEY) || "{}")[m] || 0; } catch { return 0; }
+  }
+  function setBest(m, s) {
+    try {
+      const b = JSON.parse(localStorage.getItem(BEST_KEY) || "{}");
+      if (s > (b[m] || 0)) { b[m] = s; localStorage.setItem(BEST_KEY, JSON.stringify(b)); }
+    } catch {}
+  }
+  const seg = el("div", "seg");
+  seg.setAttribute("role", "group");
+  seg.setAttribute("aria-label", "Mode quiz");
+  const modeBtns = {};
+  for (const [m, labelTxt] of [["counter", "Tebak Counter"], ["tebak", "Tebak Hero"]]) {
+    const b = el("button", "m" + (m === mode ? " on" : ""), labelTxt);
+    b.type = "button"; b.dataset.mode = m;
+    b.setAttribute("aria-pressed", String(m === mode));
+    b.addEventListener("click", () => {
+      mode = m;
+      for (const k in modeBtns) {
+        modeBtns[k].classList.toggle("on", k === m);
+        modeBtns[k].setAttribute("aria-pressed", String(k === m));
+      }
+      startRound();
+    });
+    modeBtns[m] = b;
+    seg.appendChild(b);
+  }
+  main.appendChild(seg);
+  const board = el("div");
+  main.appendChild(board);
+
+  function sample(arr, n) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a.slice(0, n);
+  }
+  function makeQuestions() {
+    if (mode === "counter") {
+      const pool = HEROES.filter(h => (h.naturalCounters || []).length);
+      return sample(pool, ROUND).map(enemy => {
+        const counters = enemy.naturalCounters || [];
+        const hard = counters.filter(c => c.strength === "hard");
+        const pick = hard.length ? hard[Math.floor(Math.random() * hard.length)] : counters[0];
+        const correct = byId.get(pick.hero);
+        const banned = new Set([enemy.id, correct.id, ...counters.map(c => c.hero)]);
+        const distract = sample(HEROES.filter(h => !banned.has(h.id)), 3);
+        return { enemy, correct, why: pick.why || null, options: sample([correct, ...distract], 4) };
+      });
+    }
+    return sample(HEROES, ROUND).map(hero => ({
+      hero,
+      options: sample([hero, ...sample(HEROES.filter(h => h.id !== hero.id), 3)], 4),
+    }));
+  }
+  function startRound() {
+    questions = makeQuestions();
+    qi = 0; score = 0; answered = false;
+    paintQuestion();
+  }
+  function paintQuestion() {
+    board.replaceChildren();
+    answered = false;
+    if (qi >= questions.length) { paintResult(); return; }
+    const q = questions[qi];
+    progEl = el("p", "mut", "Soal " + (qi + 1) + "/" + questions.length + " · Skor " + score);
+    board.appendChild(progEl);
+    const card = el("div", "card");
+    if (mode === "counter") {
+      const row = el("div", "row");
+      row.appendChild(avatar(q.enemy, 56));
+      const t = el("div");
+      t.appendChild(el("b", null, "Siapa counter terkuat " + q.enemy.en + "?"));
+      t.appendChild(el("p", "mut", q.enemy.roles.map(roleName).join(" / ") + " · " + q.enemy.classes.join(", ")));
+      row.appendChild(t);
+      card.appendChild(row);
+    } else {
+      const row = el("div", "row");
+      const big = avatar(q.hero, 96);
+      big.style.width = "96px"; big.style.height = "96px";
+      row.appendChild(big);
+      row.appendChild(el("b", null, "Hero apakah ini?"));
+      card.appendChild(row);
+    }
+    board.appendChild(card);
+    const grid = el("div", "qgrid");
+    const optBtns = [];
+    for (const opt of q.options) {
+      const b = el("button", "qopt");
+      b.type = "button";
+      b.dataset.id = String(opt.id);
+      // Tebak Hero: foto cuma di soal — opsi tanpa ikon biar nggak jadi contekan.
+      if (mode === "counter") b.appendChild(avatar(opt, 40));
+      b.appendChild(el("span", null, opt.en));
+      b.addEventListener("click", () => answer(opt, b, optBtns));
+      grid.appendChild(b);
+      optBtns.push(b);
+    }
+    board.appendChild(grid);
+    const fb = el("p", "mut");
+    fb.id = "qfb";
+    board.appendChild(fb);
+    const next = el("button", "btn-acc", qi === questions.length - 1 ? "Lihat hasil" : "Lanjut");
+    next.id = "qnext";
+    next.type = "button";
+    next.hidden = true;
+    next.addEventListener("click", () => { qi++; paintQuestion(); });
+    board.appendChild(next);
+  }
+  function answer(opt, btn, all) {
+    if (answered) return;
+    answered = true;
+    const q = questions[qi];
+    const correct = mode === "counter" ? q.correct : q.hero;
+    const ok = opt.id === correct.id;
+    if (ok) score++;
+    for (const b of all) {
+      b.disabled = true;
+      if (Number(b.dataset.id) === correct.id) b.classList.add("ok");
+      else if (b === btn) b.classList.add("no");
+    }
+    const fb = $("#qfb");
+    const info = correct.roles.map(roleName).join(" / ") + " · " + correct.classes.join(", ");
+    if (mode === "counter") {
+      fb.textContent = ok
+        ? "Benar! " + (q.why || "")
+        : "Jawabannya " + correct.en + ". " + (q.why || "");
+    } else {
+      fb.textContent = ok ? "Benar! " + correct.en + " — " + info : "Salah, ini " + correct.en + " — " + info;
+    }
+    if (progEl) progEl.textContent = "Soal " + (qi + 1) + "/" + questions.length + " · Skor " + score;
+    $("#qnext").hidden = false;
+  }
+  function paintResult() {
+    board.replaceChildren();
+    setBest(mode, score);
+    board.appendChild(el("h2", null, "Hasil"));
+    board.appendChild(el("p", null, "Skor kamu: " + score + "/" + questions.length));
+    board.appendChild(el("p", "mut", "Skor terbaik mode ini: " + getBest(mode) + "/" + questions.length));
+    const again = el("button", "btn-acc", "Main lagi");
+    again.type = "button";
+    again.addEventListener("click", startRound);
+    board.appendChild(again);
+  }
+  startRound();
+  renderDock("quiz", null);
+  applyFavStars();
+}
+
+/* ---------- FAVORIT ---------- */
+function renderFavorit() {
+  document.title = "Favorit — Lawanku";
+  const main = $("#main");
+  main.replaceChildren();
+  main.appendChild(el("h1", null, "Favorit"));
+  const sub = el("p", "mut");
+  const n = el("span"); n.id = "n"; n.textContent = "0";
+  sub.appendChild(n);
+  sub.appendChild(document.createTextNode(" hero · tersimpan di perangkat ini"));
+  main.appendChild(sub);
+  const none = el("p", "mut", "Belum ada. Cari hero di bawah, tap buat tambah.");
+  none.id = "none";
+  main.appendChild(none);
+  const awasL = el("h2", null, "Awas counter-nya");
+  awasL.id = "awasL";
+  main.appendChild(awasL);
+  const awas = el("div");
+  awas.id = "awas";
+  main.appendChild(awas);
+  const poolL = el("h2", null, "Semua hero");
+  poolL.id = "poolL";
+  main.appendChild(poolL);
+  const pool = el("ul", "pool");
+  pool.id = "pool";
+  for (const h of HEROES) {
+    const li = el("li");
+    const c = heroCard("button", h, "cell");
+    c.type = "button";
+    c.dataset.id = String(h.id);
+    li.appendChild(c);
+    pool.appendChild(li);
+  }
+  main.appendChild(pool);
+  const tip = el("p", "mut", "Tap hero buat tambah atau hapus favorit.");
+  tip.id = "tip";
+  main.appendChild(tip);
+
+  const ctl = el("div", "ctl");
+  const { label, input } = searchBox("q", "Cari hero…");
+  ctl.appendChild(label);
+  const strip = el("div", "strip");
+  strip.id = "strip";
+  strip.setAttribute("aria-label", "Hasil pencarian");
+  const empty = el("p", "mut", "Hero tidak ketemu.");
+  empty.id = "empty"; empty.hidden = true;
+  strip.appendChild(empty);
+  for (const h of HEROES) strip.appendChild(heroButton(h));
+  ctl.appendChild(strip);
+  renderDock("favorit", ctl);
+
+  const indexed = withKeys(HEROES);
+  function paint() {
+    const favs = getFavs();
+    const favSet = new Set(favs);
+    n.textContent = String(favs.length);
+    none.hidden = favs.length > 0;
+    for (const id of ["awasL", "poolL", "tip"]) $("#" + id).hidden = !favs.length;
+    awas.replaceChildren();
+    for (const id of favs) {
+      const h = byId.get(id);
+      if (!h) continue;
+      const row = el("div", "row1");
+      row.dataset.id = String(id);
+      row.appendChild(avatar(h, 40));
+      const box = el("div");
+      box.appendChild(el("b", null, h.en));
+      const counters = (h.naturalCounters || []).slice(0, 3).map(c => byId.get(c.hero)).filter(Boolean);
+      box.appendChild(el("small", null, counters.length ? "Kalah lawan " + counters.map(c => c.en).join(", ") : "Belum ada data counter"));
+      row.appendChild(box);
+      awas.appendChild(row);
+    }
+    for (const c of $$("#pool .cell"))
+      c.classList.toggle("on", favSet.has(Number(c.dataset.id)));
+    // pool menampilkan semua hero; urutan: favorit dulu
+    for (const li of $$("#pool li")) {
+      const id = Number(li.querySelector(".cell").dataset.id);
+      li.style.order = favSet.has(id) ? String(favs.indexOf(id)) : String(1000 + HEROES.findIndex(h => h.id === id));
+    }
+    applyFavStars();
+  }
+  function applyStripFilter() {
+    const q = input.value.trim();
+    const order = q ? new Map(searchHeroes(indexed, q).map((h, i) => [h.id, i])) : null;
+    let count = 0;
+    for (const b of $$("#strip .hero")) {
+      const id = Number(b.dataset.id);
+      const show = !order || order.has(id);
+      b.hidden = !show;
+      b.style.order = order ? String(order.get(id)) : "";
+      if (show) count++;
+    }
+    empty.hidden = count > 0;
+    strip.scrollLeft = 0;
+  }
+  strip.addEventListener("click", e => {
+    const b = e.target.closest(".hero");
+    if (!b) return;
+    toggleFav(Number(b.dataset.id));
+    paint();
+    if (input.value) { input.value = ""; applyStripFilter(); }
+  });
+  strip.addEventListener("wheel", e => {
+    if (!e.deltaY || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+    e.preventDefault();
+    strip.scrollLeft += e.deltaY;
+  }, { passive: false });
+  pool.addEventListener("click", e => {
+    const c = e.target.closest(".cell");
+    if (!c) return;
+    toggleFav(Number(c.dataset.id));
+    paint();
+  });
+  input.addEventListener("input", applyStripFilter);
+  paint();
+  applyStripFilter();
+}
+
+
+/* ---------- ITEMS ---------- */
+const ITEM_TAGS = {
+  "anti-burst": "Anti-Burst",
+  "anti-cc": "Anti-CC",
+  "anti-heal": "Anti-Heal",
+  "anti-tank": "Anti-Tank",
+  "anti-autoattack": "Anti-Auto Attack",
+};
+function renderItems() {
+  document.title = "Database Item — Lawanku";
+  const main = $("#main");
+  main.replaceChildren();
+  main.appendChild(el("h1", null, "Database Item"));
+  main.appendChild(el("p", "mut", "Rekomendasi item lawan hero, dikelompokkan per kategori. Badge hijau = sudah terkurasi."));
+  const ctl = el("div", "ctl");
+  const srch = el("label", "srch");
+  srch.appendChild(icon("i-search"));
+  const input = document.createElement("input");
+  input.type = "search";
+  input.placeholder = "Cari item, kategori, atau hero…";
+  input.setAttribute("aria-label", "Cari item");
+  srch.appendChild(input);
+  ctl.appendChild(srch);
+  const row = el("div", "row");
+  const tog = el("button", "all", "Hanya yang terkurasi");
+  tog.type = "button";
+  tog.setAttribute("aria-pressed", "false");
+  row.appendChild(tog);
+  ctl.appendChild(row);
+  main.appendChild(ctl);
+  const list = el("div", "taggrid");
+  main.appendChild(list);
+  const empty = el("p", "mut", "Tidak ada yang cocok.");
+  empty.hidden = true;
+  main.appendChild(empty);
+  let curatedOnly = false;
+  const paint = () => {
+    tog.classList.toggle("on", curatedOnly);
+    tog.setAttribute("aria-pressed", String(curatedOnly));
+    const q = norm(input.value);
+    list.replaceChildren();
+    let shown = 0;
+    const tags = [...new Set(HEROES.flatMap(h => (h.itemCounters || []).map(c => c.tag)))].sort();
+    for (const tag of tags) {
+      const rows = [];
+      for (const h of HEROES) for (const c of h.itemCounters || []) {
+        if (c.tag !== tag) continue;
+        if (curatedOnly && c.needsReview) continue;
+        if (q && !norm(c.items + " " + tag + " " + h.en + " " + (c.why || "")).includes(q)) continue;
+        rows.push({ h, c });
+      }
+      if (!rows.length) continue;
+      shown += rows.length;
+      const card = el("div", "card tagcard");
+      const head = el("div", "row");
+      head.appendChild(el("b", null, ITEM_TAGS[tag] || tag));
+      head.appendChild(el("span", "badge soft", rows.length + " hero"));
+      card.appendChild(head);
+      for (const { h, c } of rows) {
+        const r = el("div", "row1");
+        r.appendChild(avatar(h, 40));
+        const txt = el("div");
+        const a = document.createElement("a");
+        a.href = "#/hero/" + slug(h.en);
+        a.textContent = h.en;
+        txt.appendChild(a);
+        txt.appendChild(el("small", null, c.items));
+        if (c.why) txt.appendChild(el("small", null, c.why));
+        r.appendChild(txt);
+        if (!c.needsReview) r.appendChild(el("span", "tag ok", "terkurasi"));
+        card.appendChild(r);
+      }
+      list.appendChild(card);
+    }
+    empty.hidden = shown > 0;
+  };
+  input.addEventListener("input", paint);
+  tog.addEventListener("click", () => { curatedOnly = !curatedOnly; paint(); });
+  paint();
+  renderDock("items", null);
+}
+
+/* ---------- MORE ---------- */
+function renderMore() {
+  document.title = "More — Lawanku";
+  const main = $("#main");
+  main.replaceChildren();
+  main.appendChild(el("h1", null, "More"));
+  const total = HEROES.reduce((n, h) => n + (h.itemCounters || []).length, 0);
+  const list = el("div", "list");
+  const a = el("a", "item");
+  a.href = "#/items";
+  const icn = el("span", "ic");
+  icn.appendChild(icon("i-item"));
+  a.appendChild(icn);
+  const txt = el("span");
+  txt.appendChild(el("b", null, "Database Item"));
+  txt.appendChild(el("small", null, total + " rekomendasi item lawan hero"));
+  a.appendChild(txt);
+  const go = el("span", "go");
+  go.appendChild(icon("i-go"));
+  a.appendChild(go);
+  list.appendChild(a);
+  main.appendChild(list);
+  const about = el("div", "card");
+  about.appendChild(el("b", null, "Tentang Lawanku"));
+  about.appendChild(el("p", "mut", "Lawanku adalah alat fan-made buat cari counter hero Honor of Kings: counter alami, counter item, saran draft, dan quiz. Data counter dikurasi dari patch Season 16. Bukan afiliasi resmi Tencent, TiMi, atau Level Infinite."));
+  main.appendChild(about);
+  renderDock("more", null);
+}
+
+/* ---------- router & boot ---------- */
+function route() {
+  const hash = location.hash.replace(/^#/, "") || "/";
+  const [path] = hash.split("?");
+  const parts = path.split("/").filter(Boolean);
+  if (parts.length === 0) renderHome();
+  else if (parts[0] === "draft") renderDraft();
+  else if (parts[0] === "favorit") renderFavorit();
+  else if (parts[0] === "quiz") renderQuiz();
+  else if (parts[0] === "items") renderItems();
+  else if (parts[0] === "more") renderMore();
+  else if (parts[0] === "hero" && parts[1]) renderHero(parts[1]);
+  else renderHome();
+  scrollTo(0, 0);
+}
+async function boot() {
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+    });
+  }
+  const dock = $(".dock");
+  new ResizeObserver(() => {
+    document.documentElement.style.setProperty("--dock-h", dock.offsetHeight + "px");
+  }).observe(dock);
+  try {
+    // data.json dipecah jadi 2 chunk (batas argumen Vercel MCP ~128 KB per file).
+    const [d1, d2] = await Promise.all([
+      fetch("data-1.json").then(r => r.json()),
+      fetch("data-2.json").then(r => r.json()),
+    ]);
+    HEROES = [...d1.heroes, ...d2.heroes];
+  } catch {
+    $("#main").replaceChildren(el("p", "mut", "Gagal memuat data — buka lewat server lokal (mis. python3 -m http.server), bukan file://."));
+    return;
+  }
+  for (const h of HEROES) {
+    byId.set(h.id, h);
+    bySlug.set(slug(h.en), h);
+  }
+  window.addEventListener("hashchange", route);
+  route();
+}
+boot();

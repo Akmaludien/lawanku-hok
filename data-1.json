@@ -1,0 +1,2765 @@
+{
+ "version": "lawanku-2026-11-09",
+ "heroes": [
+  {
+   "id": 533,
+   "en": "Agudo",
+   "cn": "阿古朵",
+   "aliases": [],
+   "roles": [
+    "jungle",
+    "farm"
+   ],
+   "howToPlayAgainst": "Abis pakai skill 3, Agudo tipis banget. Pilih momen buat fokus bunuh dia sebelum dia heal tim dan kasih buff.",
+   "naturalCounters": [
+    {
+     "hero": 528,
+     "strength": "hard",
+     "why": "Pet Agudo jadi target gratis buat numpuk basic attack Lam yang di-enhance (3–4 kali beruntun). Makin banyak target, makin gede damage dan heal skill 2. Abis ult Agudo, Lam bisa dive ke badannya."
+    },
+    {
+     "hero": 150,
+     "strength": "soft",
+     "why": "Batalin channel Release dan lompat ke badannya pas lagi kepisah dari pet."
+    },
+    {
+     "hero": 153,
+     "strength": "soft",
+     "why": "Deketin pakai stealth buat batalin Release, terus burst badannya yang HP-nya rendah sebelum pet balik."
+    },
+    {
+     "hero": 524,
+     "strength": "soft",
+     "why": "Jangkauan super jauh Meng Ya mengalahkan Agudo yang harus mendekat dengan pet-nya — poke dari jauh dan jangan adu saat dia lagi mode semangat."
+    },
+    {
+     "hero": 112,
+     "strength": "soft",
+     "why": "Agudo tipis banget setelah memakai skill 3 — skill Luban yang bisa dihindari dari jauh tetap mengancamnya, dan meriam hiu ult-nya mengeksekusi HP rendah."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-heal",
+     "items": "Mortal Punisher (fisik) / Venomous Staff (magic)",
+     "why": "Agudo heal timnya dan memberi buff lewat skill 3 — anti-heal memotong pemulihannya, lalu fokus bunuh dia saat tipis setelah ult.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Marksman"
+   ]
+  },
+  {
+   "id": 545,
+   "en": "Alessio",
+   "cn": "莱西奥",
+   "aliases": [],
+   "roles": [
+    "farm"
+   ],
+   "howToPlayAgainst": "Jangan jalan sendirian pas HP sekarat — ultinya ngunci satu orang dan makin sakit kalau HP udah tipis, jadi tetap dekat tim biar ada yang bantu nahan satu tembakannya. Jangan kejar dia masuk ke asap skill 2-nya, soalnya dia bisa ngilang lalu terbang ke arah carry kalian.",
+   "naturalCounters": [
+    {
+     "hero": 130,
+     "why": "Skill 1 Musashi ngeblok peluru Alessio, dan ult-nya tetep kena Alessio walaupun dia lagi terbang.",
+     "strength": "hard"
+    },
+    {
+     "hero": 509,
+     "why": "Control Dunshan motong skill 2 dan 3 Alessio, dan blok-nya ngurangin damage Alessio.",
+     "strength": "hard"
+    },
+    {
+     "hero": 111,
+     "strength": "soft",
+     "why": "Burst dan dash Lady Sun ngalahin pendekatan stealth Alessio. Alessio udah mati sebelum asapnya ilang."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-autoattack",
+     "items": "Spikemail (aktifkan manual) / Ominous Premonition",
+     "why": "Damage Alessio dari proyektil basic attack — Ominous Premonition memotong attack speed-nya; skill 1 Musashi memblokir pelurunya dan ult-nya tetap kena meski Alessio sedang terbang.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Marksman"
+   ]
+  },
+  {
+   "id": 514,
+   "en": "Allain",
+   "cn": "亚连",
+   "aliases": [],
+   "roles": [
+    "clash"
+   ],
+   "howToPlayAgainst": "Jangan duel lama sendirian — makin lama dia mukul, Fury-nya makin penuh, damage reduction naik dan pas penuh dia nge-heal gede justru pas HP-nya sekarat, jadi burst bareng tim atau kite dari jauh, dan simpan CC buat sebelum dia mulai Meteor Kill.",
+   "naturalCounters": [
+    {
+     "hero": 121,
+     "strength": "hard",
+     "why": "Skill 1 dan ult Mi Yue ngindarin ult Allain, dan skill 2-nya nyerap attack Allain."
+    },
+    {
+     "hero": 199,
+     "why": "Arli punya banyak dash dengan sudut yang susah ditebak, jadi Allain yang jarak pendek susah nempel.",
+     "strength": "hard"
+    },
+    {
+     "hero": 137,
+     "strength": "soft",
+     "why": "Silence dan burst Sima Yi kena Allain sebelum dia sempet numpuk combo, terus dive-nya menang trade."
+    },
+    {
+     "hero": 132,
+     "strength": "soft",
+     "why": "Marco Polo nge-kite fighter melee pakai true damage. Allain gak pernah bisa nempel."
+    },
+    {
+     "hero": 537,
+     "strength": "soft",
+     "why": "Magic damage jarak jauh dan mobilitas Devara jauhin fighter melee sepanjang laning phase."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-heal",
+     "items": "Mortal Punisher (fisik) / Venomous Staff (magic)",
+     "why": "Heal pasif Fury saat stack penuh — makin sekarat makin besar — adalah sumber comeback duelnya, jadi anti-heal memotong langsung mesin sustain itu.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Fighter"
+   ]
+  },
+  {
+   "id": 142,
+   "en": "Angela",
+   "cn": "安琪拉",
+   "aliases": [],
+   "roles": [
+    "mid"
+   ],
+   "howToPlayAgainst": "Deketin Angela pakai jalur zig-zag (S) dan jangan kabur lurus. Semua skill-nya butuh prediksi arah, jadi gerak muter-muter sering bisa ngindarin. Hero melee terus pindah posisi pas nempel.",
+   "naturalCounters": [
+    {
+     "hero": 131,
+     "why": "Li Bai punya dua dash dan kebal control di skill 2, jadi bisa masuk ke Angela yang gak punya dash.",
+     "strength": "soft"
+    },
+    {
+     "hero": 190,
+     "strength": "soft",
+     "why": "Dash Kongming ngindarin skill shot. Begitu control Angela meleset, Angela gak punya jalan kabur."
+    },
+    {
+     "hero": 199,
+     "strength": "soft",
+     "why": "Arli sangat lincah dengan dash bersudut sulit ditebak — skill Angela yang butuh prediksi arah sering meleset, dan begitu control-nya habis Arli masuk membunuhnya."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-burst",
+     "items": "Succubus Cloak",
+     "why": "Angela mage burst magic tanpa dash — Succubus Cloak + shield magic menahan one-combo-nya; dekati dengan jalur zig-zag karena semua skill-nya butuh prediksi arah.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Mage"
+   ]
+  },
+  {
+   "id": 640,
+   "en": "Annette",
+   "cn": null,
+   "roles": [
+    "roam"
+   ],
+   "classes": [
+    "Support"
+   ],
+   "naturalCounters": [
+    {
+     "hero": 153,
+     "strength": "hard",
+     "why": "Annette gak punya skill reveal dan gak punya hard CC, jadi Gao bisa muncul dari stealth dan langsung one-combo badannya yang tipis sebelum dia sempat channel ult. Lingkaran slow skill 1-nya gampang dihindari kalau musuhnya gak kelihatan."
+    },
+    {
+     "hero": 116,
+     "strength": "hard",
+     "why": "Sama kayak Gao: stealth + burst dari belakang bikin semua alat peel Annette (slow lingkaran, tembok ult) gak kepake, soalnya dia baru sadar pas Arke udah nempel. Annette juga gak punya dash kabur beneran — skill 2-nya cuma lompatan recoil kecil."
+    },
+    {
+     "hero": 123,
+     "strength": "hard",
+     "why": "True damage Lu Bu nembus semua shield Annette (shield skill 2 + shield item roam), jadi satu-satunya pertahanan timnya jadi gak ada gunanya. Ult lompatannya juga bisa ditiming abis tembok ult Annette kelar (cuma 4 detik), atau dive dia sebelum dia sempat ult."
+    },
+    {
+     "hero": 137,
+     "strength": "soft",
+     "why": "Silence Sima Yi bikin Annette gak bisa casting ult — dan ult Annette itu harus dipencet sebelum CC nempel, bukan buat ngelepas CC. Abis di-silence, badannya yang tipis tinggal di-burst. Tapi kalau Annette sempat channel duluan, temboknya bisa nendang Sima Yi balik, jadi masih bisa dilawan."
+    }
+   ],
+   "howToPlayAgainst": "Jangan dive membabi buta ke dalam tembok ult-nya — tunggu 4 detik sampai temboknya hilang atau poke dari luar jangkauannya, dan kunci dia pakai CC sebelum dia sempat channel ult, soalnya ult-nya cuma kebal CC, bukan ngelepas CC yang udah nempel."
+  },
+  {
+   "id": 519,
+   "en": "Ao'yin",
+   "cn": "敖隐",
+   "aliases": [],
+   "roles": [
+    "farm"
+   ],
+   "howToPlayAgainst": "Jangan buang skill pas dia terbang jadi naga — selama di udara dia nggak bisa ditarget, jadi simpan CC buat pas dia mendarat. Jangan bergerombol juga, soalnya habis mendarat basic attack-nya kena sampai dua musuh tambahan, dan jangan ajak adu poke lama-lama karena skill airnya bisa nge-heal dia.",
+   "naturalCounters": [
+    {
+     "hero": 174,
+     "why": "Skill 2 Consort Yu kebal damage fisik, padahal hampir semua damage Ao'yin itu fisik. Jangkauannya juga panjang.",
+     "strength": "hard"
+    },
+    {
+     "hero": 199,
+     "why": "Skill 2 Arli nahan proyektil, termasuk serangan Fire Dragon Soul Ao'yin. Asal timing-nya pas, Arli menang di semua fase.",
+     "strength": "hard"
+    },
+    {
+     "hero": 169,
+     "why": "Hou Yi menang trade di lane awal, dan ult-nya bisa stun Ao'yin sebelum dia sempet ult.",
+     "strength": "soft"
+    },
+    {
+     "hero": 508,
+     "strength": "soft",
+     "why": "Jangkauan Garo lebih jauh dan nge-slow pendekatan. Ao'yin kepaksa jalan nembus poke."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-autoattack",
+     "items": "Spikemail (aktifkan manual) / Ominous Premonition",
+     "why": "Hampir semua damage Ao'yin itu fisik dari basic attack — Ominous Premonition memotong attack speed-nya; skill 2 Consort Yu kebal damage fisik dan skill 2 Arli menahan proyektilnya.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Marksman"
+   ]
+  },
+  {
+   "id": 116,
+   "en": "Arke",
+   "cn": "阿轲",
+   "aliases": [],
+   "roles": [
+    "jungle"
+   ],
+   "howToPlayAgainst": "Jangan munggungin Arke, terus atur posisi. Arke roaming-nya efisien banget, jadi pas laning jangan adu sama musuh kalau lu gak tahu Arke lagi di mana.",
+   "naturalCounters": [
+    {
+     "hero": 187,
+     "strength": "hard",
+     "why": "Ult Donghuang gak bisa dihapus Purify, jadi Arke yang masuk langsung kekunci."
+    },
+    {
+     "hero": 156,
+     "strength": "hard",
+     "why": "Ult Liang yang pasti kena di areanya ngunci Arke, lanjut skill 1 buat bunuh dia."
+    },
+    {
+     "hero": 189,
+     "why": "Ult Guiguzi buka vision jadi stealth Arke kelihatan, dan tarikannya nge-control Arke.",
+     "strength": "hard"
+    },
+    {
+     "hero": 173,
+     "strength": "soft",
+     "why": "Arke di awal ngandelin jungle dan susah gank sebelum level 4, sedangkan Fang cepet clear wave dan rotasi. Pasif \"nguping\" Fang ngebatesin stealth dari ult Arke. Pas di-gank, Fang bisa lihat gerakan musuh, kabur pakai slow ult + dash skill 2, terus burst pakai attack speed dari skill 1."
+    },
+    {
+     "hero": 137,
+     "strength": "soft",
+     "why": "Pasif Sima Yi nampilin skill yang di-cast di deketnya, jadi Arke yang masuk pakai stealth bakal ketahuan."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-burst",
+     "items": "Destiny (anti-mati) / Ominous Premonition",
+     "why": "Arke roaming dan burst dari stealth satu combo — Destiny menyelamatkanmu sekali dari one-shot, Ominous memperlambat serangan lanjutannya.",
+     "needsReview": false
+    },
+    {
+     "tag": "anti-autoattack",
+     "items": "Spikemail (aktifkan manual) / Ominous Premonition",
+     "why": "Tekan aktif Spikemail saat Arke muncul dari stealth — 35% damage yang diterima memantul jadi true damage selama 3 detik.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Assassin"
+   ]
+  },
+  {
+   "id": 199,
+   "en": "Arli",
+   "cn": "公孙离",
+   "aliases": [],
+   "roles": [
+    "farm"
+   ],
+   "howToPlayAgainst": "1) Arah payung kertas nunjukin niat Arli, prediksi lebih awal. 2) Selincah apa pun Arli tetep tipis dan takut control, pertimbangin ini pas milih hero.",
+   "naturalCounters": [
+    {
+     "hero": 106,
+     "strength": "hard",
+     "why": "Ult Xiao Qiao otomatis ngunci target, dan skill 2 Arli gak bisa nahan itu (dipakai di KPL 2025)."
+    },
+    {
+     "hero": 192,
+     "strength": "hard",
+     "why": "Jangkauan late game dan mode turret Huang Zhong ngalahin dive Arli. Arli gak bisa masuk zona itu."
+    },
+    {
+     "hero": 577,
+     "strength": "soft",
+     "why": "Arli hidup dari kiting pakai dash dan payungnya, tapi mark Bitter Farewell Dyadia nempel terus dan ngebuka posisinya ke mana pun dia kabur. Begitu Dyadia dash ke Arli dan menguncinya diam di tempat, Arli susah kabur atau numpuk mark buat burst-nya."
+    },
+    {
+     "hero": 112,
+     "strength": "soft",
+     "why": "Arli tipis dan takut control — Luban menekan dari jauh dan ult hiu-nya bisa mengeksekusi Arli yang sekarat."
+    },
+    {
+     "hero": 187,
+     "strength": "hard",
+     "why": "Begitu ultinya Donghuang kena, Arli nggak bisa gerak sama sekali — dash dan teleport ke payungnya mati total, dan Arli yang tipis tinggal jadi sasaran empuk tim musuh. Arli juga nggak punya skill pembersih buat lepas dari kuncian itu."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-autoattack",
+     "items": "Spikemail (aktifkan manual) / Ominous Premonition",
+     "why": "Arli hidup dari basic attack beruntun buat numpuk mark Falling Leaves sampai meledak, jadi pantulan Spikemail dan pelambat attack speed Ominous langsung memotong mesin damage-nya.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Marksman"
+   ]
+  },
+  {
+   "id": 166,
+   "en": "Arthur",
+   "cn": "亚瑟",
+   "aliases": [],
+   "roles": [
+    "clash",
+    "jungle"
+   ],
+   "howToPlayAgainst": "1) Melee di lane jangan adu poke sama Arthur, pasti kalah. 2) Hero ranged bisa poke dia. 3) Pas HP rendah jauhin Arthur, ult-nya sakit banget buat target sekarat.",
+   "naturalCounters": [
+    {
+     "hero": 111,
+     "strength": "soft",
+     "why": "Jangkauan dan dash buat nge-kite silence. Dia gak pernah bisa nyentuh."
+    },
+    {
+     "hero": 196,
+     "strength": "soft",
+     "why": "Jangkauan lebih jauh dari bruiser melee dan nge-poke dia keluar dari wave."
+    },
+    {
+     "hero": 192,
+     "strength": "soft",
+     "why": "Arthur melee yang harus mendekat — jangkauan late game dan mode turret Huang Zhong membuatnya tidak bisa masuk; Arthur kalah sebelum sempat menyentuh."
+    },
+    {
+     "hero": 123,
+     "why": "True damage Lu Bu unggul pas trade di lane. Masih diperdebatin: sumber lain bilang Arthur bisa adu langsung asal ngindarin skill 1 Lu Bu.",
+     "strength": "soft"
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-burst",
+     "items": "Destiny (anti-mati)",
+     "why": "Arthur masuk dengan burst skill 1 + silence yang bisa one-combo hero tipis — Destiny menyelamatkanmu sekali; hindari skill 1-nya, lalu adu langsung.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Fighter"
+   ]
+  },
+  {
+   "id": 556,
+   "en": "Ata",
+   "cn": "猪八戒",
+   "aliases": [
+    "Zhu Bajie"
+   ],
+   "roles": [
+    "clash",
+    "jungle"
+   ],
+   "howToPlayAgainst": "Serang Ata pakai hit-and-run biar dia gak bisa bales sambil balikin HP. Jangan sejajar sama Ata dan tembok, biar gak kepaksa masuk fight dan mati instan.",
+   "naturalCounters": [
+    {
+     "hero": 198,
+     "strength": "soft",
+     "why": "Shield dan sustain tahan lawan drain, magic damage menang di adu panjang."
+    },
+    {
+     "hero": 163,
+     "strength": "soft",
+     "why": "Ukyo yang lincah bisa menghindari jebakan tembok Ata dan menyerang balik — gank dia setelah memakai skill 1."
+    },
+    {
+     "hero": 121,
+     "strength": "soft",
+     "why": "Mi Yue kuat duel dan sulit ditangkap — skill 2-nya menguras HP Ata sambil memulihkan diri, dan ult-nya menghindar saat Ata mencoba membalas."
+    },
+    {
+     "hero": 157,
+     "strength": "soft",
+     "why": "Mai yang lincah bisa masuk-keluar tanpa memberi Ata kesempatan membalas sambil regen — burst dive-nya mengenai Ata yang mengandalkan hit-and-run."
+    },
+    {
+     "hero": 503,
+     "strength": "soft",
+     "why": "Biron kuat di lane dengan lifesteal dan shield — dia bisa adu langsung dengan Ata dan menang trade berkat sustain-nya yang lebih besar."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-heal",
+     "items": "Mortal Punisher (fisik) / Venomous Staff (magic)",
+     "why": "Ata memulihkan HP sambil menyerang — serang hit-and-run dan potong heal-nya supaya dia tidak bisa membalas sambil regen.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Tank"
+   ]
+  },
+  {
+   "id": 183,
+   "en": "Athena",
+   "cn": "雅典娜",
+   "aliases": [],
+   "roles": [
+    "jungle"
+   ],
+   "howToPlayAgainst": "1) Shield skill 1 Athena singkat, pecahin cepet terus control. 2) Pas dia ult jangan buang skill damage utama ke dia.",
+   "naturalCounters": [
+    {
+     "hero": 178,
+     "why": "True damage Yang Jian nembus shield Athena, efek execute-nya bikin Athena yang sekarat susah bales, dan burst-nya lebih tinggi.",
+     "strength": "hard"
+    },
+    {
+     "hero": 123,
+     "why": "Pasif dan skill 1 Lu Bu kasih true damage yang nembus shield Athena.",
+     "strength": "hard"
+    },
+    {
+     "hero": 140,
+     "strength": "soft",
+     "why": "Damage dasar skill Guan Yu tetep tinggi walaupun build tank, dan pas lari dia bisa dorong Athena."
+    },
+    {
+     "hero": 508,
+     "strength": "soft",
+     "why": "Panah shield breaker plus jangkauan. Shield itu satu-satunya pertahanan Athena, dan itu gak bakal tahan."
+    },
+    {
+     "hero": 118,
+     "strength": "soft",
+     "why": "Speed-up dan silence buat lepas dari dive. Reset-nya gak pernah kejadian."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-tank",
+     "items": "Overlord's Might / Starbreaker (armor pen)",
+     "why": "Shield Athena satu-satunya pertahanan — penetrasi armor menembusnya; pecahkan shield skill 1-nya cepat lalu kunci dengan control.",
+     "needsReview": false
+    },
+    {
+     "tag": "anti-cc",
+     "items": "Boots of Resistance + Purify (spell)",
+     "why": "Musuh punya banyak crowd control",
+     "needsReview": true
+    }
+   ],
+   "classes": [
+    "Fighter"
+   ]
+  },
+  {
+   "id": 517,
+   "en": "Augran",
+   "cn": "大司命",
+   "aliases": [],
+   "roles": [
+    "jungle",
+    "clash"
+   ],
+   "howToPlayAgainst": "Jangan ajak dia duel panjang sendirian — dia nempel lewat Soul Resonance, heal dari skill 2 dan ult, lalu bisa eksekusi pas HP-mu sekarat di Seer State. Simpan CC buat pas dia sudah commit masuk, dan jangan kabur lurus lewat tembok karena jalurnya bikin dia makin cepat.",
+   "naturalCounters": [
+    {
+     "hero": 156,
+     "why": "Ult Liang gak bisa di-purify dan jangkauannya jauh, jadi bisa ngunci Augran pas masuk.",
+     "strength": "hard"
+    },
+    {
+     "hero": 193,
+     "why": "Ult Kaizer nahan damage kecil beruntun dari basic attack Augran, padahal itu sumber utama damage dan heal-nya.",
+     "strength": "soft"
+    },
+    {
+     "hero": 170,
+     "strength": "soft",
+     "why": "Liu Bei menang duel jarak deket. Batas execute Augran gak pernah kesampean."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-tank",
+     "items": "Overlord's Might / Starbreaker (armor pen)",
+     "why": "Damage dan heal Augran berasal dari basic attack beruntun — penetrasi armor mempercepat membunuhnya sebelum batas execute-nya tercapai.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Fighter"
+   ]
+  },
+  {
+   "id": 120,
+   "en": "Bai Qi",
+   "cn": "白起",
+   "aliases": [],
+   "roles": [
+    "clash"
+   ],
+   "howToPlayAgainst": "Bai Qi itu fighter-tank: HP tebel, damage reduction dari basic attack, regen cepet, taunt area luas. Di clash lane biasanya beli item regen, dan kalau gold-nya udah jalan dia susah dibunuh. Saran: Mi Yue/Lu Bu/Cheng Yaojin/Ata/Meng Tian/Li Xin/Guan Yu (clash), Diaochan/Garuda (mage), Zhuangzi (support), Di Renjie/Arli (marksman). Kalau sama-sama susah dibunuh, menangin lewat nyolong jungle dan kontribusi teamfight.",
+   "naturalCounters": [
+    {
+     "hero": 113,
+     "strength": "hard",
+     "why": "Pasif dan ult Zhuangzi ngelepas control, jadi taunt dari ult Bai Qi bisa digagalin."
+    },
+    {
+     "hero": 507,
+     "strength": "hard",
+     "why": "Li Xin mode gelap lincah dan lama kebal control, jadi susah ditangkep taunt Bai Qi."
+    },
+    {
+     "hero": 141,
+     "why": "Skill 2 Diaochan ngindarin ult Bai Qi, dan pasifnya kasih slow plus true damage.",
+     "strength": "hard"
+    },
+    {
+     "hero": 132,
+     "why": "Marco Polo punya dua dash buat kiting, bisa ngebersihin control, dan kasih true damage.",
+     "strength": "hard"
+    },
+    {
+     "hero": 123,
+     "why": "True damage Lu Bu tetep efektif lawan armor tinggi Bai Qi.",
+     "strength": "hard"
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-heal",
+     "items": "Mortal Punisher (fisik) / Venomous Staff (magic)",
+     "why": "Bai Qi regen cepat dan biasanya membeli item regen di clash lane — anti-heal memotong pemulihannya.",
+     "needsReview": false
+    },
+    {
+     "tag": "anti-autoattack",
+     "items": "Spikemail (aktifkan manual) / Ominous Premonition",
+     "why": "Damage reduction Bai Qi berasal dari basic attack — Spikemail aktif memantulkan damage-nya, Ominous memperlambat serangannya.",
+     "needsReview": false
+    },
+    {
+     "tag": "anti-tank",
+     "items": "Overlord's Might / Starbreaker (armor pen)",
+     "why": "HP tebal + taunt area luas — penetrasi armor dan true damage menembus ketahanannya; kalau sama-sama susah dibunuh, menangkan lewat rotasi dan curi jungle.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Tank"
+   ]
+  },
+  {
+   "id": 503,
+   "en": "Biron",
+   "cn": "狂铁",
+   "aliases": [],
+   "roles": [
+    "clash"
+   ],
+   "howToPlayAgainst": "Biron kuat banget di clash lane dengan lifesteal, shield, dan dash, di awal susah nyari lawan yang berani adu. Tapi jangkauannya pendek dan gampang di-kite, tanpa flash susah masuk ke backline, jadi biasa aja di teamfight mid-late. Dia hero early game: Guan Yu/Mi Yue/Ma Chao/Sun Ce/Lu Bu (clash) asal gak mati sebelum level 4, sisanya 50:50. Marco Polo/Arli/Lady Sun (marksman), Diaochan/Sima Yi/Liang (mage), Sun Bin (support) juga bagus ngelawan dia.",
+   "naturalCounters": [
+    {
+     "hero": 118,
+     "strength": "hard",
+     "why": "Skill 2 Sun Bin kasih speed dan ult-nya nge-silence Biron, jadi burst Biron yang ngandelin skill langsung berhenti."
+    },
+    {
+     "hero": 123,
+     "why": "True damage Lu Bu gak peduli perisai dan heal Biron, jadi ult perisai Biron gak ada gunanya lawan dia.",
+     "strength": "hard"
+    },
+    {
+     "hero": 139,
+     "why": "Fuzi punya true damage dan damage reduction dari skill 2 buat nahan burst Biron, terus ult-nya ngunci Biron.",
+     "strength": "hard"
+    },
+    {
+     "hero": 132,
+     "strength": "soft",
+     "why": "True damage Marco Polo nembus shield Biron, dan dash-nya jaga Marco tetep di luar jendela burst."
+    },
+    {
+     "hero": 125,
+     "strength": "soft",
+     "why": "Poke dari jarak maksimal, shield-nya gak ada gunanya."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-heal",
+     "items": "Mortal Punisher (fisik) / Venomous Staff (magic)",
+     "why": "Biron kuat di lane berkat lifesteal, shield, dan dash — anti-heal memotong lifesteal-nya, lalu kite dari luar jangkauannya yang pendek.",
+     "needsReview": false
+    },
+    {
+     "tag": "anti-autoattack",
+     "items": "Spikemail (aktifkan manual) / Ominous Premonition",
+     "why": "Burst Biron mengandalkan skill beruntun jarak dekat — Spikemail aktif memantulkan damage saat dia masuk.",
+     "needsReview": false
+    },
+    {
+     "tag": "anti-tank",
+     "items": "Overlord's Might / Starbreaker (armor pen)",
+     "why": "Shield dan heal Biron membuat ult perisainya tebal — penetrasi armor dan true damage mengabaikannya.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Fighter"
+   ]
+  },
+  {
+   "id": 646,
+   "en": "Butterfly",
+   "cn": null,
+   "roles": [
+    "jungle"
+   ],
+   "classes": [
+    "Fighter"
+   ],
+   "naturalCounters": [
+    {
+     "hero": 187,
+     "strength": "hard",
+     "why": "Butterfly harus dive masuk buat eksekusi, dan begitu dia lompat, Donghuang tinggal tekan ult — suppression-nya nggak bisa di-purify dan tembus CC immunity, jadi dia kekunci di tengah musuh tanpa bisa pakai skill atau kabur. Donghuang juga tebal, jadi Butterfly nggak bisa burst dia buat reset ult-nya."
+    },
+    {
+     "hero": 108,
+     "strength": "hard",
+     "why": "Skill 2 Mozi itu stun jarak jauh — Butterfly bisa distop sebelum sempat nempel ke carry, dan kalau dia nekat dive, ult Mozi ngunci dia di zona stun beruntun. Dia nggak punya cleanse buat lepas dari rantai CC itu."
+    },
+    {
+     "hero": 154,
+     "strength": "hard",
+     "why": "Begitu mark Mulan numpuk 5, Butterfly kena silence + slow 90% — rantai skill-nya putus dan dia nggak bisa reset apa-apa. Pindah ke heavy sword, Mulan nahan burst-nya pakai damage reduction + super armor, terus dibalas knock-up."
+    },
+    {
+     "hero": 123,
+     "strength": "hard",
+     "why": "Butterfly nggak bisa burst Lu Bu — shield skill 2-nya numpuk sampai 3 lapis terus berubah jadi heal, dan true damage Lu Bu nembus shield skill 1 Butterfly. Kena ult-nya, dia keangkat dan melambat di killing field, sementara kill yang dia butuhin buat reset ult malah nggak kejadian."
+    },
+    {
+     "hero": 150,
+     "strength": "soft",
+     "why": "Han Xin punya tiga dash + knock-up di mana-mana, jadi dia bisa ngindarin lompatan ult Butterfly dan motong kombo-nya, apalagi ult-nya kebal CC. Tapi ini duel sesama assassin — kalau Butterfly nangkep dia pas dash-nya habis, tetap bisa mati. Bonus: Han Xin bisa invade jungle-nya di awal dan telatin level 4 Butterfly."
+    }
+   ],
+   "howToPlayAgainst": "Jangan kasih dia kill — tiap kill nge-reset skill-nya, jadi jangan jalan sendirian pas HP sekarat dan tetaplah dekat tim atau minion. Simpan CC buat momen dia dive, dan tekan dia di awal sebelum level 4 biar gank-nya nggak jadi.",
+   "itemCounters": [
+    {
+     "tag": "anti-burst",
+     "items": "Destiny (anti-mati)",
+     "why": "Butterfly itu burst fisik yang ngincar hero HP rendah — Destiny nyelamatin kamu sekali dari eksekusinya.",
+     "needsReview": false
+    }
+   ]
+  },
+  {
+   "id": 184,
+   "en": "Cai Yan",
+   "cn": "蔡文姬",
+   "aliases": [],
+   "roles": [
+    "roam"
+   ],
+   "howToPlayAgainst": "1) Assassin pick-off Cai Yan, dia lemah kalau sendirian. 2) Control skill 2-nya bisa dihindarin. 3) Pas dia ult, cari cara motong secepet mungkin.",
+   "naturalCounters": [
+    {
+     "hero": 127,
+     "strength": "hard",
+     "why": "Skill area Lady Zhen plus item anti-heal motong heal Cai Yan, dan control area-nya neken tim yang ngumpul."
+    },
+    {
+     "hero": 175,
+     "strength": "hard",
+     "why": "Hook skill 2 Kui narik dan silence Cai Yan yang berdiri deket temen, mutus heal-nya, terus skill 1 dan ult ngabisin dia."
+    },
+    {
+     "hero": 152,
+     "strength": "hard",
+     "why": "Skill 2 Wang Zhaojun nge-freeze Cai Yan, terus ult bisa langsung bunuh dia. Slow skill 1 bikin Cai Yan telat heal temen."
+    },
+    {
+     "hero": 182,
+     "why": "Jangkauan super jauh Gan & Mo jaga dia di luar jangkauan skill 2 Cai Yan, dan burst late-nya hampir bunuh Cai Yan sekali combo.",
+     "strength": "hard"
+    },
+    {
+     "hero": 191,
+     "strength": "soft",
+     "why": "Cai Yan lemah kalau sendirian — Da Qiao bisa mengumpulkan tim dengan cepat untuk mengeroyok dan membunuhnya sebelum heal-nya jalan."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-heal",
+     "items": "Mortal Punisher (fisik) / Venomous Staff (magic)",
+     "why": "Cai Yan heal timnya terus-menerus — anti-heal memotong heal-nya, lalu pick-off dia saat sendirian karena dia lemah tanpa tim.",
+     "needsReview": false
+    },
+    {
+     "tag": "anti-cc",
+     "items": "Boots of Resistance + Purify (spell)",
+     "why": "Control skill 2 Cai Yan bisa dihindari — Boots of Resistance memperpendek durasinya; Purify melepas control saat dia mengunci.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Support"
+   ]
+  },
+  {
+   "id": 177,
+   "en": "Chano",
+   "cn": "苍",
+   "aliases": [],
+   "roles": [
+    "farm",
+    "jungle"
+   ],
+   "howToPlayAgainst": "Jangan kejar dia ke semak atau hutan — pasifnya bikin dia makin cepat dan bisa lompat keluar semak, sementara trap-nya yang tak terlihat bisa manggil serigala dan ngasih tahu posisimu. Tahan CC buat momen ult-nya, saat dia bisa nembak sambil jalan, lalu burst bareng tim karena dia tetap tipis.",
+   "naturalCounters": [
+    {
+     "hero": 148,
+     "strength": "soft",
+     "why": "Jangkauan Ziya lebih jauh dari Chano. Poke-nya ngikis Chano sebelum dia masuk jarak basic attack."
+    },
+    {
+     "hero": 157,
+     "strength": "soft",
+     "why": "Burst dive Mai Shiranui ke marksman yang gak bisa gerak. Chano gak punya dash buat kabur dari combo."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-autoattack",
+     "items": "Spikemail (aktifkan manual) / Ominous Premonition",
+     "why": "Damage utama Chano adalah basic attack berkelanjutan (fisik) plus serangan serigala saat ult, jadi pantulan Spikemail dan pengurang attack speed dari Ominous Premonition langsung memotong sumber damage-nya.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Marksman"
+   ]
+  },
+  {
+   "id": 536,
+   "en": "Charlotte",
+   "cn": "夏洛特",
+   "aliases": [],
+   "roles": [
+    "clash"
+   ],
+   "howToPlayAgainst": "Ngindarin atau motong skill Charlotte nyegah skill-nya ke-enhance, jadi ancamannya berkurang.",
+   "naturalCounters": [
+    {
+     "hero": 199,
+     "strength": "hard",
+     "why": "Arli punya banyak skill gerak, jadi skill Charlotte susah kena dia."
+    },
+    {
+     "hero": 121,
+     "why": "Skill 2 Mi Yue nahan Charlotte buat dikuras, terus skill 1 dan ult untargetable-nya ngindarin skill Charlotte.",
+     "strength": "hard"
+    },
+    {
+     "hero": 193,
+     "strength": "soft",
+     "why": "Burst dan damage reduction menang duel sebelum pasifnya numpuk."
+    },
+    {
+     "hero": 146,
+     "strength": "soft",
+     "why": "Luna yang lincah bisa masuk di sela skill Charlotte dan membunuhnya sebelum skill-nya ke-enhance."
+    },
+    {
+     "hero": 191,
+     "strength": "soft",
+     "why": "Charlotte butuh waktu menumpuk enhance — Da Qiao mengumpulkan tim untuk mengeroyoknya sebelum dia sempat menguat."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-heal",
+     "items": "Mortal Punisher (fisik) / Venomous Staff (magic)",
+     "why": "Splash Fount memulihkan HP di tiap tusukan dari 6 tusukannya, jadi anti-heal langsung memotong sustain yang membuat kombo beruntunnya sulit dihentikan.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Fighter"
+   ]
+  },
+  {
+   "id": 172,
+   "en": "Chicha",
+   "cn": "蚩奼",
+   "aliases": [],
+   "roles": [
+    "clash",
+    "jungle"
+   ],
+   "howToPlayAgainst": "Jangan kasih dia mukul gratis — tiap basic attack nge-heal dia dan numpuk Fighting Spirit yang attack speed-nya bisa tembus cap, jadi burst + CC dia di awal sebelum stack-nya penuh, dan jangan lanjutin duel panjang pas dia lagi ult.",
+   "naturalCounters": [
+    {
+     "hero": 193,
+     "why": "Blok Kaizer ngurangin basic attack Chicha yang sering tapi kecil, dan ult-nya nahan damage ult Chicha yang banyak hit.",
+     "strength": "hard"
+    },
+    {
+     "hero": 156,
+     "strength": "soft",
+     "why": "Suppress Liang gak peduli mobilitas Chicha dan ngunci dia dari fight selama durasi penuh."
+    },
+    {
+     "hero": 509,
+     "strength": "soft",
+     "why": "Dinding Dunshan makan proyektil Chicha, maksa dia main melee di tempat barisan shield bertahan."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-autoattack",
+     "items": "Spikemail (aktifkan manual) / Ominous Premonition",
+     "why": "Damage Chicha dari basic attack beruntun yang lincah — Ominous Premonition memotong attack speed-nya; Spikemail aktif memantulkan damage saat dia masuk.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Fighter"
+   ]
+  },
+  {
+   "id": 506,
+   "en": "Cirrus",
+   "cn": "云中君",
+   "aliases": [],
+   "roles": [
+    "jungle"
+   ],
+   "howToPlayAgainst": "1) Perhatiin sisa energi terbang Cirrus, pas kurang langsung serang. 2) Cirrus benci fight tarik-ulur. Poke dia pakai skill jarak jauh biar masuk mode fight dan energinya kekuras.",
+   "naturalCounters": [
+    {
+     "hero": 129,
+     "strength": "soft",
+     "why": "Armor reflect ngehukum damage DoT, dan true damage menang duel."
+    },
+    {
+     "hero": 531,
+     "strength": "soft",
+     "why": "Mobilitas dan burst bisa ngejar pas dia terbang dan maksa dia mendarat."
+    },
+    {
+     "hero": 140,
+     "strength": "soft",
+     "why": "Charge dan displacement maksa dia mendarat."
+    },
+    {
+     "hero": 146,
+     "strength": "soft",
+     "why": "Mobilitas reset bisa ngejar dan burst abis dia mendarat."
+    },
+    {
+     "hero": 502,
+     "strength": "soft",
+     "why": "Invade awal ngimbangin tempo dan menang duel."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-autoattack",
+     "items": "Spikemail (aktifkan manual) / Ominous Premonition",
+     "why": "Damage Cirrus datang terus-menerus dari serangannya — Spikemail aktif memantulkan damage-nya; perhatikan sisa energi terbangnya dan serang saat dia mendarat.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Assassin"
+   ]
+  },
+  {
+   "id": 174,
+   "en": "Consort Yu",
+   "cn": "虞姬",
+   "aliases": [],
+   "roles": [
+    "farm"
+   ],
+   "howToPlayAgainst": "1) Poke skill 1 Consort Yu bisa dihindarin. 2) Pas dia dateng gank, mundur ke tower lebih awal. 3) Kalau pakai assassin fisik, tunggu efek skill 2-nya abis baru cast skill.",
+   "naturalCounters": [
+    {
+     "hero": 137,
+     "strength": "hard",
+     "why": "Damage Sima Yi itu magic (gak ketahan skill 2 Consort Yu), dan dash-nya bisa ngejar sampai bawah tower."
+    },
+    {
+     "hero": 513,
+     "strength": "hard",
+     "why": "Damage Shangguan itu magic dan dia untargetable pas terbang, jadi Consort Yu susah bales."
+    },
+    {
+     "hero": 123,
+     "why": "True damage Lu Bu nembus kebal fisik skill 2 Consort Yu.",
+     "strength": "hard"
+    },
+    {
+     "hero": 157,
+     "strength": "hard",
+     "why": "Burst magic dan dive Mai Shiranui gak peduli jendela kebal fisik Consort Yu."
+    },
+    {
+     "hero": 146,
+     "strength": "soft",
+     "why": "Consort Yu itu marksman tipis, dan kebal fisik skill 2-nya gak berguna lawan Luna. Consort Yu susah kabur dari Luna yang lincah dan terus ngejar. Skill 2 Luna kasih shield gede buat nahan damage, dan ult-nya gampang ngindarin poke skill 1 Consort Yu."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-autoattack",
+     "items": "Spikemail (aktifkan manual) / Ominous Premonition",
+     "why": "Damage utama Consort Yu dari basic attack jarak jauh — Ominous Premonition memotong attack speed-nya; tunggu efek skill 2-nya habis baru serang.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Marksman"
+   ]
+  },
+  {
+   "id": 191,
+   "en": "Da Qiao",
+   "cn": "大乔",
+   "aliases": [],
+   "roles": [
+    "roam",
+    "mid"
+   ],
+   "howToPlayAgainst": "Cepet bunuh hero sekarat di dalem lingkaran biar gak di-teleport pulang. Di mid game tetep ngumpul biar musuh gak cepet kumpul dan ngeroyok.",
+   "naturalCounters": [
+    {
+     "hero": 175,
+     "strength": "hard",
+     "why": "Hook Kui narik Da Qiao atau temennya keluar dari lingkaran ult/teleport, jadi kebal dan teleport-nya putus."
+    },
+    {
+     "hero": 135,
+     "why": "Efek dorong Xiang Yu maksa Da Qiao keluar dari lingkaran ult, padahal kebal dari ult-nya cuma aktif selama dia berdiri di dalem lingkaran.",
+     "strength": "hard"
+    },
+    {
+     "hero": 169,
+     "strength": "soft",
+     "why": "Panah global batalin channel teleport dari seberang map."
+    },
+    {
+     "hero": 166,
+     "strength": "soft",
+     "why": "Silence ngehentiin teleport, dan knock-up batalin reset."
+    }
+   ],
+   "itemCounters": [],
+   "classes": [
+    "Support"
+   ]
+  },
+  {
+   "id": 109,
+   "en": "Daji",
+   "cn": "妲己",
+   "aliases": [],
+   "roles": [
+    "mid"
+   ],
+   "howToPlayAgainst": "1) Assassin masuk abis Daji pakai control. 2) Hindarin skill poke-nya. 3) Di late hero tipis jangan deket pas skill Daji ready, gampang mati instan.",
+   "naturalCounters": [
+    {
+     "hero": 130,
+     "why": "Skill 1 Musashi nahan semua skill Daji dan dia kebal control pas masuk. Dua tebasan crit cukup buat bunuh dia.",
+     "strength": "hard"
+    },
+    {
+     "hero": 167,
+     "strength": "soft",
+     "why": "Skill 1 Wukong nahan satu skill musuh dan kasih kebal sesaat, kuat banget lawan Daji yang cuma ngandelin satu combo burst. Begitu combo Daji ketahan, Wukong tinggal pakai kebal + shield 4 detik buat bunuh dia."
+    },
+    {
+     "hero": 184,
+     "strength": "soft",
+     "why": "Sustain dan control mantul batalin combo one-shot. Daji gak bisa nyelesaiin karena ada heal."
+    },
+    {
+     "hero": 119,
+     "strength": "soft",
+     "why": "Wave clear Daji di awal lemah, AoE Dr Bian lebih cepet, jadi Dr Bian unggul gold dan level. Di early-mid Daji belum bisa one-combo Dr Bian, dan pas skill-nya cooldown Daji gak bisa ngapa-ngapain. Dr Bian yang punya heal dan awet di lane bisa neken Daji."
+    },
+    {
+     "hero": 131,
+     "strength": "soft",
+     "why": "Daji simpel: lempar combo 2-3-1. Li Bai punya dash lincah dan skill kebal damage: poke pakai skill 2 + ult, engage pakai skill 1, terus ngindarin combo Daji pakai skill 2 atau ult pas Daji mau cast."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-cc",
+     "items": "Boots of Resistance + Purify (spell)",
+     "why": "Control skill 2 Daji mengunci satu target — Purify melepasnya; masuklah setelah Daji memakai control-nya.",
+     "needsReview": false
+    },
+    {
+     "tag": "anti-burst",
+     "items": "Succubus Cloak / Destiny",
+     "why": "Daji one-combo hero tipis di late — Succubus Cloak menahan burst magic-nya; jangan jalan sendirian saat skill-nya ready.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Mage"
+   ]
+  },
+  {
+   "id": 537,
+   "en": "Devara",
+   "cn": "司空震",
+   "aliases": [
+    "Sikong Zhen"
+   ],
+   "roles": [
+    "clash",
+    "jungle"
+   ],
+   "howToPlayAgainst": "Cooldown transformasi Devara lama banget. Incer dia di jeda abis dia berubah.",
+   "naturalCounters": [
+    {
+     "hero": 509,
+     "why": "Perisai Dunshan nahan serangan Devara yang bentuknya proyektil, jadi damage-nya di teamfight ilang.",
+     "strength": "hard"
+    },
+    {
+     "hero": 193,
+     "why": "Damage Devara itu berkelanjutan, bukan burst. Kaizer dengan ult (blok dan burst) menang adu deket.",
+     "strength": "hard"
+    },
+    {
+     "hero": 508,
+     "strength": "hard",
+     "why": "Devara tangannya pendek dan gampang di-kite Garo. Serangan Garo mecahin shield Devara, dan kalau masuk lewat ult dia udah sekarat sebelum mendarat."
+    },
+    {
+     "hero": 137,
+     "why": "Devara ngandelin selingan skill dan basic attack, jadi silence dan mobilitas Sima Yi motong ritmenya.",
+     "strength": "hard"
+    },
+    {
+     "hero": 169,
+     "strength": "soft",
+     "why": "Hou Yi bisa poke Devara dari jauh selama jeda transformasinya — Devara yang cooldown-nya lama tidak bisa membalas."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-burst",
+     "items": "Succubus Cloak",
+     "why": "Semua damage skill-nya berskala Magical Attack dan burst petirnya memuncak saat bar Energy penuh + ult, jadi magic defense + shield anti-magic Succubus Cloak langsung meredam sumber damage-nya.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Fighter"
+   ]
+  },
+  {
+   "id": 134,
+   "en": "Dharma",
+   "cn": "达摩",
+   "aliases": [],
+   "roles": [
+    "clash"
+   ],
+   "howToPlayAgainst": "1) Control skill 1 Dharma bisa dihindarin tinggal gerak. 2) Hero tipis waspadain dash Dharma. 3) Jangan biarin dia nendang lu ke pinggir tembok.",
+   "naturalCounters": [
+    {
+     "hero": 506,
+     "strength": "soft",
+     "why": "Cirrus terbang lewatin tembok, jadi Dharma gak bisa nendang dia ke dinding buat nge-trigger stun."
+    },
+    {
+     "hero": 129,
+     "why": "Semua skill Dian Wei ngelepas control dan damage-nya tinggi, jadi control Dharma kurang ngaruh. Dari artikel setelah rework CN (Desember 2023).",
+     "strength": "soft"
+    },
+    {
+     "hero": 141,
+     "strength": "soft",
+     "why": "True damage dan frame untargetable ngindarin combo dinding."
+    },
+    {
+     "hero": 183,
+     "strength": "soft",
+     "why": "Athena kebal control, jadi Dharma susah knock-up dia dan gak bisa buka damage tahap kedua ult. Skill 1 dan 3 Athena itu magic damage, jadi armor fisik dari pasif Dharma gak ngebantu."
+    },
+    {
+     "hero": 170,
+     "strength": "soft",
+     "why": "Liu Bei mengandalkan basic attack dan kebal control saat ult — dia bisa adu langsung dengan Dharma dan tidak takut ditendang ke tembok."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-cc",
+     "items": "Boots of Resistance + Purify (spell)",
+     "why": "Control skill 1 Dharma bisa dihindari dengan bergerak — Purify melepasnya saat kamu ditendang ke tembok; hero tipis waspada dash-nya.",
+     "needsReview": false
+    },
+    {
+     "tag": "anti-burst",
+     "items": "Destiny (anti-mati) / Ominous Premonition",
+     "why": "Dash + tendangan Dharma ke tembok bisa one-combo hero tipis — Destiny menyelamatkanmu sekali.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Fighter"
+   ]
+  },
+  {
+   "id": 133,
+   "en": "Di Renjie",
+   "cn": "狄仁杰",
+   "aliases": [],
+   "roles": [
+    "farm"
+   ],
+   "howToPlayAgainst": "Di Renjie gak punya dash, assassin gampang bunuh dia. Tank yang kena ult-nya kehilangan armor dan magic resist, jadi ati-ati nerima damage.",
+   "naturalCounters": [
+    {
+     "hero": 510,
+     "why": "Sun Ce tebel dan sustain-nya kuat. Combo control-nya bisa bunuh Di Renjie yang tipis, bahkan abis dia lepas control.",
+     "strength": "hard"
+    },
+    {
+     "hero": 508,
+     "why": "Jangkauan serang Garo lebih jauh, dan skill 2-nya kasih slow dan silence, jadi Di Renjie ketekan di lane.",
+     "strength": "hard"
+    },
+    {
+     "hero": 130,
+     "why": "Musashi cepet deketin Di Renjie, dan skill 2 Di Renjie (pelepas control) gak bisa lepas dari kuncian ult Musashi.",
+     "strength": "hard"
+    },
+    {
+     "hero": 139,
+     "strength": "soft",
+     "why": "Di Renjie tidak punya dash — Fuzi bisa mendekat dan mengikatnya dengan ult, lalu membunuhnya sebelum dia kabur."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-autoattack",
+     "items": "Spikemail (aktifkan manual) / Ominous Premonition",
+     "why": "Damage Di Renjie dari basic attack — Ominous Premonition memotong attack speed-nya; bunuh dia dengan assassin karena dia tidak punya dash.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Marksman"
+   ]
+  },
+  {
+   "id": 129,
+   "en": "Dian Wei",
+   "cn": "典韦",
+   "aliases": [],
+   "roles": [
+    "jungle"
+   ],
+   "howToPlayAgainst": "1) Hero damage jaga posisi pas teamfight dan serang Dian Wei dari jauh. 2) Tank yang HP-nya rendah jangan ngelawan Dian Wei pas ult-nya ready.",
+   "naturalCounters": [
+    {
+     "hero": 111,
+     "strength": "hard",
+     "why": "Lady Sun punya crit dan dash buat jaga jarak dari Dian Wei."
+    },
+    {
+     "hero": 174,
+     "why": "Skill 2 Consort Yu kebal serangan fisik dan pasifnya kasih slow. Dian Wei susah deket.",
+     "strength": "hard"
+    },
+    {
+     "hero": 146,
+     "strength": "soft",
+     "why": "Mobilitas Luna dengan dash beruntun dan reset bisa kite Dian Wei yang mengandalkan basic attack dan lifesteal — dia tidak pernah bisa menempel."
+    },
+    {
+     "hero": 199,
+     "strength": "soft",
+     "why": "Arli punya banyak dash buat jaga jarak. Dian Wei susah nyentuh dia."
+    },
+    {
+     "hero": 141,
+     "why": "Diaochan kebal sesaat di skill 2 dan cooldown dash-nya pendek. Slow-nya bikin Dian Wei gak bisa ngejar.",
+     "strength": "soft"
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-autoattack",
+     "items": "Spikemail (aktifkan manual) / Ominous Premonition",
+     "why": "Dian Wei mengandalkan basic attack + lifesteal dari ult — Spikemail aktif memantulkan damage-nya.",
+     "needsReview": false
+    },
+    {
+     "tag": "anti-tank",
+     "items": "Overlord's Might / Starbreaker (armor pen)",
+     "why": "Dengan build semi-tank Dian Wei sulit dibunuh sekali combo — penetrasi armor dan true damage menembusnya.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Fighter"
+   ]
+  },
+  {
+   "id": 141,
+   "en": "Diaochan",
+   "cn": "貂蝉",
+   "aliases": [],
+   "roles": [
+    "mid",
+    "clash"
+   ],
+   "howToPlayAgainst": "1) Assassin masuk abis Diaochan pakai dash. 2) Pakai hero hard CC: kunci terus bunuh begitu dia masuk. 3) Jangan berdiri rapet biar AoE-nya gak kena banyak orang.",
+   "naturalCounters": [
+    {
+     "hero": 156,
+     "strength": "hard",
+     "why": "Skill 1 dan ult Liang ngunci Diaochan. Ult-nya susah lepas, bahkan pakai Purify."
+    },
+    {
+     "hero": 187,
+     "why": "Ult Donghuang suppress Diaochan yang ngandelin lompat terus-terusan. Ditambah damage tim, dia gak bisa kabur.",
+     "strength": "hard"
+    },
+    {
+     "hero": 109,
+     "strength": "soft",
+     "why": "Diaochan takut hard CC dan burst fokus. Burst single target Daji tinggi, bisa bunuh Diaochan pakai combo 2-3-1 sebelum dia sempet gerak. Tunggu Diaochan pakai skill 2 (ngilang), baru stun dan combo. Di mid-late kalau Daji unggul gold, Diaochan full HP pun bisa mati."
+    },
+    {
+     "hero": 139,
+     "why": "Ult Fuzi ngurung Diaochan abis dia pakai Purify dan skill 2, dan skill 2 Fuzi ngurangin damage-nya.",
+     "strength": "soft"
+    },
+    {
+     "hero": 537,
+     "strength": "soft",
+     "why": "Diaochan maunya nari di dalam lingkaran ult-nya biar skill-nya cepat muter, tapi Devara bisa dash masuk pakai shield lalu mendorongnya keluar lingkaran dengan Divine Judgment — begitu keluar lingkaran, ritme kombo Diaochan langsung rusak. Devara juga susah dilepas karena ult-nya kebal control dan nambah movement speed, jadi slow dari ledakan pasif Diaochan nggak cukup buat nahan dia nempel dan menang adu pukul jarak dekat yang berkepanjangan."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-cc",
+     "items": "Boots of Resistance + Purify (spell)",
+     "why": "Pasif Diaochan memberi slow berlapis dan skill-nya mengunci area — Boots of Resistance memperpendek slow-nya; Purify melepas control saat dia mengunci.",
+     "needsReview": false
+    },
+    {
+     "tag": "anti-burst",
+     "items": "Succubus Cloak / Destiny",
+     "why": "Diaochan menari dengan true damage di sekitar combo melee — Succubus Cloak menahan burst magic-nya; jangan berdiri rapat agar AoE-nya tidak kena banyak orang.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Mage"
+   ]
+  },
+  {
+   "id": 159,
+   "en": "Dolia",
+   "cn": "朵莉亚",
+   "aliases": [],
+   "roles": [
+    "roam"
+   ],
+   "howToPlayAgainst": "Habisi Dolia dulu sebelum war besar — selama dia masih hidup, ult-nya bisa me-reset skill/ult temanmu dan memberi mereka giliran kedua. Jangan kejar dia ke kolam airnya, di sana dia nge-heal dan susah di-slow.",
+   "naturalCounters": [
+    {
+     "hero": 137,
+     "strength": "soft",
+     "why": "Sima Yi dive ke support di backline. Silence-nya nyegah Dolia nge-refresh ult carry."
+    },
+    {
+     "hero": 189,
+     "strength": "soft",
+     "why": "Engage stealth grup dari Guiguzi nangkep support yang gak bisa gerak sebelum dia sempet reset fight."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-heal",
+     "items": "Mortal Punisher (fisik) / Venomous Staff (magic)",
+     "why": "Skill 2-nya (Wavebreaker) bikin kolam air yang nge-heal teman di sekitarnya, jadi anti-heal langsung memangkas sumber sustain utama timnya.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Support"
+   ]
+  },
+  {
+   "id": 187,
+   "en": "Donghuang",
+   "cn": "东皇太一",
+   "aliases": [],
+   "roles": [
+    "roam",
+    "clash"
+   ],
+   "howToPlayAgainst": "Di awal Donghuang susah last-hit dari jauh dan agak lemah, jadi tekan farm-nya. Pas ult-nya ngunci temen lu, jangan serang dia, soalnya damage yang dia terima diterusin ke temen yang kekunci.",
+   "naturalCounters": [
+    {
+     "hero": 184,
+     "strength": "hard",
+     "why": "Heal cepet Cai Yan bikin target ult Donghuang tetep hidup, jadi ult itu malah ngerugiin Donghuang."
+    },
+    {
+     "hero": 132,
+     "strength": "hard",
+     "why": "Dash Marco Polo bikin Donghuang susah deket, dan serangan jarak jauhnya terus nguras Donghuang."
+    },
+    {
+     "hero": 106,
+     "strength": "soft",
+     "why": "Lewat pasif speed abis skill 2 kena plus poke skill 1 terus-terusan, Xiao Qiao jaga jarak dari Donghuang, jadi bola energi di sekitarnya gak bisa nyentuh Xiao Qiao buat heal. Donghuang cuma bisa di-kite."
+    },
+    {
+     "hero": 111,
+     "strength": "soft",
+     "why": "Area ult Donghuang kecil dan dia cuma heal pas bola energinya nyentuh musuh, jadi jangkauan super jauh Lady Sun counter dia. Control skill 2 Donghuang sampai 1 detik tapi jedanya lama, jarang kena Lady Sun yang punya dash. Ult-nya control kuat tapi jangkauannya kelemahan. Kalau gak bisa deketin Lady Sun, dia kekikis sampai mati."
+    },
+    {
+     "hero": 119,
+     "strength": "soft",
+     "why": "Donghuang di awal kuat invade jungle. Dr Bian beda dari mid lain: numpuk pasif lewat basic attack. Pas Donghuang masuk ke blue buff tim, Dr Bian bisa terus poke pakai basic attack dan skill tanpa perlu adu deket, jadi invade Donghuang melemah dan musuh gak dapet momentum awal."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-heal",
+     "items": "Mortal Punisher (fisik) / Venomous Staff (magic)",
+     "why": "Bola energi Donghuang heal dia saat menyentuh musuh — anti-heal memotong pemulihannya; saat ult-nya mengunci temanmu, jangan serang dia karena damage-nya diteruskan.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Support"
+   ]
+  },
+  {
+   "id": 119,
+   "en": "Dr Bian",
+   "cn": "扁鹊",
+   "aliases": [],
+   "roles": [
+    "mid"
+   ],
+   "howToPlayAgainst": "Dr Bian itu mage jarak deket, lemah bantu tim di awal tapi bisa heal dan damage, kuat teamfight di mid-late. Minusnya: jangkauan pendek, gak punya control, takut burst. Counter efektif: Diaochan/Shi/Mai Shiranui/Wang Zhaojun (mid), Da Qiao/Zhang Fei (support). 1) Lemah sendirian, bisa di-pick-off. 2) Skill-nya bisa dihindarin. 3) Pas tumpukan pasifnya udah tinggi, keluar dari area ult-nya.",
+   "naturalCounters": [
+    {
+     "hero": 153,
+     "why": "Gao Changgong deketin lewat stealth, dan burst-nya bunuh Dr Bian yang gak punya dash sebelum heal-nya sempet ngaruh.",
+     "strength": "hard"
+    },
+    {
+     "hero": 110,
+     "why": "Garuda nguras Dr Bian dari jarak jauh, jadi pasif racunnya gak sempet jalan.",
+     "strength": "hard"
+    },
+    {
+     "hero": 182,
+     "why": "Damage jarak jauh Gan & Mo, apalagi skill yang udah di-enhance di late, bisa langsung bunuh Dr Bian.",
+     "strength": "hard"
+    },
+    {
+     "hero": 157,
+     "why": "Mai lincah dan punya knock-up. Dr Bian tanpa dash susah kabur dari combo-nya.",
+     "strength": "hard"
+    },
+    {
+     "hero": 167,
+     "why": "Wukong bisa langsung bunuh Dr Bian yang gak punya dash maupun control.",
+     "strength": "hard"
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-heal",
+     "items": "Mortal Punisher (fisik) / Venomous Staff (magic)",
+     "why": "Dr Bian bisa heal dan memberi damage — anti-heal memotong pemulihannya; dia lemah sendirian, jadi pick-off dia.",
+     "needsReview": false
+    },
+    {
+     "tag": "anti-burst",
+     "items": "Succubus Cloak / Destiny",
+     "why": "Damage racun Dr Bian itu magic — Succubus Cloak menahannya; keluar dari area ult-nya saat tumpukan pasifnya sudah tinggi.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Mage"
+   ]
+  },
+  {
+   "id": 126,
+   "en": "Dun",
+   "cn": "夏侯惇",
+   "aliases": [],
+   "roles": [
+    "clash",
+    "roam",
+    "jungle"
+   ],
+   "howToPlayAgainst": "1) Hindarin control Dun tinggal gerak. 2) Hero lincah bisa nge-kite dia. 3) Pas sekarat jangan adu sama Dun yang juga sekarat, waspadain pasif regen-nya.",
+   "naturalCounters": [
+    {
+     "hero": 121,
+     "strength": "hard",
+     "why": "Mi Yue jangkauannya panjang buat nge-kite Dun yang tangannya pendek. Ult-nya kasih lifesteal dan kebal control."
+    },
+    {
+     "hero": 123,
+     "why": "True damage Lu Bu nembus shield Dun. Di awal Dun masih kuat berkat lifesteal pasif, tapi Lu Bu unggul mulai mid game.",
+     "strength": "hard"
+    },
+    {
+     "hero": 111,
+     "strength": "soft",
+     "why": "Jangkauan dan dash buat nge-kite tank. Dia gak pernah bisa bertahan di jarak melee."
+    },
+    {
+     "hero": 132,
+     "strength": "soft",
+     "why": "True damage dan kiting Marco Polo ngalahin brawler tebel. Dun gak pernah sempet deket."
+    },
+    {
+     "hero": 159,
+     "strength": "soft",
+     "why": "Dun ngandelin satu kali lompatan ult buat engage, terus adu sustain pas HP-nya sekarat — Dolia bikin adu itu kalah: kolam Wavebreaker nge-heal tim selama war, dan Celestial Melody nge-refresh ult/skill kunci teman biar bisa dipakai dua kali, jadi engage Dun yang cuma sekali itu kebalas dua gelombang."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-heal",
+     "items": "Mortal Punisher (fisik) / Venomous Staff (magic)",
+     "why": "Pasif regen Dun saat sekarat — anti-heal memotong regennya; jangan adu dengannya saat sama-sama sekarat.",
+     "needsReview": false
+    },
+    {
+     "tag": "anti-cc",
+     "items": "Boots of Resistance + Purify (spell)",
+     "why": "Control Dun bisa dihindari dengan bergerak — Boots of Resistance memperpendek durasinya; hero lincah bisa kite dia.",
+     "needsReview": false
+    },
+    {
+     "tag": "anti-tank",
+     "items": "Overlord's Might / Starbreaker (armor pen)",
+     "why": "Shield + true damage Dun — penetrasi armor menembus ketahanannya; Lu Bu contohnya unggul mulai mid game.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Tank"
+   ]
+  },
+  {
+   "id": 509,
+   "en": "Dunshan",
+   "cn": "盾山",
+   "aliases": [
+    "Dun Shan"
+   ],
+   "roles": [
+    "roam"
+   ],
+   "howToPlayAgainst": "1) Ganggu dari banyak arah biar Dunshan kewalahan. Sabar mancing bisa nembus pertahanan timnya. 2) Pilih hero dengan dash jauh buat ngelompatin Dunshan dan nyerang backline.",
+   "naturalCounters": [
+    {
+     "hero": 105,
+     "strength": "hard",
+     "why": "Control area dan super armor Lian Po batalin skill 1 Dunshan dan bikin dia kebal skill 2 Dunshan."
+    },
+    {
+     "hero": 124,
+     "strength": "soft",
+     "why": "Api Zhou Yu nyerang dari tanah, jadi perisai depan Dunshan gak bisa nahan."
+    },
+    {
+     "hero": 152,
+     "strength": "soft",
+     "why": "Skill Wang Zhaojun jatuh dari atas dan gampang kena Dunshan yang geraknya lambat pas pegang perisai."
+    },
+    {
+     "hero": 112,
+     "strength": "soft",
+     "why": "Pasif dan ult Luban No.7 gak bisa ditahan perisai Dunshan."
+    },
+    {
+     "hero": 114,
+     "strength": "soft",
+     "why": "Knock-up dan stun Liu Shan motong stance shield Dunshan. Dindingnya jatuh dan backline langsung kebuka."
+    }
+   ],
+   "itemCounters": [],
+   "classes": [
+    "Support"
+   ]
+  },
+  {
+   "id": 577,
+   "en": "Dyadia",
+   "cn": "少司缘",
+   "aliases": [],
+   "roles": [
+    "roam"
+   ],
+   "howToPlayAgainst": "Kalau kena mark dari skill 2-nya, cepat tempel teman yang kena mark juga biar damage-nya berhenti, dan jangan kasih dia heal gratis — burst satu target sampai mati sebelum dia sempat nempelin heal ke dua orang sekaligus, karena kalau dua yang di-bless itu berdekatan, heal-nya makin deras.",
+   "naturalCounters": [
+    {
+     "hero": 130,
+     "why": "Musashi nebas proyektil skill Dyadia jadi tandanya gak nempel, dan ult-nya ngunci target.",
+     "strength": "hard"
+    },
+    {
+     "hero": 133,
+     "why": "Skill 2 Di Renjie ngehapus tanda skill 2 Dyadia, jadi damage dan curian gold-nya batal (cuma satu dari dua cast).",
+     "strength": "soft"
+    },
+    {
+     "hero": 184,
+     "strength": "soft",
+     "why": "Sustain dan control mantul Cai Yan lebih awet dari buff support Dyadia di fight panjang."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-heal",
+     "items": "Mortal Punisher (fisik) / Venomous Staff (magic)",
+     "why": "Heal adalah inti kit-nya — skill 1 Heartlink dan ult Destined Encounter menyembuhkan satu tim sekaligus, jadi anti-heal langsung memangkas sustain yang bikin timnya susah mati di war.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Support"
+   ]
+  },
+  {
+   "id": 155,
+   "en": "Erin",
+   "cn": "艾琳",
+   "aliases": [],
+   "roles": [
+    "farm"
+   ],
+   "howToPlayAgainst": "Erin susah bertahan hidup, simpen control buat dia.",
+   "naturalCounters": [
+    {
+     "hero": 199,
+     "strength": "hard",
+     "why": "Damage dan mobilitas Arli di fase awal neken Erin di lane."
+    },
+    {
+     "hero": 106,
+     "why": "Burst Xiao Qiao bisa ngabisin Erin sebelum lifesteal-nya sempet nolong.",
+     "strength": "hard"
+    },
+    {
+     "hero": 508,
+     "strength": "soft",
+     "why": "Jangkauan lebih jauh dari marksman magic, dan shield break ngehukum build-nya."
+    },
+    {
+     "hero": 169,
+     "strength": "soft",
+     "why": "Panah global dan DPS berkelanjutan ngalahin damage poke."
+    },
+    {
+     "hero": 196,
+     "strength": "soft",
+     "why": "Erin susah bertahan hidup — Shouyue yang one-shot dari jauh dengan skill 2 bisa membunuhnya sebelum dia sempat membalas."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-heal",
+     "items": "Mortal Punisher (fisik) / Venomous Staff (magic)",
+     "why": "Lifesteal Erin menolongnya di duel — anti-heal memotong pemulihannya, lalu burst dia sebelum sempat pulih.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Marksman"
+   ]
+  },
+  {
+   "id": 173,
+   "en": "Fang",
+   "cn": "李元芳",
+   "aliases": [],
+   "roles": [
+    "farm",
+    "jungle"
+   ],
+   "howToPlayAgainst": "1) Itung damage ledakan tanda Fang. 2) Abis dash-nya kepake, cari momen buat nahan damage-nya.",
+   "naturalCounters": [
+    {
+     "hero": 133,
+     "strength": "hard",
+     "why": "Skill 2 Di Renjie ngehapus tanda dari skill 1 Fang, jadi ledakan damage-nya batal."
+    },
+    {
+     "hero": 174,
+     "strength": "hard",
+     "why": "Skill 2 Consort Yu kebal damage fisik, termasuk ledakan tanda Fang."
+    },
+    {
+     "hero": 130,
+     "why": "Skill 1 Musashi nahan proyektil Fang, dan ult-nya ngunci Fang yang tipis.",
+     "strength": "hard"
+    },
+    {
+     "hero": 199,
+     "strength": "soft",
+     "why": "Payung Arli ngeblok tanda Fang dan dash-nya ngindarin serangan lanjutan."
+    },
+    {
+     "hero": 121,
+     "strength": "soft",
+     "why": "Fang mengandalkan ledakan tanda dan dash — Mi Yue yang kuat duel bisa menguras HP-nya lewat skill 2 dan menghindar dengan ult saat Fang mencoba burst."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-autoattack",
+     "items": "Spikemail (aktifkan manual) / Ominous Premonition",
+     "why": "Damage Fang datang dari basic attack yang menumpuk Dark Mark sampai meledak, jadi pantulan Spikemail dan pelambat attack speed Ominous langsung menghambat ledakan mark-nya.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Marksman"
+   ]
+  },
+  {
+   "id": 128,
+   "en": "Fatih",
+   "cn": "曹操",
+   "aliases": [
+    "Cao Cao"
+   ],
+   "roles": [
+    "clash",
+    "jungle"
+   ],
+   "howToPlayAgainst": "1) Hindarin tiga dash skill 1 Fatih, tahap ketiga kasih knock-up. 2) Abis ult aktif, lifesteal dan tenacity-nya kuat banget. Jangan adu langsung atau nyoba nge-control dia.",
+   "naturalCounters": [
+    {
+     "hero": 180,
+     "why": "Pasif Nezha ngurangin heal, padahal Fatih bertahan hidup dari lifesteal ult-nya.",
+     "strength": "hard"
+    },
+    {
+     "hero": 149,
+     "strength": "soft",
+     "why": "Shield dan kehadiran global ngelindungin dari dive. Sustain-nya gak ngalahin damage carry."
+    },
+    {
+     "hero": 129,
+     "strength": "soft",
+     "why": "True damage dan burst anti-heal ngalahin brawler sustain."
+    },
+    {
+     "hero": 119,
+     "strength": "soft",
+     "why": "Dr Bian mage jarak dekat yang bisa heal — dia bisa menahan duel dengan Fatih dan menggerogoti HP-nya dengan racun sambil menunggu ult Fatih habis."
+    },
+    {
+     "hero": 174,
+     "strength": "soft",
+     "why": "Consort Yu menyerang dari jauh dengan basic attack — dia bisa kite Fatih yang jangkauannya pendek dan menyerang dari luar jangkauan dash-nya."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-heal",
+     "items": "Mortal Punisher (fisik) / Venomous Staff (magic)",
+     "why": "Ult Fatih memberi lifesteal dan heal besar — anti-heal memotong pemulihannya; jangan adu langsung saat ult aktif.",
+     "needsReview": false
+    },
+    {
+     "tag": "anti-cc",
+     "items": "Boots of Resistance + Purify (spell)",
+     "why": "Tiga dash skill 1 Fatih, tahap ketiga memberi knock-up — hindari dash-nya; Boots of Resistance memperpendek control-nya.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Fighter"
+   ]
+  },
+  {
+   "id": 542,
+   "en": "Feyd",
+   "cn": "暃",
+   "aliases": [],
+   "roles": [
+    "jungle"
+   ],
+   "howToPlayAgainst": "Feyd itu jungler super lincah, cepet bantu tim, dan jago ngabisin musuh, tapi lemah di level 1. Ganggu jungle-nya di awal buat ngacak ritmenya. Setelah level 4 backline jauhin tembok biar dia gak bisa ngabisin. Tekan dia di awal pakai jungler kuat kayak Pei, Cirrus, Wukong, tanpa gold di awal dia susah bangkit. Juga efektif: Chang'e/Diaochan/Jin Chan (mage), Zhang Fei/Liu Shan/Donghuang (support), Consort Yu/Di Renjie/Fang (marksman), Menki/Biron/Li Xin/Charlotte (clash).",
+   "naturalCounters": [
+    {
+     "hero": 175,
+     "why": "Hook Kui bisa narik Feyd turun dari dinding, pas geraknya kebatas dan gampang ditebak.",
+     "strength": "soft"
+    },
+    {
+     "hero": 128,
+     "strength": "soft",
+     "why": "Feyd jago menghabisi musuh setelah level 4 — Fatih yang tebal dengan lifesteal ult sulit dihabisi sekali combo, dan bisa membalikkan keadaan."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-burst",
+     "items": "Destiny (anti-mati) / Ominous Premonition",
+     "why": "Feyd menghabisi musuh dengan burst setelah level 4 — Destiny menyelamatkanmu sekali dari eksekusinya; tekan dia di awal karena dia lemah di level 1.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Assassin"
+   ]
+  },
+  {
+   "id": 631,
+   "en": "Florentino",
+   "cn": null,
+   "roles": [
+    "clash"
+   ],
+   "classes": [
+    "Fighter"
+   ],
+   "naturalCounters": [
+    {
+     "hero": 187,
+     "strength": "hard",
+     "why": "Ult Donghuang itu suppress yang gak bisa dihapus Purify, jadi kebal CC dari ult Florentino gak ada gunanya — begitu dia masuk mode duel, Donghuang tinggal kunci dia di tempat dan kombo bunga-bunganya langsung mati."
+    },
+    {
+     "hero": 156,
+     "strength": "hard",
+     "why": "Sama kayak Donghuang: ult Liang itu suppress jarak jauh yang nembus kebal CC, jadi Florentino yang lagi asyik mungutin bunga dan nge-reset skill 2 tiba-tiba kekunci diam di tempat. Catatan: ini counter konteks teamfight, bukan lane — Liang itu mid/roam, jadi butuh tim yang follow-up burst selagi dia kekunci."
+    },
+    {
+     "hero": 123,
+     "strength": "soft",
+     "why": "True damage Lu Bu gak peduli armor dan build semi-tank Florentino, dan dia cukup tebal buat nemenin duel panjangnya sampai habis. Catatan: Florentino jauh lebih lincah dan bisa kabur dari skill Lu Bu yang lambat, jadi ini cuma soft, bukan jawaban pasti."
+    },
+    {
+     "hero": 153,
+     "strength": "soft",
+     "why": "Gao nyergap dari stealth dan nge-burst sebelum Florentino sempat mulai loop bunga + skill 2-nya, dan bonus damage ke musuh yang sendirian itu pas banget menghukum Florentino yang doyan duel terpisah dari tim. Catatan: kalau one-shot-nya gagal, Florentino bisa balik badan pakai sustain + kebal CC ult-nya; dan ini counter dari jungle, bukan lawan lane."
+    }
+   ],
+   "howToPlayAgainst": "Jangan layanin duel 1v1 sendirian — itu habitatnya. Bikin skill 1-nya meleset dan jauhi bunga-bunganya biar kombo dia putus, lalu kunci dia pakai suppress (Donghuang/Liang) pas dia ult, karena CC biasa mental sama kebal control-nya.",
+   "itemCounters": [
+    {
+     "tag": "anti-heal",
+     "items": "Mortal Punisher (fisik) / Venomous Staff (magic)",
+     "why": "Sustain Florentino datang dari heal basic attack ter-enhance-nya yang digandakan saat ult — anti-heal memotong napas duelnya tepat di sumbernya.",
+     "needsReview": false
+    }
+   ]
+  },
+  {
+   "id": 583,
+   "en": "Flowborn (Assassin)",
+   "cn": "元流之子(刺客)",
+   "aliases": [],
+   "roles": [
+    "jungle"
+   ],
+   "howToPlayAgainst": "Jangan kasih dia numpuk Flow gratis — tiap Convergence dan Claw Flurry nambah stack yang bisa dia tukar jadi dash dan ult ekstra, dan ult-nya kebal CC. Jaga jarak pas HP-mu sekarat, simpan CC buat setelah ult-nya selesai, dan jangan kejar dia sendirian ke semak.",
+   "naturalCounters": [
+    {
+     "hero": 193,
+     "strength": "soft",
+     "why": "Burst dan ketahanan Kaizer menang 1v1. Assassin gak bisa reset abis engage pertama."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-burst",
+     "items": "Destiny (anti-mati)",
+     "why": "Ult Mortal Talons dan Claw Flurry beruntun bisa menghabisi target sekarat dalam satu dive, jadi Destiny menahan burst finisher-nya.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Assassin"
+   ]
+  },
+  {
+   "id": 582,
+   "en": "Flowborn (Mage)",
+   "cn": "元流之子(法师)",
+   "aliases": [],
+   "roles": [
+    "mid"
+   ],
+   "howToPlayAgainst": "Jangan bergerombol — basic attack empowered-nya nge-chain ke musuh di dekatmu dan beam ult-nya nyambung ke yang berdekatan, jadi jaga jarak satu sama lain. Tekan dia sebelum stack Flow-nya penuh, dan gas pas Convergence-nya habis dipakai karena itu sumber heal + reset cooldown-nya.",
+   "naturalCounters": [
+    {
+     "hero": 193,
+     "strength": "soft",
+     "why": "Burst dive Kaizer ngehapus mage yang diem sebelum cast-nya selesai."
+    },
+    {
+     "hero": 108,
+     "strength": "soft",
+     "why": "Poke dan stun jarak jauh Mozi. Mage kepaksa jalan masuk ke control buat trade."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-burst",
+     "items": "Succubus Cloak",
+     "why": "Damage utamanya magic DoT berulang — orb Starflow Cascade, beam Arcane Arts, dan basic attack empowered yang nge-chain — jadi shield magic meredam cicilan itu di tiap trade.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Mage"
+   ]
+  },
+  {
+   "id": 584,
+   "en": "Flowborn (Marksman)",
+   "cn": "元流之子(射手)",
+   "aliases": [],
+   "roles": [
+    "farm"
+   ],
+   "howToPlayAgainst": "Jangan berdiri bergerombol di depannya — basic attack yang sudah penuh Flow bisa menembus dan kena banyak orang sekaligus, jadi sebar posisi dan dive dia saat ult Arrowstorm-nya lagi jalan. Paksa dia pakai dash dari skill 2-nya dulu, baru kejar lagi setelah dash-nya habis.",
+   "naturalCounters": [
+    {
+     "hero": 509,
+     "strength": "soft",
+     "why": "Dinding Dunshan makan damage marksman. Backline gak pernah bisa DPS."
+    },
+    {
+     "hero": 528,
+     "strength": "soft",
+     "why": "Lam dive ke marksman yang gak bisa gerak. Gak ada peel yang bisa nyelametin posisinya."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-autoattack",
+     "items": "Spikemail (aktifkan manual) / Ominous Premonition",
+     "why": "Damage utama varian Marksman ini adalah basic attack yang diperkuat Flow (menembus, crit) plus poke jarak jauh, jadi pantulan Spikemail dan pengurang attack speed dari Ominous Premonition langsung memotong sumber damage-nya.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Marksman"
+   ]
+  },
+  {
+   "id": 585,
+   "en": "Flowborn (Roamer)",
+   "cn": "元流之子(辅助)",
+   "aliases": [],
+   "roles": [
+    "roam"
+   ],
+   "howToPlayAgainst": "Jangan war di atas platform-nya — di sana timnya dapat shield, vision, dan jangkauan skill yang lebih jauh, jadi pancing mereka keluar atau serang dari arah lain. Burst satu target sampai mati sebelum gelombang heal ult-nya sampai, karena kalau war-nya berlarut-larut, dia bisa nge-heal dan nge-reset cooldown timnya terus-terusan.",
+   "naturalCounters": [
+    {
+     "hero": 137,
+     "strength": "soft",
+     "why": "Sima Yi dive ke support, silence utility-nya, terus bunuh sebelum tim sempet bereaksi."
+    },
+    {
+     "hero": 189,
+     "strength": "soft",
+     "why": "Engage grup Guiguzi nangkep support yang salah posisi, jadi lu yang nentuin kapan fight dimulai."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-heal",
+     "items": "Mortal Punisher (fisik) / Venomous Staff (magic)",
+     "why": "Ult-nya Lingering Melody adalah group heal yang menyembuhkan semua teman yang kena gelombangnya, jadi anti-heal langsung memangkas penyelamat utama timnya di war panjang.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Support"
+   ]
+  },
+  {
+   "id": 581,
+   "en": "Flowborn (Tank)",
+   "cn": "元流之子(坦克)",
+   "aliases": [],
+   "roles": [
+    "clash",
+    "jungle"
+   ],
+   "howToPlayAgainst": "Jangan buang semua CC dan burst ke dia di awal — dia tebal, dapat shield dari Power From Within, dan heal dari Convergence, jadi fokusmu itu jaga carry dari lompatan All In-nya. Sebar posisi biar knock-up-nya nggak kena ramai-ramai, dan serang balik pas skill engage-nya sudah dipakai.",
+   "naturalCounters": [
+    {
+     "hero": 121,
+     "strength": "soft",
+     "why": "Sustain di lane dan ult untargetable Mi Yue ngalahin damage kecil Flowborn tank."
+    },
+    {
+     "hero": 199,
+     "strength": "soft",
+     "why": "Arli nge-kite tank pakai reposisi tanpa batas. Tank gak pernah berhasil satu rotasi skill."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-tank",
+     "items": "Overlord's Might / Starbreaker (armor pen)",
+     "why": "Tank tebal dengan damage kecil — penetrasi armor dan true damage menembus ketahanannya.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Tank"
+   ]
+  },
+  {
+   "id": 139,
+   "en": "Fuzi",
+   "cn": "老夫子",
+   "aliases": [],
+   "roles": [
+    "clash"
+   ],
+   "howToPlayAgainst": "Control Fuzi bisa dihindarin pakai gerakan lincah. Hero tipis jaga jarak dari Fuzi pas fight.",
+   "naturalCounters": [
+    {
+     "hero": 141,
+     "why": "Diaochan lincah dan tetep bisa gerak pakai ult walaupun diiket Fuzi, jadi susah ditangkep.",
+     "strength": "hard"
+    },
+    {
+     "hero": 111,
+     "strength": "soft",
+     "why": "Kiting. Bind gak pernah kena tanpa skill buat deketin."
+    },
+    {
+     "hero": 514,
+     "strength": "soft",
+     "why": "Tekanan lane awal sebelum Fuzi beres item inti."
+    },
+    {
+     "hero": 193,
+     "strength": "soft",
+     "why": "Fuzi mengandalkan ikatan ult dan damage reduction skill 2 — Kaizer yang tebal dengan shield dan dash bisa menahan kombo Fuzi dan menyerang balik."
+    },
+    {
+     "hero": 191,
+     "strength": "soft",
+     "why": "Fuzi berbahaya saat fight jarak dekat — Da Qiao bisa memindahkan teman yang diikat Fuzi keluar dengan teleport, dan mengumpulkan tim untuk mengeroyoknya."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-cc",
+     "items": "Boots of Resistance + Purify (spell)",
+     "why": "Skill 2 Fuzi mengurangi damage termasuk true damage, dan ult-nya mengikat — Purify melepas ikatan ult-nya; hero tipis jaga jarak saat fight.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Fighter"
+   ]
+  },
+  {
+   "id": 182,
+   "en": "Gan & Mo",
+   "cn": "干将莫邪",
+   "aliases": [],
+   "roles": [
+    "mid"
+   ],
+   "howToPlayAgainst": "1) Jangkauan dan lintasan pedang terbang Gan & Mo itu tetap, jadi mending cepet nempel. 2) Area pedangnya lebar tapi bagian tengahnya kosong dan gak kasih damage.",
+   "naturalCounters": [
+    {
+     "hero": 130,
+     "why": "Skill 1 Musashi nangkis pedang terbang Gan & Mo, dan ult-nya ngunci Gan & Mo jadi gak bisa kabur.",
+     "strength": "hard"
+    },
+    {
+     "hero": 199,
+     "why": "Semua skill Arli kasih dash jadi pedang terbang Gan & Mo susah kena, dan skill 2-nya nahan proyektil pedang.",
+     "strength": "hard"
+    },
+    {
+     "hero": 131,
+     "why": "Li Bai lincah muter ke belakang, skill-nya kasih kebal buat ngindarin pedang, terus burst-nya bunuh Gan & Mo.",
+     "strength": "hard"
+    },
+    {
+     "hero": 140,
+     "strength": "soft",
+     "why": "Guan Yu salah satu dari sedikit hero yang bisa nahan Gan & Mo. Skill 1 dan flash Gan & Mo bisa ngindarin banyak skill, tapi Guan Yu tinggal muter ke belakang tower kedua lawan, dorong Gan & Mo pakai ult sampai gak bisa balik ke tower, dan dia pasti mati."
+    },
+    {
+     "hero": 162,
+     "strength": "soft",
+     "why": "Gan & Mo gak lincah, takut hero yang nempel, dan karena jangkauannya jauh posisinya sering sendirian. Nakoruru tinggal muter ke belakang pakai ult terus bunuh dari deket."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-burst",
+     "items": "Succubus Cloak",
+     "why": "Gan & Mo memberi burst magic jarak jauh dari pedang terbangnya — Succubus Cloak + shield magic menahan burst-nya; tekan mereka dari dekat karena mereka lemah saat didekati.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Mage"
+   ]
+  },
+  {
+   "id": 115,
+   "en": "Gao",
+   "cn": "高渐离",
+   "aliases": [],
+   "roles": [
+    "mid"
+   ],
+   "howToPlayAgainst": "Gao itu mage jarak deket dengan AoE burst berkelanjutan, lumayan tebel berkat lifesteal ult, bahaya banget buat backline di early-mid. Minusnya jelas: jangkauan pendek, gak punya dash, butuh gold, lemah kalau ketinggalan. Gank dia sering di awal, dan pilih hero yang punya control atau lincah biar gak kena ult. Saran: Shi/Wang Zhaojun/Mai Shiranui/Yixing (mage), Sun Bin/Liu Shan/Dunshan/Ziya (support).",
+   "naturalCounters": [
+    {
+     "hero": 187,
+     "why": "Ult Donghuang ngunci Gao begitu dia masuk teamfight.",
+     "strength": "hard"
+    },
+    {
+     "hero": 118,
+     "why": "Speed-up dan damage reduction Sun Bin nahan damage berkelanjutan Gao, plus slow dan silence ult-nya bikin Gao susah masuk.",
+     "strength": "hard"
+    },
+    {
+     "hero": 150,
+     "strength": "soft",
+     "why": "Kiting. Gao kepaksa nerobos damage buat nyampe backline."
+    },
+    {
+     "hero": 157,
+     "strength": "soft",
+     "why": "Mai Shiranui lawan Gao: di awal kipasnya bisa poke Gao yang jangkauannya pendek terus-terusan. Setelah level 4 burst Gao bisa dihindarin pakai dash Mai, dan pas ult Gao lagi gak ada, Mai gampang bunuh dia."
+    },
+    {
+     "hero": 182,
+     "strength": "soft",
+     "why": "Poke dari luar jangkauan ult. Dia udah mati sebelum nyampe backline."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-heal",
+     "items": "Mortal Punisher (fisik) / Venomous Staff (magic)",
+     "why": "Ult Gao memberi lifesteal besar saat dia burst AoE jarak dekat — anti-heal memotong pemulihannya; gank dia di awal karena dia tidak punya dash dan lemah kalau ketinggalan.",
+     "needsReview": false
+    },
+    {
+     "tag": "anti-cc",
+     "items": "Boots of Resistance + Purify (spell)",
+     "why": "Musuh punya banyak crowd control",
+     "needsReview": true
+    },
+    {
+     "tag": "anti-burst",
+     "items": "Succubus Cloak",
+     "why": "Gao mage burst magic jarak dekat — Succubus Cloak + shield magic menahan burst-nya; pilih hero lincah atau yang punya control agar tidak kena ult-nya.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Mage"
+   ]
+  },
+  {
+   "id": 153,
+   "en": "Gao Changgong",
+   "cn": "兰陵王",
+   "aliases": [],
+   "roles": [
+    "jungle"
+   ],
+   "howToPlayAgainst": "1) Tank tim nempel ke carry buat nahan pisau dan nge-control Gao Changgong begitu dia nongol. 2) Dia kasih damage lebih ke musuh yang sendirian, jadi jangan sendirian. 3) Abis kena pisaunya, menjauh biar gak kena damage lanjutan.",
+   "naturalCounters": [
+    {
+     "hero": 196,
+     "why": "Alat vision Shouyue ngebongkar stealth Gao Changgong, jadi dia susah nyergap.",
+     "strength": "hard"
+    },
+    {
+     "hero": 189,
+     "strength": "soft",
+     "why": "Gao Changgong mainnya stealth deketin carry musuh terus bunuh backline. Ult Guiguzi kasih efek anti-stealth jadi posisinya ketahuan, abis itu control skill 2 dan pengurangan resist skill 1 bantu tim bunuh dia."
+    },
+    {
+     "hero": 505,
+     "strength": "soft",
+     "why": "Skill 1 ngebuka stealth pas dia deketin, sebelum burst kena."
+    },
+    {
+     "hero": 117,
+     "strength": "soft",
+     "why": "Gao Changgong itu assassin tanpa dash. Walaupun stealth ult-nya kuat, Wuyan bisa jaga deket backline tim dan pakai skill 1 dan 2 biar dia gak bisa deket. Kalau Gao berhasil bunuh backline, dia tetep kena petrify Wuyan: nyawa ganti nyawa."
+    },
+    {
+     "hero": 149,
+     "strength": "soft",
+     "why": "Gao Changgong bunuh pakai combo abis skill 2. Liu Bang yang tebel susah dibunuh di mid-late: pas split push dia bisa adu langsung pakai slow dan control, pas teamfight ult-nya ngelindungin carry, dan skill 2 abis mendarat ngunci Gao buat kabur atau balik bunuh."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-burst",
+     "items": "Destiny (anti-mati)",
+     "why": "Gao Changgong muncul dari stealth dan burst target yang sendirian — Destiny menyelamatkanmu sekali dari one-shot-nya; jangan jalan sendirian dan minta tank menempel ke carry.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Assassin"
+   ]
+  },
+  {
+   "id": 508,
+   "en": "Garo",
+   "cn": "伽罗",
+   "aliases": [],
+   "roles": [
+    "farm"
+   ],
+   "howToPlayAgainst": "1) Jangkauan Garo unggul, incer pakai assassin yang dash-nya kuat. 2) Makin cepet tower di belakangnya ancur, makin kebatas dia.",
+   "naturalCounters": [
+    {
+     "hero": 153,
+     "strength": "hard",
+     "why": "Gao Changgong bisa ngilang buat deketin Garo tanpa ketahuan, terus nge-burst dia."
+    },
+    {
+     "hero": 131,
+     "why": "Garo minim mobilitas. Li Bai bisa dash dua kali dan pakai ult buat deketin terus bunuh dia.",
+     "strength": "hard"
+    },
+    {
+     "hero": 116,
+     "why": "Garo gak punya dash. Assassin kayak Arke bisa masuk dan bunuh dia di early dan mid game.",
+     "strength": "hard"
+    },
+    {
+     "hero": 167,
+     "why": "Garo gak punya dash. Wukong punya burst tinggi buat masuk dan bunuh dia.",
+     "strength": "hard"
+    },
+    {
+     "hero": 120,
+     "strength": "soft",
+     "why": "Garo jangkauannya pendek dan gak punya dash, susah lepas dari skill 3 Bai Qi."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-autoattack",
+     "items": "Spikemail (aktifkan manual) / Ominous Premonition",
+     "why": "Garo hampir seluruh damage-nya dari basic attack crit jarak jauh yang berkelanjutan, jadi pantulan Spikemail dan pelambat attack speed Ominous langsung memotong DPS-nya begitu dia menyerangmu.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Marksman"
+   ]
+  },
+  {
+   "id": 110,
+   "en": "Garuda",
+   "cn": "嬴政",
+   "aliases": [
+    "Ying Zheng"
+   ],
+   "roles": [
+    "mid"
+   ],
+   "howToPlayAgainst": "1) Assassin manfaatin Garuda yang salah posisi. 2) Hindarin skill 1-nya. 3) Ult Garuda bentuknya garis lurus, bisa dihindarin tinggal geser.",
+   "naturalCounters": [
+    {
+     "hero": 153,
+     "why": "Gao Changgong bisa deketin Garuda lewat stealth terus langsung bunuh. Garuda tipis.",
+     "strength": "hard"
+    },
+    {
+     "hero": 137,
+     "why": "Sima Yi lincah jadi gampang nempel Garuda, dan shield sihirnya nahan damage Garuda.",
+     "strength": "hard"
+    },
+    {
+     "hero": 513,
+     "why": "Shangguan cepet clear wave dan bisa bunuh Garuda yang gak punya control.",
+     "strength": "hard"
+    },
+    {
+     "hero": 138,
+     "strength": "soft",
+     "why": "Garuda cuma punya slow, tanpa hard CC maupun dash, jadi pasif Wang Wei yang nge-dodge satu serangan paling ngena ke dia. Wang Wei juga bisa narik Garuda ke tengah zona Misty Mountain pakai Endless River, lalu kabur atau rotasi pakai ultinya, sementara Garuda susah ngejar atau ngunci dia."
+    },
+    {
+     "hero": 547,
+     "strength": "soft",
+     "why": "Garuda mainnya zoning dari jauh dan cuma ngandelin slow, tanpa dash buat ngejar — Luara yang lincah bisa loncat tembok pakai Deadly Fang buat keluar dari zona panahnya dan tetap nge-DPS dari jarak aman, plus ultinya yang nge-blind dan nge-launch Garuda kalau dia maksa maju."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-burst",
+     "items": "Succubus Cloak",
+     "why": "Garuda mage burst magic — Succubus Cloak + shield magic menahan burst-nya; hindari skill 1-nya dan geser keluar dari garis lurus ult-nya.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Mage"
+   ]
+  },
+  {
+   "id": 140,
+   "en": "Guan Yu",
+   "cn": "关羽",
+   "aliases": [],
+   "roles": [
+    "clash"
+   ],
+   "howToPlayAgainst": "1) Pas Guan Yu lagi charge, hero tipis jaga jarak aman. 2) Pas teamfight jangan buang damage utama ke dia. 3) Pas skill 2 dan ult-nya ready, jangan pakai control utama ke dia.",
+   "naturalCounters": [
+    {
+     "hero": 156,
+     "why": "Skill 1 dan ult Liang kasih hard CC pas Guan Yu nyerbu.",
+     "strength": "hard"
+    },
+    {
+     "hero": 508,
+     "why": "Skill 2 Garo kasih silence dan slow, jadi Guan Yu gak bisa ngumpulin charge.",
+     "strength": "hard"
+    },
+    {
+     "hero": 148,
+     "why": "Skill 1 Ziya kasih slow dan ngurangin armor dalam waktu lama, jadi Guan Yu susah lari dan ngumpulin charge.",
+     "strength": "hard"
+    },
+    {
+     "hero": 111,
+     "strength": "soft",
+     "why": "Kiting dan dash: charge dihindarin, terus burst masuk."
+    },
+    {
+     "hero": 157,
+     "strength": "soft",
+     "why": "Guan Yu ngandelin banget pasif charge. Tiap skill Mai Shiranui, termasuk pasif, bisa mutus charge itu. Tanpa charge Guan Yu hampir kayak super minion. Mai itu counter alami Guan Yu."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-cc",
+     "items": "Boots of Resistance + Purify (spell)",
+     "why": "Musuh punya banyak crowd control",
+     "needsReview": true
+    }
+   ],
+   "classes": [
+    "Fighter"
+   ]
+  },
+  {
+   "id": 189,
+   "en": "Guiguzi",
+   "cn": "鬼谷子",
+   "aliases": [],
+   "roles": [
+    "roam"
+   ],
+   "howToPlayAgainst": "1) Perhatiin gerakan Guiguzi dan selalu cek apakah lu kelihatan musuh. 2) Di late pas vision kurang, ati-ati serangan mendadak grup musuh.",
+   "naturalCounters": [
+    {
+     "hero": 105,
+     "strength": "hard",
+     "why": "Lian Po kebal control dan damage balasannya kuat, jadi Guiguzi susah masuk buat narik dia."
+    },
+    {
+     "hero": 187,
+     "strength": "hard",
+     "why": "Ult Donghuang ngunci Guiguzi begitu dia masuk buat narik, terus tim bunuh dia."
+    },
+    {
+     "hero": 173,
+     "why": "Fang bisa denger langkah musuh dari jauh, jadi Guiguzi yang ngilang tetep ketahuan sebelum sempet narik temen.",
+     "strength": "hard"
+    },
+    {
+     "hero": 135,
+     "strength": "soft",
+     "why": "Guiguzi mengandalkan kejutan dari vision dan tarikan — Xiang Yu yang tebal bisa menahan tarikannya dan membalas dengan control, sehingga gank Guiguzi gagal."
+    },
+    {
+     "hero": 171,
+     "strength": "soft",
+     "why": "Guiguzi mengandalkan serangan mendadak saat vision kurang — Zhang Fei yang tebal dengan energi penuh sulit dibunuh mendadak, dan raungannya membubarkan gank."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-cc",
+     "items": "Boots of Resistance + Purify (spell)",
+     "why": "Kombo intinya adalah tarik + stun massal dari skill 2 The Animist setelah dia mendekat diam-diam, jadi tenacity + Purify membuatmu bisa lepas dari tarikannya sebelum burst susulan timnya masuk.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Support"
+   ]
+  },
+  {
+   "id": 150,
+   "en": "Han Xin",
+   "cn": "韩信",
+   "aliases": [],
+   "roles": [
+    "jungle"
+   ],
+   "howToPlayAgainst": "1) Han Xin takut control, kunci terus bunuh begitu dia masuk. 2) Dia tipis pas skill-nya abis, serang di situ. 3) Dia lincah banget cuy, jangan ngejar kejauhan, nanti timnya dateng ngebalikin keadaan.",
+   "naturalCounters": [
+    {
+     "hero": 174,
+     "strength": "hard",
+     "why": "Skill 2 Consort Yu kasih kebal damage fisik 2 detik, jadi serangan Han Xin meleset semua."
+    },
+    {
+     "hero": 156,
+     "why": "Hard CC Liang ngunci Han Xin yang ngandelin gerak. Begitu kekunci, dia gampang dibunuh.",
+     "strength": "hard"
+    },
+    {
+     "hero": 109,
+     "why": "Skill 2 Daji stun 1,5 detik, lanjut burst dari ult. Han Xin yang dive langsung mati kalau stun-nya kena.",
+     "strength": "hard"
+    },
+    {
+     "hero": 187,
+     "why": "Ult Donghuang tetep bisa ngunci Han Xin walaupun dia lagi kebal control.",
+     "strength": "hard"
+    },
+    {
+     "hero": 166,
+     "strength": "soft",
+     "why": "Han Xin ngandelin banget skill. Silence skill 1 Arthur gampang motong serangannya, terus skill 2 dan ult nguras HP Han Xin."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-burst",
+     "items": "Destiny (anti-mati)",
+     "why": "Han Xin lincah dan burst dari skill-nya — Destiny menyelamatkanmu sekali; kunci terus dengan control begitu dia masuk, karena dia tipis saat skill-nya habis.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Assassin"
+   ]
+  },
+  {
+   "id": 521,
+   "en": "Haya",
+   "cn": "海月",
+   "aliases": [],
+   "roles": [
+    "mid"
+   ],
+   "howToPlayAgainst": "Jangan duel sendirian pas dia full kristal — mark-nya bisa jadi true damage + stun, dan ult-nya narik kamu duel 1v1 dengan shield + imun 2 detik. Pancing skill-nya habis buat clear wave, lalu gas bareng tim saat kristalnya kosong dan ult-nya cooldown, dan tahan CC sampai imunnya habis.",
+   "naturalCounters": [
+    {
+     "hero": 133,
+     "why": "Skill 2 Di Renjie kerjanya kayak purify yang ngelepas efek ult Haya.",
+     "strength": "hard"
+    },
+    {
+     "hero": 121,
+     "why": "Ult Mi Yue batalin ult Haya, dan rantainya terus nyerap attack Haya.",
+     "strength": "hard"
+    },
+    {
+     "hero": 193,
+     "why": "Ult Kaizer nahan damage dan dia tebel banget. Walaupun ditarik ke ult Haya, Kaizer bisa ngebalikin duel.",
+     "strength": "hard"
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-cc",
+     "items": "Boots of Resistance + Purify (spell)",
+     "why": "Ult Haya memberi control area yang menahan gerakan — Purify melepasnya seperti skill 2 Di Renjie membersihkan control; Boots of Resistance memperpendek durasinya.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Mage"
+   ]
+  },
+  {
+   "id": 563,
+   "en": "Heino",
+   "cn": "海诺",
+   "aliases": [],
+   "roles": [
+    "mid",
+    "clash"
+   ],
+   "howToPlayAgainst": "Jangan cicil dia — poke pelan cuma di-heal balik lewat mark dan ult-nya, jadi all-in burst bareng tim dalam sekali jalan. Jangan kejar dia habis ult karena dia balik ke posisi awalnya.",
+   "naturalCounters": [
+    {
+     "hero": 199,
+     "why": "Skill 2 Arli nahan tembakan Heino, dan dia bisa masuk pas jeda lemparan terus menjauh pas Heino ganti ke jarak deket.",
+     "strength": "hard"
+    },
+    {
+     "hero": 509,
+     "why": "Perisai Dunshan nahan tembakan skill 1 Heino dan matahin ritme serta tandanya, terus skill 2 narik Heino ke tengah tim.",
+     "strength": "soft"
+    },
+    {
+     "hero": 141,
+     "strength": "soft",
+     "why": "True damage Diaochan nembus build tebel Heino, dan mobilitasnya jaga dia tetep di luar zona."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-heal",
+     "items": "Mortal Punisher (fisik) / Venomous Staff (magic)",
+     "why": "Heino memulihkan HP dari Skill 1 mode melee, Skill 2 mode melee, dan ult Fate Rewind — anti-heal memotong loop sustain yang bikin dia susah dibunuh di fight panjang.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Mage"
+   ]
+  },
+  {
+   "id": 169,
+   "en": "Hou Yi",
+   "cn": "后羿",
+   "aliases": [],
+   "roles": [
+    "farm"
+   ],
+   "howToPlayAgainst": "Hou Yi tipis banget dan susah nyelametin diri. Pas nyerang perhatiin posisi. Kalau bahaya jangan basic attack, serang dari jauh pakai skill 2.",
+   "naturalCounters": [
+    {
+     "hero": 107,
+     "strength": "hard",
+     "why": "Ult Zilong lebih gampang kena ke Hou Yi karena dia gak punya dash."
+    },
+    {
+     "hero": 162,
+     "strength": "hard",
+     "why": "Nakoruru cepet deketin dan burst Hou Yi yang diem di tempat pas nembak."
+    },
+    {
+     "hero": 175,
+     "strength": "hard",
+     "why": "Hook Kui narik Hou Yi yang gak punya dash ke timnya, apalagi pas dia berdiri deket support."
+    },
+    {
+     "hero": 510,
+     "why": "Sun Ce kebal control pas ult (kapal) dan langsung nabrak Hou Yi yang gak punya dash.",
+     "strength": "hard"
+    },
+    {
+     "hero": 123,
+     "why": "Ult Lu Bu lompat ke backline. Walaupun Hou Yi punya control, Lu Bu tetep nyampe.",
+     "strength": "hard"
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-autoattack",
+     "items": "Spikemail (aktifkan manual) / Ominous Premonition",
+     "why": "Damage Hou Yi dari basic attack — Ominous Premonition memotong attack speed-nya; dia tipis dan tidak bisa menyelamatkan diri, jadi dive dia dengan assassin.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Marksman"
+   ]
+  },
+  {
+   "id": 192,
+   "en": "Huang Zhong",
+   "cn": "黄忠",
+   "aliases": [],
+   "roles": [
+    "farm"
+   ],
+   "howToPlayAgainst": "1) Pas adu, jangan nginjek ranjau Huang Zhong. 2) Gank dia sebelum level 4 buat nahan farm-nya. 3) Serang gak lama abis dia pasang ult.",
+   "naturalCounters": [
+    {
+     "hero": 123,
+     "strength": "hard",
+     "why": "Lompatan Lu Bu kasih knock-up ke Huang Zhong yang lagi ult, terus tim bisa nyerang dia."
+    },
+    {
+     "hero": 108,
+     "strength": "hard",
+     "why": "Skill 1 Mozi buat deketin, skill 2-nya damage-nya tinggi, dan pakai ult dia bisa ngunci Huang Zhong."
+    },
+    {
+     "hero": 153,
+     "why": "Gao gampang nangkep dan langsung bunuh Huang Zhong.",
+     "strength": "hard"
+    },
+    {
+     "hero": 175,
+     "strength": "soft",
+     "why": "Hook skill 2 Kui narik Huang Zhong, terus burst magic-nya bisa bunuh Huang Zhong tanpa bantuan temen."
+    },
+    {
+     "hero": 110,
+     "strength": "soft",
+     "why": "Ult Garuda yang jangkauannya super jauh bisa kena Huang Zhong dari luar area ult-nya, maksa dia bongkar turret biar tim gampang bunuh dia. Kalau gak dibongkar, Garuda bisa solo kill."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-autoattack",
+     "items": "Spikemail (aktifkan manual) / Ominous Premonition",
+     "why": "Damage Huang Zhong dari basic attack, terutama saat mode turret — Ominous Premonition memotong attack speed-nya; serang segera setelah dia memasang ult.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Marksman"
+   ]
+  },
+  {
+   "id": 531,
+   "en": "Jing",
+   "cn": "镜",
+   "aliases": [],
+   "roles": [
+    "jungle"
+   ],
+   "howToPlayAgainst": "Burst Jing tinggi banget. Pas dia ult, langsung keluar dari areanya atau dorong dia keluar.",
+   "naturalCounters": [
+    {
+     "hero": 156,
+     "why": "Ult Liang kasih control pasti ke Jing yang harus deket, dan skill-nya nahan Jing.",
+     "strength": "hard"
+    },
+    {
+     "hero": 187,
+     "why": "Ult Donghuang gak bisa dihapus. Jing yang kekunci gak bisa ngapa-ngapain.",
+     "strength": "hard"
+    },
+    {
+     "hero": 135,
+     "strength": "soft",
+     "why": "Xiang Yu tebel jadi susah dibunuh Jing, dan skill 1-nya dorong Jing keluar dari area ult-nya."
+    },
+    {
+     "hero": 528,
+     "strength": "soft",
+     "why": "Displacement paksa narik Jing keluar dari zona cermin, damage-nya langsung anjlok."
+    },
+    {
+     "hero": 509,
+     "strength": "soft",
+     "why": "Displacement dan dinding dorong Jing keluar dari zona cermin."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-burst",
+     "items": "Destiny (anti-mati)",
+     "why": "Burst Jing tinggi banget — Destiny menyelamatkanmu sekali dari kombo ult-nya; begitu dia ult, langsung keluar dari areanya atau dorong dia keluar.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Assassin"
+   ]
+  },
+  {
+   "id": 193,
+   "en": "Kaizer",
+   "cn": "铠",
+   "aliases": [],
+   "roles": [
+    "clash",
+    "jungle"
+   ],
+   "howToPlayAgainst": "1) Skill 1 Kaizer bisa dihindarin. 2) Waspadain dash-nya, hero tipis jaga jarak biar gak di-engage.",
+   "naturalCounters": [
+    {
+     "hero": 128,
+     "strength": "hard",
+     "why": "Fatih kuat di duel side lane: ult-nya kasih heal gede, cukup buat menang 1v1 lawan Kaizer."
+    },
+    {
+     "hero": 154,
+     "strength": "hard",
+     "why": "Mulan punya silence dan super armor, jadi Kaizer susah ngunci dan bisa mati sebelum ult-nya ready."
+    },
+    {
+     "hero": 129,
+     "why": "Ult Dian Wei kasih true damage dan lifesteal. Dengan build semi-tank, dia gak bisa dibunuh sekali combo sama Kaizer.",
+     "strength": "hard"
+    },
+    {
+     "hero": 121,
+     "why": "Rantai skill 2 Mi Yue ngurangin damage dan speed Kaizer, terus dash jauh dan ult kebalnya dipakai buat ngindar pas Kaizer lagi kuat.",
+     "strength": "hard"
+    },
+    {
+     "hero": 146,
+     "strength": "soft",
+     "why": "Kiting. Mobilitas reset jaga dia tetep di luar jangkauan melee."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-tank",
+     "items": "Overlord's Might / Starbreaker (armor pen)",
+     "why": "Kaizer fighter tebal dengan shield dan dash — penetrasi armor menembus ketahanannya; hindari skill 1-nya dan jaga jarak sebagai hero tipis agar tidak di-engage.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Fighter"
+   ]
+  },
+  {
+   "id": 190,
+   "en": "Kongming",
+   "cn": "诸葛亮",
+   "aliases": [],
+   "roles": [
+    "mid",
+    "jungle"
+   ],
+   "howToPlayAgainst": "1) Kongming bisa dash berkali-kali dalam waktu singkat, prediksi pas cast skill. 2) Pas ult-nya ngincer temen yang sekarat, berdiri di jalurnya buat nahan. 3) Perhatiin tumpukan pasifnya, pas dia bawa bola sihir menjauh.",
+   "naturalCounters": [
+    {
+     "hero": 141,
+     "why": "Skill 2 Diaochan ngindarin ult dan skill 1 Kongming, pasifnya nempel, terus combo-nya cepet bunuh Kongming.",
+     "strength": "hard"
+    },
+    {
+     "hero": 131,
+     "strength": "soft",
+     "why": "Skill 1 dan ult Li Bai kasih kebal buat ngindarin skill Kongming, dan burst-nya bunuh Kongming yang tipis."
+    },
+    {
+     "hero": 137,
+     "strength": "soft",
+     "why": "Silence batalin combo dash, dan burst menang adu."
+    },
+    {
+     "hero": 153,
+     "strength": "soft",
+     "why": "Gao ngilang terus nyergap dan bunuh Kongming pakai burst sebelum dia sempet bereaksi."
+    },
+    {
+     "hero": 118,
+     "strength": "soft",
+     "why": "Pas temen sekarat di depan Kongming, silence dari ult Sun Bin nahan skill Kongming biar temen bisa kabur. Pas Kongming sekarat dan kabur, silence ult juga nyegah dia pergi pakai skill 2."
+    }
+   ],
+   "itemCounters": [
+    {
+     "tag": "anti-burst",
+     "items": "Succubus Cloak",
+     "why": "Kongming mage burst magic dengan dash berkali-kali — Succubus Cloak + shield magic menahan burst-nya; saat ult-nya mengincar teman sekarat, berdiri di jalurnya untuk menahan.",
+     "needsReview": false
+    }
+   ],
+   "classes": [
+    "Mage"
+   ]
+  }
+ ]
+}
