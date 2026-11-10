@@ -464,9 +464,10 @@ main:has(.qgrid) { max-width: 640px; }
 /* layar kecil: tim draft menumpuk */
 @media (max-width: 560px) {
   .s16 { display: none; }
-  /* dock bawah ikon saja (Counter–Tentang): 7 tab berlabel terasa berdesakan di HP */
-  .tab { font-size: 0; min-height: 48px; }
-  .dock-in { padding-top: var(--s2); }
+  /* label dock mobile kembali tampil (Fase 25 Tugas 4) */
+  .tab { font-size: 10px; min-height: 50px; gap: 2px; }
+  .tab svg { width: 20px; height: 20px; }
+  .dock-in { padding: var(--s1) var(--s4) env(safe-area-inset-bottom); }
 }
 
 /* bedah counter di home */
