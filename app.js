@@ -379,9 +379,15 @@ function renderHome() {
     }
     grid2.appendChild(colB);
     bedah.appendChild(grid2);
+    const actions = el("div", "row");
+    actions.style.marginTop = "var(--s2)";
     const more = el("a", "link", "Buka halaman hero →");
     more.href = "#/hero/" + slug(h.en);
-    bedah.appendChild(more);
+    const h2hLink = el("a", "link", "Bandingkan hero ini ⇄");
+    h2hLink.href = "#/h2h?a=" + slug(h.en);
+    actions.appendChild(more);
+    actions.appendChild(h2hLink);
+    bedah.appendChild(actions);
     bedah.hidden = false;
   }
   renderDock("home", null);
@@ -482,7 +488,14 @@ function renderHero(slugName) {
   };
   paintFav();
   favBtn.addEventListener("click", () => { toggleFav(h.id); paintFav(); });
-  heroHead.appendChild(favBtn);
+  const actRow = el("div", "heroact");
+  actRow.appendChild(favBtn);
+  const h2hBtn = el("a", "btn-sec");
+  h2hBtn.href = "#/h2h?a=" + slug(h.en);
+  h2hBtn.appendChild(icon("i-swords"));
+  h2hBtn.appendChild(document.createTextNode("Bandingkan"));
+  actRow.appendChild(h2hBtn);
+  heroHead.appendChild(actRow);
   main.appendChild(heroHead);
 
   const cols = el("div", "hero2col");
@@ -660,6 +673,18 @@ function renderHero(slugName) {
 const DRAFT_KEY = "hok-draft";
 const ROLE_KEY = "hok-role";
 const RECENT_KEY = "hok-recent";
+function getRecentHeroes() {
+  try {
+    const v = JSON.parse(localStorage.getItem(RECENT_KEY) || "[]");
+    return Array.isArray(v) ? v.filter(Number.isInteger) : [];
+  } catch { return []; }
+}
+function pushRecentHero(id) {
+  try {
+    const r = [id, ...getRecentHeroes().filter(x => x !== id)].slice(0, 8);
+    localStorage.setItem(RECENT_KEY, JSON.stringify(r));
+  } catch {}
+}
 let draftKeyHandler = null;
 let draft = null;
 function loadDraft() {
@@ -978,18 +1003,8 @@ function renderDraft() {
 
   renderDock("draft", null);
 
-  function getRecent() {
-    try {
-      const v = JSON.parse(localStorage.getItem(RECENT_KEY) || "[]");
-      return Array.isArray(v) ? v.filter(Number.isInteger) : [];
-    } catch { return []; }
-  }
-  function pushRecent(id) {
-    try {
-      const r = [id, ...getRecent().filter(x => x !== id)].slice(0, 8);
-      localStorage.setItem(RECENT_KEY, JSON.stringify(r));
-    } catch {}
-  }
+  const getRecent = getRecentHeroes;
+  const pushRecent = pushRecentHero;
   function paintSlots() {
     const nextIdx = activeSlot ? -1 : draft[mode].indexOf(null);
     for (const team of ["ally", "enemy", "ban"]) {
@@ -2113,6 +2128,344 @@ function renderTentang() {
   renderDock("tentang", null);
 }
 
+/* ---------- HEAD-TO-HEAD ---------- */
+function renderH2H() {
+  document.title = "Head-to-head — Lawanku";
+  const main = $("#main");
+  main.replaceChildren();
+
+  const qPos = location.hash.indexOf("?");
+  const params = new URLSearchParams(qPos >= 0 ? location.hash.slice(qPos + 1) : "");
+  let heroA = bySlug.get(slug(params.get("a") || "")) || byId.get(Number(params.get("a"))) || null;
+  let heroB = bySlug.get(slug(params.get("b") || "")) || byId.get(Number(params.get("b"))) || null;
+
+  const head = el("div", "herohead");
+  head.appendChild(el("h1", null, "Head-to-Head"));
+  head.appendChild(el("p", "mut", "Bandingkan dua hero: relasi counter dua arah, rekomendasi item lawan, dan perbandingan tier resmi."));
+  main.appendChild(head);
+
+  const pickers = el("div", "h2h-pickers");
+  const slotA = el("div", "h2h-slot");
+  const swapBtn = el("button", "h2h-swap", "⇄");
+  swapBtn.type = "button";
+  swapBtn.setAttribute("aria-label", "Tukar posisi hero");
+  const slotB = el("div", "h2h-slot");
+  pickers.appendChild(slotA);
+  pickers.appendChild(swapBtn);
+  pickers.appendChild(slotB);
+  main.appendChild(pickers);
+
+  const results = el("div", "h2h-results");
+  main.appendChild(results);
+
+  // Dialog picker
+  const dlg = document.createElement("dialog");
+  dlg.id = "h2hdlg";
+  const dlgHead = el("div", "dlg-head");
+  const dlgTitle = el("h2", null, "Pilih Hero");
+  dlgHead.appendChild(dlgTitle);
+  const dlgX = el("button", "x", "×");
+  dlgX.type = "button"; dlgX.setAttribute("aria-label", "Tutup");
+  dlgX.addEventListener("click", () => dlg.close());
+  dlgHead.appendChild(dlgX);
+  dlg.appendChild(dlgHead);
+
+  const pqWrap = searchBox("h2h-pq", "Cari hero…");
+  const pq = pqWrap.input;
+  dlg.appendChild(pqWrap.label);
+
+  let pRole = "all";
+  const pRoles = roleButtons(pRole, (r) => {
+    pRole = r;
+    $$(".role", pRoles).forEach(b => {
+      b.classList.toggle("on", b.dataset.role === r);
+      b.setAttribute("aria-pressed", String(b.dataset.role === r));
+    });
+    filterDlg();
+  });
+  dlg.appendChild(pRoles);
+
+  const recentLbl = el("p", "lbl", "Terakhir dipakai");
+  dlg.appendChild(recentLbl);
+  const recentStrip = el("div", "strip");
+  dlg.appendChild(recentStrip);
+
+  const pGrid = el("div", "pgrid");
+  dlg.appendChild(pGrid);
+
+  for (const h of HEROES) {
+    const b = heroCard("button", h, "pickhero");
+    b.type = "button";
+    b.dataset.id = String(h.id);
+    b.dataset.roles = h.roles.join(" ");
+    b.addEventListener("click", () => {
+      pushRecentHero(h.id);
+      if (pickingTarget === "A") heroA = h;
+      else if (pickingTarget === "B") heroB = h;
+      dlg.close();
+      syncUrlAndPaint();
+    });
+    pGrid.appendChild(b);
+  }
+
+  const pEmpty = el("p", "mut", "Hero tidak ketemu.");
+  pEmpty.hidden = true;
+  dlg.appendChild(pEmpty);
+  main.appendChild(dlg);
+
+  let pickingTarget = "A";
+
+  function filterDlg() {
+    const q = norm(pq.value);
+    let n = 0;
+    for (const b of $$(".pickhero", pGrid)) {
+      const h = byId.get(Number(b.dataset.id));
+      const matchRole = pRole === "all" || (h && h.roles.includes(pRole));
+      const matchQ = !q || (h && (norm(h.en).includes(q) || (h.cn && norm(h.cn).includes(q))));
+      const ok = matchRole && matchQ;
+      b.hidden = !ok;
+      if (ok) n++;
+    }
+    pEmpty.hidden = n > 0;
+  }
+  pq.addEventListener("input", filterDlg);
+
+  function openPicker(target) {
+    pickingTarget = target;
+    dlgTitle.textContent = target === "A" ? "Pilih Hero A" : "Pilih Hero B";
+    pq.value = "";
+    pRole = "all";
+    $$(".role", pRoles).forEach(b => {
+      b.classList.toggle("on", b.dataset.role === "all");
+      b.setAttribute("aria-pressed", String(b.dataset.role === "all"));
+    });
+    const recent = getRecentHeroes().map(id => byId.get(id)).filter(Boolean);
+    recentStrip.replaceChildren();
+    if (recent.length) {
+      recentLbl.hidden = false;
+      recentStrip.hidden = false;
+      for (const h of recent) {
+        const btn = heroButton(h);
+        btn.addEventListener("click", () => {
+          pushRecentHero(h.id);
+          if (pickingTarget === "A") heroA = h;
+          else if (pickingTarget === "B") heroB = h;
+          dlg.close();
+          syncUrlAndPaint();
+        });
+        recentStrip.appendChild(btn);
+      }
+    } else {
+      recentLbl.hidden = true;
+      recentStrip.hidden = true;
+    }
+    filterDlg();
+    dlg.showModal();
+    pq.focus();
+  }
+
+  function syncUrlAndPaint() {
+    const aSlug = heroA ? slug(heroA.en) : "";
+    const bSlug = heroB ? slug(heroB.en) : "";
+    let hash = "#/h2h";
+    if (aSlug && bSlug) hash += `?a=${aSlug}&b=${bSlug}`;
+    else if (aSlug) hash += `?a=${aSlug}`;
+    else if (bSlug) hash += `?b=${bSlug}`;
+    if (location.hash !== hash) {
+      history.replaceState(null, "", hash);
+    }
+    paintSlotsAndResults();
+  }
+
+  swapBtn.addEventListener("click", () => {
+    const tmp = heroA;
+    heroA = heroB;
+    heroB = tmp;
+    syncUrlAndPaint();
+  });
+
+  function renderSlot(slotEl, h, label, target) {
+    slotEl.replaceChildren();
+    if (h) {
+      slotEl.classList.add("filled");
+      slotEl.onclick = null;
+      slotEl.appendChild(avatar(h, 56));
+      slotEl.appendChild(el("p", "hname", h.en));
+      slotEl.appendChild(el("span", "mut", h.roles.map(roleName).join(" / ") + " · " + h.classes.join(", ")));
+      const changeBtn = el("button", "btn-sec", "Ganti " + label);
+      changeBtn.type = "button";
+      changeBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openPicker(target);
+      });
+      slotEl.appendChild(changeBtn);
+    } else {
+      slotEl.classList.remove("filled");
+      slotEl.appendChild(icon("i-swords"));
+      slotEl.appendChild(el("p", "hname", "+ Pilih " + label));
+      slotEl.appendChild(el("span", "mut", "Klik untuk memilih"));
+      slotEl.onclick = () => openPicker(target);
+    }
+  }
+
+  function paintSlotsAndResults() {
+    renderSlot(slotA, heroA, "Hero A", "A");
+    renderSlot(slotB, heroB, "Hero B", "B");
+
+    results.replaceChildren();
+
+    if (!heroA || !heroB) {
+      const guide = el("div", "card");
+      guide.appendChild(el("p", "mut", "Silakan pilih Hero A dan Hero B di atas untuk melihat analisis head-to-head."));
+      results.appendChild(guide);
+      return;
+    }
+
+    if (heroA.id === heroB.id) {
+      const warn = el("div", "card");
+      warn.appendChild(el("p", "mut", "Kamu memilih hero yang sama (" + heroA.en + "). Silakan pilih dua hero yang berbeda untuk membandingkan."));
+      results.appendChild(warn);
+      return;
+    }
+
+    // --- (a) Hubungan Counter Dua Arah ---
+    const secCtr = el("section");
+    secCtr.appendChild(el("h2", "lbl", "Hubungan Counter"));
+
+    const aCountersB = (heroB.naturalCounters || []).find(c => c.hero === heroA.id);
+    const bCountersA = (heroA.naturalCounters || []).find(c => c.hero === heroB.id);
+
+    if (!aCountersB && !bCountersA) {
+      const card = el("div", "card");
+      const r = el("div", "row");
+      r.appendChild(el("b", null, "Tidak Ada Hubungan Counter Langsung"));
+      r.appendChild(el("span", "tag", "Netral"));
+      card.appendChild(r);
+      card.appendChild(el("p", "mut", "Tidak ada hubungan counter langsung antara " + heroA.en + " dan " + heroB.en + " dalam data kurasi. Hasil pertarungan lebih ditentukan oleh posisi, timing skill, dan gold."));
+      secCtr.appendChild(card);
+    } else {
+      if (aCountersB) {
+        const card = el("div", "card");
+        const r = el("div", "row");
+        r.appendChild(el("b", null, heroA.en + " meng-counter " + heroB.en));
+        r.appendChild(el("span", "badge " + aCountersB.strength, aCountersB.strength));
+        card.appendChild(r);
+        card.appendChild(el("p", null, aCountersB.why));
+        secCtr.appendChild(card);
+      }
+      if (bCountersA) {
+        const card = el("div", "card");
+        const r = el("div", "row");
+        r.appendChild(el("b", null, heroB.en + " meng-counter " + heroA.en));
+        r.appendChild(el("span", "badge " + bCountersA.strength, bCountersA.strength));
+        card.appendChild(r);
+        card.appendChild(el("p", null, bCountersA.why));
+        secCtr.appendChild(card);
+      }
+    }
+    results.appendChild(secCtr);
+
+    // --- (b) Rekomendasi Item Tiap Pihak ---
+    const secItem = el("section");
+    secItem.appendChild(el("h2", "lbl", "Rekomendasi Item Lawan"));
+    const gridItem = el("div", "h2h-grid2");
+
+    const boxItemA = el("div", "card");
+    boxItemA.appendChild(el("b", null, "Item untuk melawan " + heroA.en));
+    boxItemA.appendChild(el("p", "mut why", "Disarankan untuk " + heroB.en + " / timnya:"));
+    if (!(heroA.itemCounters || []).length) {
+      boxItemA.appendChild(el("p", "mut", "Belum ada rekomendasi item khusus untuk melawan " + heroA.en + "."));
+    } else {
+      for (const c of heroA.itemCounters) {
+        const it = el("div", "bitem");
+        const r = el("div", "row");
+        r.appendChild(el("b", null, c.items));
+        r.appendChild(el("span", "tag" + (c.needsReview ? "" : " ok"), c.needsReview ? "belum dikurasi" : "terkurasi"));
+        it.appendChild(r);
+        const pl = itemPriceLine(c.items);
+        if (pl) it.appendChild(el("p", "mut iprice", pl));
+        if (c.why) it.appendChild(el("p", "mut why", c.why));
+        boxItemA.appendChild(it);
+      }
+    }
+    gridItem.appendChild(boxItemA);
+
+    const boxItemB = el("div", "card");
+    boxItemB.appendChild(el("b", null, "Item untuk melawan " + heroB.en));
+    boxItemB.appendChild(el("p", "mut why", "Disarankan untuk " + heroA.en + " / timnya:"));
+    if (!(heroB.itemCounters || []).length) {
+      boxItemB.appendChild(el("p", "mut", "Belum ada rekomendasi item khusus untuk melawan " + heroB.en + "."));
+    } else {
+      for (const c of heroB.itemCounters) {
+        const it = el("div", "bitem");
+        const r = el("div", "row");
+        r.appendChild(el("b", null, c.items));
+        r.appendChild(el("span", "tag" + (c.needsReview ? "" : " ok"), c.needsReview ? "belum dikurasi" : "terkurasi"));
+        it.appendChild(r);
+        const pl = itemPriceLine(c.items);
+        if (pl) it.appendChild(el("p", "mut iprice", pl));
+        if (c.why) it.appendChild(el("p", "mut why", c.why));
+        boxItemB.appendChild(it);
+      }
+    }
+    gridItem.appendChild(boxItemB);
+    secItem.appendChild(gridItem);
+    results.appendChild(secItem);
+
+    // --- (c) Tier Resmi & Statistik (HoK Camp) ---
+    const secTier = el("section");
+    secTier.appendChild(el("h2", "lbl", "Tier & Statistik Resmi (HoK Camp)"));
+    const gridStats = el("div", "h2h-grid2");
+
+    function renderStatBox(h) {
+      const box = el("div", "h2h-statbox");
+      const headRow = el("div", "h2h-stathead");
+      headRow.appendChild(avatar(h, 40));
+      const info = el("div");
+      info.appendChild(el("div", "hname", h.en));
+      info.appendChild(el("small", "mut", h.roles.map(roleName).join(" / ")));
+      headRow.appendChild(info);
+      box.appendChild(headRow);
+
+      const t = TIER_DATA && TIER_DATA.tiers ? TIER_DATA.tiers[String(h.id)] : null;
+      if (!t) {
+        box.appendChild(el("p", "mut", "Data tier belum termuat."));
+        return box;
+      }
+
+      const rTier = el("div", "h2h-statrow");
+      rTier.appendChild(el("span", "mut", "Tier"));
+      rTier.appendChild(el("span", "tierbadge t" + t.t.toLowerCase(), "Tier " + t.t));
+      box.appendChild(rTier);
+
+      const rWin = el("div", "h2h-statrow");
+      rWin.appendChild(el("span", "mut", "Win Rate"));
+      rWin.appendChild(el("b", null, pct1(t.w) + "%"));
+      box.appendChild(rWin);
+
+      const rPick = el("div", "h2h-statrow");
+      rPick.appendChild(el("span", "mut", "Pick Rate"));
+      rPick.appendChild(el("span", null, pct1(t.p) + "%"));
+      box.appendChild(rPick);
+
+      const rBan = el("div", "h2h-statrow");
+      rBan.appendChild(el("span", "mut", "Ban Rate"));
+      rBan.appendChild(el("span", null, pct1(t.b) + "%"));
+      box.appendChild(rBan);
+
+      return box;
+    }
+
+    gridStats.appendChild(renderStatBox(heroA));
+    gridStats.appendChild(renderStatBox(heroB));
+    secTier.appendChild(gridStats);
+    results.appendChild(secTier);
+  }
+
+  paintSlotsAndResults();
+  renderDock("h2h", null);
+}
+
 /* ---------- router & boot ---------- */
 function route() {
   const hash = location.hash.replace(/^#/, "") || "/";
@@ -2124,6 +2477,7 @@ function route() {
   else if (parts[0] === "quiz") renderQuiz();
   else if (parts[0] === "items") renderItems();
   else if (parts[0] === "tier") renderTier();
+  else if (parts[0] === "h2h") renderH2H();
   else if (parts[0] === "tentang") renderTentang();
   else if (parts[0] === "more") renderTentang();
   else if (parts[0] === "hero" && parts[1]) renderHero(parts[1]);
